@@ -30,7 +30,7 @@ A dialog should automatically appear asking for your Gemini API key.
 1. Open your browser and go to: https://makersuite.google.com/app/apikey
 2. Sign in with your Google account
 3. Click "Get API key" or "Create API key"
-4. Copy the key (it looks like: `AIzaSy...`)
+4. Copy the key (it starts with `AIza` followed by 35 characters)
 
 **Enter the key:**
 1. Paste your API key in the dialog
