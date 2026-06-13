@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mem3/main.dart';
-import 'package:mem3/services/theme_service.dart';
-import 'package:mem3/services/profile_service.dart';
-import 'package:mem3/services/menta_service.dart';
-import 'package:mem3/services/familiar_face_service.dart';
-import 'package:mem3/services/activity_monitoring_service.dart';
-import 'package:mem3/services/alert_service.dart';
-import 'package:mem3/services/inactivity_detection_service.dart';
-import 'package:mem3/providers/export_provider.dart';
+import 'package:menta/main.dart';
+import 'package:menta/services/theme_service.dart';
+import 'package:menta/services/profile_service.dart';
+import 'package:menta/services/menta_service.dart';
+import 'package:menta/services/familiar_face_service.dart';
+import 'package:menta/services/activity_monitoring_service.dart';
+import 'package:menta/services/alert_service.dart';
+import 'package:menta/services/inactivity_detection_service.dart';
+import 'package:menta/providers/export_provider.dart';
 
 void main() {
   setUp(() {

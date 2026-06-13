@@ -3,7 +3,7 @@
 ## 🚀 **Get Running Fast**
 
 ```bash
-cd /C/Archive/Coding/mem3
+cd /C/Archive/Coding/menta
 flutter clean && flutter pub get && flutter run
 ```
 

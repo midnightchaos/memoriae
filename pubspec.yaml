@@ -1,4 +1,4 @@
-name: mem3
+name: menta
 description: "A memory care companion app for dementia patients"
 publish_to: 'none'
 
@@ -52,9 +52,6 @@ dependencies:
   connectivity_plus: ^6.0.3
   share_plus: ^12.0.1
   url_launcher: ^6.3.1
-
-  # AI
-  google_generative_ai: ^0.4.5
 
   # Notifications
   flutter_local_notifications: ^18.0.1

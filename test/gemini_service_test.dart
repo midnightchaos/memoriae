@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mem3/services/gemini_service.dart';
-import 'package:mem3/models/journal_entry.dart';
+import 'package:menta/services/gemini_service.dart';
+import 'package:menta/models/journal_entry.dart';
 import 'mocks.mocks.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mem3/services/auth_service.dart';
-import 'package:mem3/theme/app_theme.dart';
-import 'package:mem3/screens/main_navigation_screen.dart';
+import 'package:menta/services/auth_service.dart';
+import 'package:menta/theme/app_theme.dart';
+import 'package:menta/screens/main_navigation_screen.dart';
 import 'package:provider/provider.dart';
 import '../../services/profile_service.dart';
 

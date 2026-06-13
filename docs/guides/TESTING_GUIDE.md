@@ -4,7 +4,7 @@
 
 ### 1. Install Dependencies
 ```bash
-cd C:\Archive\Coding\mem3
+cd C:\Archive\Coding\menta
 flutter pub get
 ```
 

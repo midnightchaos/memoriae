@@ -18,35 +18,35 @@ class AboutScreen extends StatelessWidget {
         'name': 'Numbers',
         'role': 'Lead Developer & Project Manager',
         'image': 'assets/poi/numbers.jpg',
-        'bio': 'Visionary behind Mem3, passionate about creating accessible technology that makes a real difference in people\'s lives. Specializes in Flutter development and user experience design.',
+        'bio': 'Visionary behind menta, passionate about creating accessible technology that makes a real difference in people\'s lives. Specializes in Flutter development and user experience design.',
         'expertise': '🎯 Flutter • 🚀 Project Management • 💡 Innovation',
       },
       {
         'name': 'Suv',
         'role': 'Full Stack Developer',
         'image': 'assets/poi/suv.jpg',
-        'bio': 'Expert in building robust and scalable applications. Focused on creating seamless user experiences and efficient backend systems for Mem3.',
+        'bio': 'Expert in building robust and scalable applications. Focused on creating seamless user experiences and efficient backend systems for menta.',
         'expertise': '💻 Full Stack • 🔧 Backend • 📱 Mobile Dev',
       },
       {
         'name': 'Son',
         'role': 'UI/UX Designer',
         'image': 'assets/poi/son.jpg',
-        'bio': 'Crafts beautiful and accessible interfaces with empathy at the core. Ensures every interaction in Mem3 is intuitive and delightful for users of all abilities.',
+        'bio': 'Crafts beautiful and accessible interfaces with empathy at the core. Ensures every interaction in menta is intuitive and delightful for users of all abilities.',
         'expertise': '🎨 UI Design • ✨ UX Research • 🌈 Accessibility',
       },
       {
         'name': 'Mal',
         'role': 'AI/ML Specialist',
         'image': 'assets/poi/mal.jpg',
-        'bio': 'Integrates cutting-edge AI features to enhance Mem3\'s cognitive support capabilities. Specializes in natural language processing and personalized assistance.',
+        'bio': 'Integrates cutting-edge AI features to enhance menta\'s cognitive support capabilities. Specializes in natural language processing and personalized assistance.',
         'expertise': '🤖 AI/ML • 🧠 NLP • 📊 Data Science',
       },
       {
         'name': 'Lak',
         'role': 'Quality Assurance & Testing',
         'image': 'assets/poi/lak.jpg',
-        'bio': 'Ensures Mem3 works flawlessly for every user. Dedicated to delivering a bug-free, reliable experience through comprehensive testing and quality standards.',
+        'bio': 'Ensures menta works flawlessly for every user. Dedicated to delivering a bug-free, reliable experience through comprehensive testing and quality standards.',
         'expertise': '✅ QA Testing • 🔍 Bug Hunting • 📈 Performance',
       },
     ];
@@ -137,7 +137,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Mem3',
+                            'menta',
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -382,7 +382,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '© 2025 Mem3 Team. All rights reserved.',
+                            '© 2025 menta Team. All rights reserved.',
                             style: TextStyle(
                               fontSize: 11,
                               color: isDark
@@ -657,8 +657,8 @@ class AboutScreen extends StatelessWidget {
   void _launchEmail(BuildContext context) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: 'team@mem3app.com',
-      query: 'subject=Feedback for Mem3',
+      path: 'team@mentaapp.com',
+      query: 'subject=Feedback for menta',
     );
 
     try {
@@ -687,7 +687,7 @@ class AboutScreen extends StatelessWidget {
   }
 
   void _launchWebsite(BuildContext context) async {
-    final Uri websiteUri = Uri.parse('https://mem3app.com');
+    final Uri websiteUri = Uri.parse('https://mentaapp.com');
 
     try {
       if (await canLaunchUrl(websiteUri)) {

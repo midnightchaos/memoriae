@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'package:mem3/services/database_helper.dart';
+import 'package:menta/services/database_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 

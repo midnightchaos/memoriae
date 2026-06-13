@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:mem3/screens/daily_routines_screen.dart';
-import 'package:mem3/services/theme_service.dart';
+import 'package:menta/screens/daily_routines_screen.dart';
+import 'package:menta/services/theme_service.dart';
 import 'package:mockito/mockito.dart';
 
 class MockThemeService extends Mock implements ThemeService {

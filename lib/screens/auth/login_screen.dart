@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/profile_service.dart';
-import 'package:mem3/services/auth_service.dart';
-import 'package:mem3/theme/app_theme.dart';
-import 'package:mem3/screens/main_navigation_screen.dart';
-import 'package:mem3/screens/caregiver/caregiver_dashboard_screen.dart';
-import 'package:mem3/screens/caregiver/caregiver_register_screen.dart';
-import 'package:mem3/screens/auth/registration_screen.dart';
+import 'package:menta/services/auth_service.dart';
+import 'package:menta/theme/app_theme.dart';
+import 'package:menta/screens/main_navigation_screen.dart';
+import 'package:menta/screens/caregiver/caregiver_dashboard_screen.dart';
+import 'package:menta/screens/caregiver/caregiver_register_screen.dart';
+import 'package:menta/screens/auth/registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final UserRole initialRole;

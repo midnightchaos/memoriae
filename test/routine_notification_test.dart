@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mem3/services/daily_routine_notification_service.dart';
-import 'package:mem3/models/daily_routine.dart';
+import 'package:menta/services/daily_routine_notification_service.dart';
+import 'package:menta/models/daily_routine.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

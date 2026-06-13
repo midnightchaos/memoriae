@@ -4,10 +4,10 @@ import 'dart:math';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mem3/models/chat_message.dart';
-import 'package:mem3/config/env_config.dart';
-import 'package:mem3/config/menta_system_prompt.dart';
-import 'package:mem3/services/database_helper.dart';
+import 'package:menta/models/chat_message.dart';
+import 'package:menta/config/env_config.dart';
+import 'package:menta/config/menta_system_prompt.dart';
+import 'package:menta/services/database_helper.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as developer;
 

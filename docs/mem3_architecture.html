@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>mem3 Architecture Diagram</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background:#fff;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#111;
+  }
+
+  .page {
+    width: 900px;
+    margin: 0 auto;
+    padding: 18px 24px 22px;
+    background:#fff;
+  }
+
+  .hdr, .ftr {
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:#444;
+  }
+  .hdr { margin-bottom:2px; }
+  h1 {
+    text-align:center;
+    font-size:32px;
+    font-weight:400;
+    margin-bottom:20px;
+    letter-spacing:.3px;
+  }
+  .ftr { margin-top:14px; border-top:1px solid #ccc; padding-top:6px; }
+
+  .canvas {
+    position:relative;
+    width:852px;
+    height:548px;
+  }
+
+  .box {
+    position:absolute;
+    border:1.5px solid #111;
+    background:#fff;
+    font-family:Arial,sans-serif;
+  }
+
+  .bx-title {
+    font-size:10px;
+    font-weight:700;
+    text-align:center;
+    padding:4px 5px;
+    border-bottom:1.5px solid #111;
+    line-height:1.35;
+  }
+
+  .bx-step {
+    font-size:9.5px;
+    text-align:center;
+    padding:5px 6px;
+    line-height:1.4;
+    border-bottom:1.5px solid #111;
+  }
+  .bx-step:last-child { border-bottom:none; }
+  .bx-step small { display:block; font-size:8px; color:#555; margin-top:1px; }
+
+  .bx-arr {
+    text-align:center;
+    font-size:8px;
+    padding:1px 0;
+    border-bottom:1.5px solid #111;
+    color:#111;
+  }
+
+  .lbl {
+    position:absolute;
+    font-family:Arial,sans-serif;
+    font-size:9.5px;
+    line-height:1.4;
+    text-align:center;
+    color:#111;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <span>mem3 / Memoriae: Memory Care Companion App</span>
+    <span>Dept. of CSE</span>
+  </div>
+
+  <h1>Architecture Diagram</h1>
+
+  <div class="canvas" id="cv">
+
+    <svg id="svg" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;pointer-events:none;"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Standard solid arrowhead -->
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0.5 L7,3.5 L0,6.5 L1.5,3.5 Z" fill="#111"/>
+        </marker>
+        <!-- Grey arrowhead for inter-module lines -->
+        <marker id="arr-grey" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0.5 L7,3.5 L0,6.5 L1.5,3.5 Z" fill="#666"/>
+        </marker>
+        <!-- Light grey arrowhead for feedback loops -->
+        <marker id="arr-lt" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0.5 L7,3.5 L0,6.5 L1.5,3.5 Z" fill="#999"/>
+        </marker>
+        <!-- Up arrowhead for feedback loop -->
+        <marker id="arr-up" markerWidth="8" markerHeight="8" refX="3.5" refY="0.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0.5,7 L3.5,0 L6.5,7 L3.5,5.5 Z" fill="#999"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <div class="box" id="BL" style="left:118px;top:128px;width:174px;">
+      <div class="bx-title">User Auth &amp; Profile Setup</div>
+      <div class="bx-step">Biometric / PIN Login
+        <small>local_auth · auth_service.dart</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Role Detection
+        <small>Patient / Caregiver / Guest</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Encrypted DB Init
+        <small>SQLCipher AES-256<br>flutter_secure_storage</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Context Loader
+        <small>FamiliarFaces · Medications<br>Routines · Journal Entries</small>
+      </div>
+    </div>
+
+    <div class="box" id="M1" style="left:430px;top:20px;width:258px;">
+      <div class="bx-title">① Companion Module — "Menta" Chatbot</div>
+      <div class="bx-step">Input Capture
+        <small>speech_to_text · ImagePicker · TextField</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Memory Context Injection
+        <small>Loads Faces · Meds · Journals → prompt</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Gemini 2.5-Flash LLM Inference
+        <small>HTTP · retry ×3 · fallback model · base64 image</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">TTS Reply + Feedback Log
+        <small>flutter_tts · 👍👎 → ActivityLog TYPE_CHAT</small>
+      </div>
+    </div>
+
+    <div class="box" id="M2" style="left:430px;top:218px;width:258px;">
+      <div class="bx-title">② Caregiver Coordination Module</div>
+      <div class="bx-step">Activity Logger + Engagement Scorer
+        <small>E = 2C + 10J + 5G · InactivityDetection</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Alert Engine
+        <small>Score &lt;15 after 14:00 → Medium alert · 12-hr dedup</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Dashboard + Analytics
+        <small>fl_chart · EngagementHistory · ActivitySummary</small>
+      </div>
+    </div>
+
+    <div class="box" id="M3" style="left:430px;top:390px;width:258px;">
+      <div class="bx-title">③ Therapy Module</div>
+      <div class="bx-step">Activity Selection
+        <small>Drawing · Music · Breathing · Meditation</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Cognitive Game Engine
+        <small>FaceMatchingGame ← FamiliarFaces · GameProgress</small>
+      </div>
+      <div class="bx-arr">▼</div>
+      <div class="bx-step">Journal &amp; Mood Entry → Score Update
+        <small>JournalEntry · mood · TYPE_THERAPY/GAME/JOURNAL</small>
+      </div>
+    </div>
+
+    <!-- Input labels -->
+    <div class="lbl" id="LI1" style="left:0;top:128px;width:84px;text-align:right;">Patient<br>Input</div>
+    <div class="lbl" id="LI2" style="left:0;top:335px;width:84px;text-align:right;">Activity<br>Events</div>
+    <div class="lbl" id="LI3" style="left:0;top:460px;width:84px;text-align:right;">Therapy<br>Interaction</div>
+
+    <!-- Data-passing labels -->
+    <div class="lbl" id="LP1" style="left:300px;top:98px; width:122px;">User Context<br><span style="font-size:8px;color:#555">(Profile + DB Cache)</span></div>
+    <div class="lbl" id="LP2" style="left:300px;top:344px;width:122px;">Engagement Score<br><span style="font-size:8px;color:#555">(ActivityLog data)</span></div>
+    <div class="lbl" id="LP3" style="left:300px;top:468px;width:122px;">Familiar Faces<br><span style="font-size:8px;color:#555">(FaceMatch + Journal)</span></div>
+
+    <!-- Output labels -->
+    <div class="lbl" id="LO1" style="left:730px;top:92px; width:122px;text-align:left;padding-left:8px;font-weight:700;">Personalised<br>AI Response</div>
+    <div class="lbl" id="LO2" style="left:730px;top:315px;width:122px;text-align:left;padding-left:8px;font-weight:700;">Caregiver<br>Dashboard<br>&amp; Alerts</div>
+    <div class="lbl" id="LO3" style="left:730px;top:452px;width:122px;text-align:left;padding-left:8px;font-weight:700;">Therapy<br>Progress<br>Report</div>
+
+    <!-- Inter-module data labels -->
+    <div class="lbl" id="LD12" style="left:648px;top:174px;width:80px;font-size:8px;color:#555;text-align:center;">ActivityLog<br>TYPE_CHAT</div>
+    <div class="lbl" id="LD23" style="left:648px;top:352px;width:80px;font-size:8px;color:#555;text-align:center;">Score nudge<br>TYPE_THERAPY</div>
+
+  </div>
+
+  <div class="ftr">
+    <span>2026/3/4</span>
+    <span>CSD 416 — mem3 / Memoriae</span>
+    <span>16</span>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  const svg  = document.getElementById('svg');
+  const cv   = document.getElementById('cv');
+  const cvR  = cv.getBoundingClientRect();
+
+  function b(id) {
+    const r = document.getElementById(id).getBoundingClientRect();
+    return {
+      t:  r.top    - cvR.top,
+      b:  r.bottom - cvR.top,
+      l:  r.left   - cvR.left,
+      r:  r.right  - cvR.left,
+      cy: (r.top + r.bottom) / 2 - cvR.top,
+      cx: (r.left + r.right) / 2 - cvR.left,
+      w:  r.width,
+      h:  r.height,
+    };
+  }
+
+  /* ── Core drawing primitives ── */
+
+  // Straight line (no marker)
+  function line(x1, y1, x2, y2, {stroke='#111', sw=1.5, dash=false}={}) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg','line');
+    el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+    el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+    el.setAttribute('stroke', stroke);
+    el.setAttribute('stroke-width', sw);
+    el.setAttribute('stroke-linecap', 'round');
+    if (dash) el.setAttribute('stroke-dasharray', '5,3');
+    svg.appendChild(el);
+  }
+
+  // Path (polyline / elbow) with optional end arrowhead
+  function path(pts, {stroke='#111', sw=1.5, dash=false, marker='arr'}={}) {
+    const d = 'M ' + pts.map(p => p.join(' ')).join(' L ');
+    const el = document.createElementNS('http://www.w3.org/2000/svg','path');
+    el.setAttribute('d', d);
+    el.setAttribute('fill', 'none');
+    el.setAttribute('stroke', stroke);
+    el.setAttribute('stroke-width', sw);
+    el.setAttribute('stroke-linecap', 'round');
+    el.setAttribute('stroke-linejoin', 'round');
+    if (dash) el.setAttribute('stroke-dasharray', '5,3');
+    if (marker) el.setAttribute('marker-end', `url(#${marker})`);
+    svg.appendChild(el);
+  }
+
+  // Horizontal arrow from x1 to x2 at y
+  function arrowH(x1, y, x2, opts={}) {
+    path([[x1, y],[x2, y]], opts);
+  }
+
+  // Elbow: right then down (or up), used for trunk branches
+  function elbowRH(x1, y1, x2, y2, opts={}) {
+    path([[x1, y1],[x2, y1],[x2, y2]], opts);
+  }
+
+  /* ── Read positions ── */
+  const BL   = b('BL');
+  const M1   = b('M1');
+  const M2   = b('M2');
+  const M3   = b('M3');
+  const LI1  = b('LI1');
+  const LI2  = b('LI2');
+  const LI3  = b('LI3');
+  const LP1  = b('LP1');
+  const LP2  = b('LP2');
+  const LP3  = b('LP3');
+  const LD12 = b('LD12');
+  const LD23 = b('LD23');
+
+  /* ════════════════════════════════════════════════
+     1. VERTICAL TRUNK (left spine)
+        Clean single vertical line from LI1 to LI3
+  ════════════════════════════════════════════════ */
+  const TX = LI1.r + 10;
+  line(TX, LI1.cy, TX, LI3.cy, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     2. INPUT LABEL → TRUNK  (short horizontal ticks)
+  ════════════════════════════════════════════════ */
+  line(LI1.r + 2, LI1.cy, TX, LI1.cy, {sw: 1.5});
+  line(LI2.r + 2, LI2.cy, TX, LI2.cy, {sw: 1.5});
+  line(LI3.r + 2, LI3.cy, TX, LI3.cy, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     3. TRUNK → LEFT AUTH BOX
+        Horizontal arrow at BL midpoint
+  ════════════════════════════════════════════════ */
+  arrowH(TX, BL.cy, BL.l - 1, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     4. LEFT BOX → User Context label → M1
+        Orthogonal: right from BL, then to M1
+  ════════════════════════════════════════════════ */
+  // Horizontal from BL right edge to label left edge
+  arrowH(BL.r, LP1.cy, LP1.l - 2, {sw: 1.5, marker: null});
+  // Horizontal from label right edge to M1 left edge
+  arrowH(LP1.r + 2, LP1.cy, M1.l - 1, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     5. TRUNK → Engagement Score label → M2
+        Branch from trunk, elbow to label, then arrow to M2
+  ════════════════════════════════════════════════ */
+  arrowH(TX, LP2.cy, LP2.l - 2, {sw: 1.5, marker: null});
+  arrowH(LP2.r + 2, LP2.cy, M2.l - 1, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     6. TRUNK → Familiar Faces label → M3
+  ════════════════════════════════════════════════ */
+  arrowH(TX, LP3.cy, LP3.l - 2, {sw: 1.5, marker: null});
+  arrowH(LP3.r + 2, LP3.cy, M3.l - 1, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     7. OUTPUT ARROWS (right side of each module)
+        Short horizontal arrows to output labels
+  ════════════════════════════════════════════════ */
+  arrowH(M1.r + 1, M1.cy, M1.r + 46, {sw: 1.5});
+  arrowH(M2.r + 1, M2.cy, M2.r + 46, {sw: 1.5});
+  arrowH(M3.r + 1, M3.cy, M3.r + 46, {sw: 1.5});
+
+  /* ════════════════════════════════════════════════
+     8. INTER-MODULE FLOW  (right of module column)
+        M1 → LD12 label → M2  (ActivityLog TYPE_CHAT)
+        M2 → LD23 label → M3  (Score nudge)
+  ════════════════════════════════════════════════ */
+  const ix1 = LD12.cx;
+  // Straight down from M1 bottom → through label → M2 top
+  path([[ix1, M1.b + 1],[ix1, LD12.t - 3]], {stroke:'#555', sw:1.2, marker:null});
+  path([[ix1, LD12.b + 3],[ix1, M2.t - 1]], {stroke:'#555', sw:1.2, marker:'arr-grey'});
+
+  const ix2 = LD23.cx;
+  path([[ix2, M2.b + 1],[ix2, LD23.t - 3]], {stroke:'#555', sw:1.2, marker:null});
+  path([[ix2, LD23.b + 3],[ix2, M3.t - 1]], {stroke:'#555', sw:1.2, marker:'arr-grey'});
+
+  /* ════════════════════════════════════════════════
+     9. FEEDBACK LOOP  M3 → M2
+        Dashed elbow on the left side of module column
+        Goes: left from M3, up past M2, right into M2 bottom
+  ════════════════════════════════════════════════ */
+  const fbX  = M3.l - 18;           // vertical channel left of modules
+  const fbY1 = M3.t + M3.h * 0.25;  // exit point on M3 left
+  const fbY2 = M2.b - M2.h * 0.25;  // entry point on M2 left
+
+  path([
+    [M3.l - 1, fbY1],
+    [fbX,       fbY1],
+    [fbX,       fbY2],
+    [M2.l - 1,  fbY2]
+  ], {stroke:'#999', sw:1.1, dash:true, marker:'arr-lt'});
+
+  // Label alongside feedback arrow
+  const tLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  tLabel.setAttribute('x', fbX - 4);
+  tLabel.setAttribute('y', (fbY1 + fbY2) / 2 + 3);
+  tLabel.setAttribute('font-size', '7.5');
+  tLabel.setAttribute('fill', '#999');
+  tLabel.setAttribute('font-family', 'Arial');
+  tLabel.setAttribute('text-anchor', 'end');
+  tLabel.textContent = 'TYPE_THERAPY / GAME';
+  svg.appendChild(tLabel);
+
+  /* ════════════════════════════════════════════════
+     10. Fit canvas height
+  ════════════════════════════════════════════════ */
+  const bottom = M3.b + 24;
+  cv.style.height = bottom + 'px';
+  svg.setAttribute('height', bottom);
+});
+</script>
+</body>
+</html>

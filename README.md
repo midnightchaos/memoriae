@@ -1,259 +1,200 @@
-# Menta — AI Memory Care Companion
+# Menta
 
-> A Flutter application designed to support individuals living with dementia and their caregivers. Menta combines therapeutic activities, AI-powered conversation, medication management, and safety features into a calm, accessible mobile experience.
+AI-powered memory care companion focused on privacy, accessibility, and secure local-first data storage.
+
+Built with Flutter + Gemini + SQLCipher.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.9%2B-blue?logo=dart)](https://dart.dev)
-[![Gemini AI](https://img.shields.io/badge/Gemini-AI-orange?logo=google)](https://ai.google.dev)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![SQLite](https://img.shields.io/badge/SQLite-3-lightgrey?logo=sqlite)](https://sqlite.org)
+[![SQLCipher](https://img.shields.io/badge/SQLCipher-Encrypted-red?logo=sqlite)](https://www.zetetic.net/sqlcipher)
+[![Gemini](https://img.shields.io/badge/Gemini-AI-orange?logo=google)](https://ai.google.dev)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 ---
 
-## Features
+## What is Menta?
 
-### 🧠 Memory Journal
-Full-featured journal with photo attachments, voice recordings, mood tracking, and tag-based filtering. Entries are persisted locally via an encrypted SQLite database.
+Menta is a dedicated memory care companion application designed for individuals living with dementia or cognitive impairment, and their caregivers. By utilizing a local-first design and structured therapeutic tools, Menta assists users in orienting themselves, tracking daily routines, managing medications, and engaging in cognitive exercises. 
 
-### 👥 Familiar Faces
-A photo directory of caregivers, family members, and friends with relationship labels. Helps users maintain social orientation and recognise important people in their lives.
-
-### 🎵 Music Therapy
-Curated therapeutic playlist playback using the device audio player. Music selection is tailored to evoke positive memories and reduce anxiety.
-
-### 🎨 Drawing Therapy
-Free-form canvas with a colour palette and save-to-gallery capability. Provides a low-barrier creative outlet.
-
-### 🧘 Relaxation Hub
-Entry point for all therapeutic modalities: guided meditation, breathing exercises, music therapy, and art therapy — accessible from a single screen.
-
-### 💬 Menta AI Chatbot
-Conversational AI assistant powered by the Gemini API. Maintains multi-turn conversation history in the local database and supports retry across multiple model endpoints (`gemini-flash`, `gemini-2.0-flash`, `gemini-2.5-flash`). Requires a user-provided API key stored in `SharedPreferences` — never hardcoded.
-
-### 💊 Medication Manager
-Full CRUD for medication schedules with local push notifications via `flutter_local_notifications`. Tracks dose history and surfaces refill reminders.
-
-### 📅 Daily Routines
-Configurable morning/evening routines with per-task completion tracking and notification-based reminders.
-
-### 📍 Safety Locations
-Geofenced safe-zone management with caregiver alert integration via the `AlertService`.
-
-### 🧩 Memory Games
-Cognitive stimulation mini-games (face-matching) with progress tracking via the `MentaGamesService`.
-
-### 🔒 Authentication & Security
-- PIN / biometric authentication (`local_auth`)
-- Encrypted database via `sqflite_sqlcipher`
-- Field-level encryption via `EncryptionService`
-- Audit logging for sensitive operations
-
-### 👨‍👩‍👧 Caregiver Mode
-Dedicated caregiver screens for monitoring activity, reviewing logs, and configuring alerts.
+Menta features **Menta**, an intelligent, context-aware chatbot helper that assists users in accessing their personal history (journals, routines, medications, and family members) through conversational queries.
 
 ---
 
-## Tech Stack
+## Key Features
 
-| Layer | Technology |
+### 🔒 Privacy & Security
+- **SQLCipher Encrypted Local Database**: All data is encrypted on-device.
+- **AES-256 Encryption**: Field-level encryption for sensitive user history.
+- **Biometric Authentication**: Fingerprint/face authentication for profile protection.
+- **Secure API Key Storage**: Stored securely in native keychain/SharedPreferences.
+- **Offline-First Architecture**: Functions fully without cloud dependency.
+
+### 🧠 Memory Support
+- **Memory Journal**: Document daily logs with photo attachments and voice notes.
+- **Medication Management**: Full CRUD scheduling with automatic dose logs and refill alerts.
+- **Daily Routines**: Morning/evening routines with completing checklists and reminders.
+- **Familiar Faces**: A photo directory matching caregiver and family relationships.
+
+### 💬 AI Assistance
+- **Menta conversational assistant**: Empathetic multi-turn chatbot.
+- **Gemini-powered responses**: Powered by direct REST integration.
+- **Robust Error Handling**: Real-time retry mechanism and model fallback strategies.
+- **Context-Aware Conversations**: Dynamically injects patient database context into the prompt safely.
+
+### ♿ Accessibility
+- **Large Text Support**: Optimised for senior readability.
+- **Screen-Reader Friendly**: Native semantic labels across all widgets.
+- **High-Contrast Design**: Clean Material 3 visual styling.
+- **Voice Support**: Full text-to-speech option for audibly reading chatbot answers.
+
+---
+
+## Screenshots
+
+### Main Dashboard & Conversational Assistant
+
+| Dashboard | Menta Chat Assistant |
 |---|---|
-| Framework | Flutter 3.x / Dart 3.9+ |
-| State Management | Provider |
-| Local Database | sqflite\_sqlcipher (encrypted SQLite) |
-| AI | Google Gemini API (REST via `http`) |
-| Notifications | flutter\_local\_notifications + timezone |
-| Media | audioplayers, record, image\_picker |
-| Security | flutter\_secure\_storage, local\_auth, encrypt |
-| Analytics | Custom `AnalyticsService` |
+| ![Dashboard](docs/screenshots/dashboard.jpg) | ![Chatbot](docs/screenshots/chatbot.jpg) |
+
+### Memory Journal & Medication Tracking
+
+| Memory Journal | Medication Tracking |
+|---|---|
+| ![Journal](docs/screenshots/journal.jpg) | ![Medication](docs/screenshots/medication.jpg) |
+
+### Settings & Authentication
+
+| Accessibility & Settings | Biometrics & Security |
+|---|---|
+| ![Settings](docs/screenshots/settings.jpg) | ![Security](docs/screenshots/security.jpg) |
 
 ---
 
-## Project Structure
+## Architecture
+
+Menta uses a structured multi-layer architecture optimized for local state management and services:
 
 ```
-lib/
-├── main.dart                          # App entry, provider setup, service init
-│
-├── config/                            # Environment & system prompt configuration
-│   ├── env_config.dart                # API key loader (never commit real values)
-│   └── menta_system_prompt.dart       # Gemini AI system persona
-│
-├── models/                            # Pure data classes with toMap/fromMap
-│   ├── chat_message.dart
-│   ├── journal_entry.dart
-│   ├── medication.dart
-│   ├── familiar_face.dart
-│   ├── daily_routine.dart
-│   ├── safety_location.dart
-│   └── user_profile.dart
-│
-├── services/                          # Business logic & data access layer
-│   ├── database_helper.dart           # Singleton encrypted SQLite wrapper
-│   ├── database_migrator.dart         # Schema version migrations
-│   ├── gemini_service.dart            # Gemini REST client with multi-endpoint retry
-│   ├── menta_service.dart             # AI response orchestration
-│   ├── auth_service.dart              # Auth + session management
-│   ├── encryption_service.dart        # AES field encryption
-│   ├── analytics_service.dart         # Usage event tracking
-│   ├── audit_logging_service.dart     # Tamper-evident operation logs
-│   ├── journal_service.dart           # Journal CRUD
-│   ├── familiar_face_service.dart     # Faces CRUD
-│   ├── music_library_service.dart     # Music catalogue management
-│   ├── medication_notification_service.dart
-│   ├── daily_routine_notification_service.dart
-│   ├── activity_monitoring_service.dart
-│   ├── inactivity_detection_service.dart
-│   ├── alert_service.dart
-│   ├── data_export_service.dart
-│   └── profile_service.dart
-│
-├── screens/                           # One file per screen
-│   ├── splash_screen.dart
-│   ├── home_screen.dart
-│   ├── main_navigation_screen.dart
-│   ├── chatbot_screen.dart
-│   ├── memory_screen.dart             # Journal list & search
-│   ├── add_edit_journal_screen.dart   # Journal editor (voice + photo)
-│   ├── familiar_faces_screen.dart
-│   ├── add_edit_face_screen.dart
-│   ├── music_therapy_screen.dart
-│   ├── drawing_therapy_screen.dart
-│   ├── meditation_screen.dart
-│   ├── breathing_exercise_screen.dart
-│   ├── relax_screen.dart
-│   ├── daily_routines_screen.dart
-│   ├── medications_screen.dart
-│   ├── safety_locations_screen.dart
-│   ├── face_matching_game_screen.dart
-│   ├── settings_screen.dart
-│   ├── export_settings_screen.dart
-│   ├── edit_profile_screen.dart
-│   ├── profile_screen.dart
-│   ├── connect_screen.dart
-│   ├── about_screen.dart
-│   └── auth/                          # Auth flow screens
-│       └── caregiver/                 # Caregiver-specific screens
-│
-├── theme/
-│   └── app_theme.dart                 # Material 3 colour tokens, text styles
-│
-├── providers/
-│   └── export_provider.dart           # Data export state
-│
-└── widgets/                           # Reusable UI components
-    ├── glass_card.dart
-    ├── familiar_face_card.dart
-    ├── feature_tile.dart
-    ├── menta_assistant.dart
-    ├── animated_page_wrapper.dart
-    └── rounded_image_picker.dart
-
-test/
-├── gemini_service_test.dart           # GeminiService unit tests
-├── routine_notification_test.dart     # Notification scheduling tests
-├── routine_ui_test.dart               # Widget tests
-└── widget_test.dart
+Flutter UI
+    ↓
+Services Layer (Provider Dependency Injection)
+    ↓
+Repositories / Service Implementations
+    ↓
+SQLCipher Database (Local Storage)
 ```
+
+For AI interactions:
+```
+Flutter UI → MentaService / GeminiService → Google Gemini API (REST over HTTP) → Response
+```
+
+*For more details, see [ARCHITECTURE.md](docs/ARCHITECTURE.md).*
 
 ---
 
-## Getting Started
+## Security
+
+Menta is built with patient data security as its highest priority:
+- **SQLCipher Database Encryption**: The entire database is encrypted using a unique, securely generated key.
+- **AES-256 encryption**: Specifically encrypts sensitive fields before storage.
+- **Biometric Protection**: Optional biometric lock screens safeguard caregiver views and settings.
+- **No Hardcoded Credentials**: Runtime API key configuration allows users to input their own keys without exposure.
+
+*For more details, see [SECURITY.md](docs/SECURITY.md).*
+
+---
+
+## AI Assistant
+
+Menta integrates Google's Gemini models through direct REST API calls. The application intentionally avoids heavyweight SDK dependencies in favor of a lightweight HTTP-based approach with explicit retry and error handling. 
+
+System prompt personalization dynamically matches patient journals, daily agendas, and medication timings to respond empathetically and accurately to any memory recall queries.
+
+---
+
+## Installation
 
 ### Prerequisites
+- Flutter SDK >= 3.0
+- Dart SDK >= 3.9
+- A Google Gemini API key
 
-- Flutter SDK ≥ 3.0 ([install](https://docs.flutter.dev/get-started/install))
-- Dart SDK ≥ 3.9
-- A [Google Gemini API key](https://aistudio.google.com/app/apikey) (free tier available)
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/midnightchaos/menta.git
+   cd menta
+   ```
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+3. Configure your API key. Create the gitignored `lib/config/env_config.dart` file:
+   ```dart
+   class EnvConfig {
+     static const String geminiApiKey = 'YOUR_API_KEY_HERE';
+     static bool get hasDefaultApiKey => geminiApiKey.isNotEmpty;
+   }
+   ```
 
-### 1. Clone
+---
 
+## Development
+
+Run code generation for mock classes:
 ```bash
-git clone https://github.com/<your-username>/menta.git
-cd menta
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-### 2. Install dependencies
-
-```bash
-flutter pub get
-```
-
-### 3. Configure your API key
-
-Create `lib/config/env_config.dart` (excluded from git):
-
-```dart
-class EnvConfig {
-  static const String geminiApiKey = 'YOUR_API_KEY_HERE';
-  static bool get hasDefaultApiKey => geminiApiKey.isNotEmpty;
-}
-```
-
-> **Security note:** The API key can also be entered at runtime via the in-app Settings screen and is stored in `SharedPreferences` — it is never compiled into the binary.
-
-### 4. Run
-
+To run the application locally:
 ```bash
 flutter run
 ```
 
 ---
 
-## Running Tests
+## Testing
+
+Menta uses a robust test suite covering services, business logic, and UI widgets:
 
 ```bash
-# All tests
+# Run all unit and widget tests
 flutter test
-
-# Single file
-flutter test test/gemini_service_test.dart
 ```
 
----
+### Current Test Coverage:
+- **Core services**: Authentication, database helper methods.
+- **Widget behavior**: Routines checklist, main navigation elements.
+- **Database validation**: Verification of encryption and schema constraints.
 
-## Architecture Decisions
-
-**Local-first.** All user data is stored on-device in an encrypted SQLite database. No backend server, no cloud sync. This was a deliberate choice for the dementia care context: data sovereignty and offline reliability matter more than cross-device sync.
-
-**Service layer over repositories.** Services are singleton classes injected via Provider. They own all I/O (database, network, notifications) and expose clean async methods to UI screens. Screens contain no business logic.
-
-**Single canonical implementation.** Earlier in development, experimental variants of screens and services accumulated (`_enhanced`, `_backup`, `_fixed` suffixes). These have been removed; the codebase now has one authoritative implementation per feature.
-
-**Gemini via REST, not SDK.** The `GeminiService` uses `package:http` directly rather than `package:google_generative_ai`. This gives full control over model endpoint selection, retry logic across fallback models, and explicit timeout handling.
-
----
-
-## Accessibility
-
-The UI is designed for older adults and users with cognitive impairment:
-
-- Minimum touch targets: 48 × 48 dp
-- Minimum body text: 16 sp
-- All interactive elements have semantic labels
-- Dark/light mode with high-contrast colour palette
-- Emoji-based visual cues supplement text labels
-- Animations are slow (300–800 ms) and never loop continuously
+Additional test coverage for migration scripts and edge case AI timeouts is under development.
 
 ---
 
 ## Roadmap
 
-- [ ] Caregiver remote monitoring dashboard
-- [ ] End-to-end encrypted caregiver ↔ patient sync
-- [ ] Photo memory timeline view
-- [ ] Offline speech-to-text for journal dictation
-- [ ] Accessibility audit (WCAG 2.1 AA target)
+### Near Term
+- [ ] CI/CD pipeline automation
+- [ ] Expanded unit & widget test coverage
+- [ ] Caregiver secure remote synchronization
+- [ ] Full accessibility validation (WCAG 2.1 AA)
+
+### Future
+- [ ] Offline local speech-to-text models
+- [ ] End-to-end encrypted backup to patient's own cloud storage
+- [ ] Caregiver collaborative note-taking hub
 
 ---
 
 ## Contributing
 
-1. Fork and branch from `main`
-2. Follow existing service/screen patterns
-3. Add tests for any new service methods
-4. Keep all API keys out of source — use `env_config.dart`
+We welcome contributions to improve Menta. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on branching, styles, and pull requests.
 
 ---
 
 ## License
 
-MIT © Menta Contributors
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
