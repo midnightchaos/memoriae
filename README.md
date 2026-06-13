@@ -24,11 +24,11 @@
 
 ---
 
-## What is Menta?
+## What is Memoriae?
 
-Menta is a dedicated mobile companion for individuals living with **dementia or cognitive impairment**, and the caregivers who support them. It replaces scattered paper notes, missed medication alerts, and family photo albums with a single calm, accessible interface — all secured on-device with no cloud account required.
+Memoriae is a dedicated mobile companion for individuals living with **dementia or cognitive impairment**, and the caregivers who support them. It replaces scattered paper notes, missed medication alerts, and family photo albums with a single calm, accessible interface — all secured on-device with no cloud account required.
 
-At its core is **Menta**, a conversational AI assistant powered by Google Gemini that has access to the patient's own journals, routines, medications, and familiar faces — so it can answer questions like *"What did I do on Tuesday?"* or *"Who is the woman in my photos?"* with context drawn directly from the patient's own life.
+At its core is **Memoriae**, a conversational AI assistant powered by Google Gemini that has access to the patient's own journals, routines, medications, and familiar faces — so it can answer questions like *"What did I do on Tuesday?"* or *"Who is the woman in my photos?"* with context drawn directly from the patient's own life.
 
 > 📄 **This project was submitted to ICSRC 2026.** See [`docs/MEMORIAE_ICSRC2026_Final.docx`](docs/MEMORIAE_ICSRC2026_Final.docx) for the full research paper.
 
