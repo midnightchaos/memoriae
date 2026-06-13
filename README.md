@@ -1,4 +1,4 @@
-# Menta
+# Memoriae
 
 AI-powered memory care companion focused on privacy, accessibility, and secure local-first data storage.
 
@@ -13,9 +13,9 @@ Built with Flutter + Gemini + SQLCipher.
 
 ---
 
-## What is Menta?
+## What is Memoriae?
 
-Menta is a dedicated memory care companion application designed for individuals living with dementia or cognitive impairment, and their caregivers. By utilizing a local-first design and structured therapeutic tools, Menta assists users in orienting themselves, tracking daily routines, managing medications, and engaging in cognitive exercises. 
+Memoriae is a dedicated memory care companion application designed for individuals living with dementia or cognitive impairment, and their caregivers. By utilizing a local-first design and structured therapeutic tools, Memoriae assists users in orienting themselves, tracking daily routines, managing medications, and engaging in cognitive exercises. 
 
 Menta features **Menta**, an intelligent, context-aware chatbot helper that assists users in accessing their personal history (journals, routines, medications, and family members) through conversational queries.
 
