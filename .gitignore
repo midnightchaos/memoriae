@@ -1,0 +1,60 @@
+# ─── Flutter / Dart ───────────────────────────────────────────────
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# ─── Generated files ──────────────────────────────────────────────
+*.g.dart
+*.freezed.dart
+mocks.mocks.dart
+
+# ─── Secrets & API Keys ───────────────────────────────────────────
+# NEVER commit API keys or secrets
+*.env
+.env.*
+env_config.dart
+**/config/env_config.dart
+secrets.dart
+api_keys.dart
+
+# ─── IDE ──────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# ─── OS ───────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.atom/
+.history
+.svn/
+.swiftpm/
+
+# ─── Obfuscation / Symbols ────────────────────────────────────────
+app.*.symbols
+app.*.map.json
+
+# ─── Android build outputs ────────────────────────────────────────
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ─── Logs & temp ──────────────────────────────────────────────────
+*.log
+*.class
+*.pyc
+migrate_working_dir/
+analysis_output/
+
+# ─── Launcher Icons (generated) ───────────────────────────────────
+/android/app/src/main/res/mipmap-*/ic_launcher*.png
+/ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png
