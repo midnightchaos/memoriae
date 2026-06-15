@@ -118,11 +118,7 @@ class FeatureTile extends StatelessWidget {
                             : Colors.white.withOpacity(0.25),
                         borderRadius: AppRadius.md,
                       ),
-                      child: Icon(
-                        icon,
-                        size: 26,
-                        color: Colors.white,
-                      ),
+                      child: Icon(icon, size: 26, color: Colors.white),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(

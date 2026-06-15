@@ -5,7 +5,8 @@ import 'alert_service.dart';
 import 'auth_service.dart';
 
 class InactivityDetectionService extends ChangeNotifier {
-  static final InactivityDetectionService instance = InactivityDetectionService._internal();
+  static final InactivityDetectionService instance =
+      InactivityDetectionService._internal();
   InactivityDetectionService._internal();
 
   Timer? _inactivityTimer;
@@ -14,7 +15,10 @@ class InactivityDetectionService extends ChangeNotifier {
 
   void startMonitoring() {
     _inactivityTimer?.cancel();
-    _inactivityTimer = Timer.periodic(_checkInterval, (_) => _checkInactivity());
+    _inactivityTimer = Timer.periodic(
+      _checkInterval,
+      (_) => _checkInactivity(),
+    );
     debugPrint('Inactivity monitoring started (Check every hour)');
   }
 
@@ -25,7 +29,8 @@ class InactivityDetectionService extends ChangeNotifier {
 
   Future<void> _checkInactivity() async {
     try {
-      final lastInteraction = ActivityMonitoringService.instance.lastInteractionTime;
+      final lastInteraction =
+          ActivityMonitoringService.instance.lastInteractionTime;
       if (lastInteraction == null) return;
 
       final now = DateTime.now();
@@ -36,12 +41,13 @@ class InactivityDetectionService extends ChangeNotifier {
         if (currentUser == null) return;
 
         debugPrint('Inactivity detected: $difference since last interaction');
-        
+
         // Trigger alert
         await AlertService.instance.createAlert(
           patientId: currentUser.id,
           type: 'Inactivity',
-          message: 'Patient hasn\'t interacted with the app for over 30 minutes. Last activity: ${lastInteraction.toLocal()}',
+          message:
+              'Patient hasn\'t interacted with the app for over 30 minutes. Last activity: ${lastInteraction.toLocal()}',
           severity: 'High',
         );
       }

@@ -8,7 +8,7 @@ class FamiliarFace {
   final String? photoPath;
   final String? notes;
   final DateTime createdAt;
-  
+
   static const String defaultRelation = 'Family Member';
 
   FamiliarFace({
@@ -50,7 +50,7 @@ class FamiliarFace {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );
   }
-  
+
   FamiliarFace copyWith({
     String? id,
     String? userId,
@@ -74,13 +74,16 @@ class FamiliarFace {
       createdAt: createdAt ?? this.createdAt,
     );
   }
-  
+
   bool matchesSearch(String query) {
     final searchLower = query.toLowerCase();
     return name.toLowerCase().contains(searchLower) ||
         relation.toLowerCase().contains(searchLower) ||
         (email?.toLowerCase().contains(searchLower) ?? false) ||
-        (phoneNumber?.contains(RegExp(r'\d')) ?? false && 
-         phoneNumber!.replaceAll(RegExp(r'[^\d]', multiLine: true), '').contains(searchLower));
+        (phoneNumber?.contains(RegExp(r'\d')) ??
+            false &&
+                phoneNumber!
+                    .replaceAll(RegExp(r'[^\d]', multiLine: true), '')
+                    .contains(searchLower));
   }
 }

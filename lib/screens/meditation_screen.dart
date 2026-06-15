@@ -99,16 +99,18 @@ class _MeditationScreenState extends State<MeditationScreen>
     // Log activity
     ActivityMonitoringService.instance.logActivity(
       type: ActivityMonitoringService.TYPE_THERAPY,
-      description: 'Patient started meditation session: $durationMinutes minutes',
+      description:
+          'Patient started meditation session: $durationMinutes minutes',
     );
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
-          
+
           // Change guidance every 30 seconds
-          if (_remainingSeconds % 30 == 0 && _currentStepIndex < _guidanceSteps.length - 1) {
+          if (_remainingSeconds % 30 == 0 &&
+              _currentStepIndex < _guidanceSteps.length - 1) {
             _currentStepIndex++;
             _currentPhase = _guidanceSteps[_currentStepIndex];
           }
@@ -129,7 +131,8 @@ class _MeditationScreenState extends State<MeditationScreen>
     // Log activity
     ActivityMonitoringService.instance.logActivity(
       type: ActivityMonitoringService.TYPE_THERAPY,
-      description: 'Patient completed meditation session: $_selectedDuration minutes',
+      description:
+          'Patient completed meditation session: $_selectedDuration minutes',
     );
 
     // Show completion dialog
@@ -167,12 +170,7 @@ class _MeditationScreenState extends State<MeditationScreen>
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: const Row(
-          children: [
-            Text('🎉 '),
-            Text('Session Complete'),
-          ],
-        ),
+        title: const Row(children: [Text('🎉 '), Text('Session Complete')]),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -218,19 +216,30 @@ class _MeditationScreenState extends State<MeditationScreen>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           color: isBlackMinimalism ? Colors.black : null,
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                : [AppColors.lavender50, AppColors.blue50, AppColors.lavender100],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.lavender50,
+                          AppColors.blue50,
+                          AppColors.lavender100,
+                        ],
+                ),
         ),
         child: SafeArea(
           child: Column(
@@ -293,27 +302,44 @@ class _MeditationScreenState extends State<MeditationScreen>
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: isBlackMinimalism ? null : RadialGradient(
-                  colors: [
-                    AppColors.lavender400.withOpacity(0.3),
-                    AppColors.purple400.withOpacity(0.1),
-                    Colors.transparent,
-                  ],
-                  stops: [
-                    0.0,
-                    0.7 * _animationController.value + 0.3,
-                    1.0,
-                  ],
-                ),
-                color: isBlackMinimalism ? Colors.white.withOpacity(0.05 * _animationController.value) : null,
-                boxShadow: isBlackMinimalism ? null : [
-                  BoxShadow(
-                    color: AppColors.lavender400.withOpacity(0.3 * _animationController.value),
-                    blurRadius: 60,
-                    spreadRadius: 20,
-                  ),
-                ],
-                border: isBlackMinimalism ? Border.all(color: Colors.white10.withOpacity(0.5 * _animationController.value), width: 2) : null,
+                gradient: isBlackMinimalism
+                    ? null
+                    : RadialGradient(
+                        colors: [
+                          AppColors.lavender400.withOpacity(0.3),
+                          AppColors.purple400.withOpacity(0.1),
+                          Colors.transparent,
+                        ],
+                        stops: [
+                          0.0,
+                          0.7 * _animationController.value + 0.3,
+                          1.0,
+                        ],
+                      ),
+                color: isBlackMinimalism
+                    ? Colors.white.withOpacity(
+                        0.05 * _animationController.value,
+                      )
+                    : null,
+                boxShadow: isBlackMinimalism
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: AppColors.lavender400.withOpacity(
+                            0.3 * _animationController.value,
+                          ),
+                          blurRadius: 60,
+                          spreadRadius: 20,
+                        ),
+                      ],
+                border: isBlackMinimalism
+                    ? Border.all(
+                        color: Colors.white10.withOpacity(
+                          0.5 * _animationController.value,
+                        ),
+                        width: 2,
+                      )
+                    : null,
               ),
               child: Center(
                 child: Container(
@@ -321,15 +347,21 @@ class _MeditationScreenState extends State<MeditationScreen>
                   height: 180,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
-                    border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-                    boxShadow: isBlackMinimalism ? null : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
+                    color: isBlackMinimalism
+                        ? const Color(0xFF0A0A0A)
+                        : (isDark ? AppColors.slate800 : Colors.white),
+                    border: isBlackMinimalism
+                        ? Border.all(color: Colors.white10)
+                        : null,
+                    boxShadow: isBlackMinimalism
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +379,11 @@ class _MeditationScreenState extends State<MeditationScreen>
                         'remaining',
                         style: TextStyle(
                           fontSize: 14,
-                          color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                          color: isBlackMinimalism
+                              ? Colors.white38
+                              : (isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate600),
                         ),
                       ),
                     ],
@@ -370,7 +406,9 @@ class _MeditationScreenState extends State<MeditationScreen>
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 8,
-                  backgroundColor: isBlackMinimalism ? Colors.white10 : (isDark ? AppColors.slate700 : AppColors.slate200),
+                  backgroundColor: isBlackMinimalism
+                      ? Colors.white10
+                      : (isDark ? AppColors.slate700 : AppColors.slate200),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     isBlackMinimalism ? Colors.white : AppColors.lavender400,
                   ),
@@ -401,13 +439,19 @@ class _MeditationScreenState extends State<MeditationScreen>
               icon: const Icon(Icons.stop),
               label: const Text('Stop'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isBlackMinimalism ? Colors.white24 : AppColors.coral400,
+                backgroundColor: isBlackMinimalism
+                    ? Colors.white24
+                    : AppColors.coral400,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
                 ),
-                shape: isBlackMinimalism ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)) : null,
+                shape: isBlackMinimalism
+                    ? RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )
+                    : null,
               ),
             ),
           ],
@@ -426,22 +470,25 @@ class _MeditationScreenState extends State<MeditationScreen>
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: isBlackMinimalism ? null : LinearGradient(
-              colors: [
-                AppColors.lavender100,
-                AppColors.lavender100,
-              ],
-            ),
+            gradient: isBlackMinimalism
+                ? null
+                : LinearGradient(
+                    colors: [AppColors.lavender100, AppColors.lavender100],
+                  ),
             color: isBlackMinimalism ? const Color(0xFF0A0A0A) : null,
             borderRadius: BorderRadius.circular(24),
-            border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-            boxShadow: isBlackMinimalism ? null : [
-              BoxShadow(
-                color: AppColors.lavender400.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            border: isBlackMinimalism
+                ? Border.all(color: Colors.white10)
+                : null,
+            boxShadow: isBlackMinimalism
+                ? null
+                : [
+                    BoxShadow(
+                      color: AppColors.lavender400.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
           ),
           child: Column(
             children: [
@@ -499,19 +546,23 @@ class _MeditationScreenState extends State<MeditationScreen>
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+          color: isBlackMinimalism
+              ? const Color(0xFF0A0A0A)
+              : (isDark ? AppColors.slate800 : Colors.white),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3),
             width: isBlackMinimalism ? 1 : 2,
           ),
-          boxShadow: isBlackMinimalism ? null : [
-            BoxShadow(
-              color: color.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: isBlackMinimalism
+              ? null
+              : [
+                  BoxShadow(
+                    color: color.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Row(
           children: [
@@ -520,7 +571,9 @@ class _MeditationScreenState extends State<MeditationScreen>
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: isBlackMinimalism ? Colors.white12 : color.withOpacity(0.2),
+                color: isBlackMinimalism
+                    ? Colors.white12
+                    : color.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
@@ -551,7 +604,9 @@ class _MeditationScreenState extends State<MeditationScreen>
                     session['description'] as String,
                     style: TextStyle(
                       fontSize: 14,
-                      color: isBlackMinimalism ? Colors.white70 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                      color: isBlackMinimalism
+                          ? Colors.white70
+                          : (isDark ? AppColors.slate400 : AppColors.slate600),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -561,7 +616,9 @@ class _MeditationScreenState extends State<MeditationScreen>
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: isBlackMinimalism ? Colors.white12 : color.withOpacity(0.2),
+                      color: isBlackMinimalism
+                          ? Colors.white12
+                          : color.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -594,7 +651,9 @@ class _MeditationScreenState extends State<MeditationScreen>
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('End Session?'),
-        content: const Text('Are you sure you want to end your meditation session?'),
+        content: const Text(
+          'Are you sure you want to end your meditation session?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

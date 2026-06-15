@@ -9,7 +9,8 @@ class CaregiverRegisterScreen extends StatefulWidget {
   const CaregiverRegisterScreen({super.key});
 
   @override
-  State<CaregiverRegisterScreen> createState() => _CaregiverRegisterScreenState();
+  State<CaregiverRegisterScreen> createState() =>
+      _CaregiverRegisterScreenState();
 }
 
 class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
@@ -40,7 +41,10 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
     try {
       final authService = AuthService.instance;
       final salt = authService.generateSalt();
-      final passwordHash = authService.hashPassword(_passwordController.text, salt);
+      final passwordHash = authService.hashPassword(
+        _passwordController.text,
+        salt,
+      );
 
       final caregiver = Caregiver(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -53,7 +57,7 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
       );
 
       await DatabaseHelper.instance.insertCaregiver(caregiver.toMap());
-      
+
       // Auto-login after registration
       await authService.loginCaregiver(
         email: caregiver.email,
@@ -71,7 +75,10 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.coral400),
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: AppColors.coral400,
+          ),
         );
       }
     } finally {
@@ -120,7 +127,8 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
-                validator: (v) => v!.contains('@') ? null : 'Enter a valid email',
+                validator: (v) =>
+                    v!.contains('@') ? null : 'Enter a valid email',
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -140,8 +148,13 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
                   labelText: 'Password',
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
                   border: const OutlineInputBorder(),
                 ),
@@ -156,7 +169,9 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
                   prefixIcon: Icon(Icons.lock_outline),
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v != _passwordController.text ? 'Passwords do not match' : null,
+                validator: (v) => v != _passwordController.text
+                    ? 'Passwords do not match'
+                    : null,
               ),
               const SizedBox(height: 32),
               ElevatedButton(
@@ -165,9 +180,11 @@ class _CaregiverRegisterScreenState extends State<CaregiverRegisterScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: AppColors.lavender500,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: _isLoading 
+                child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text('Register', style: TextStyle(fontSize: 18)),
               ),

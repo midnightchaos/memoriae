@@ -26,17 +26,17 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
   late TextEditingController _tagController;
-  
+
   String _selectedMood = '😊';
   List<String> _tags = [];
   String? _imagePath;
   List<String> _imagesPaths = [];
   String? _audioPath;
-  
+
   final ImagePicker _imagePicker = ImagePicker();
   final AudioRecorder _audioRecorder = AudioRecorder();
   final AudioPlayer _audioPlayer = AudioPlayer();
-  
+
   bool _isRecording = false;
   bool _isPlayingAudio = false;
   Duration _audioDuration = Duration.zero;
@@ -48,14 +48,16 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.entry?.title ?? '');
-    _contentController = TextEditingController(text: widget.entry?.content ?? '');
+    _contentController = TextEditingController(
+      text: widget.entry?.content ?? '',
+    );
     _tagController = TextEditingController();
     _selectedMood = widget.entry?.mood ?? '😊';
     _tags = List.from(widget.entry?.tags ?? []);
     _imagePath = widget.entry?.imagePath;
     _imagesPaths = List.from(widget.entry?.imagesPaths ?? []);
     _audioPath = widget.entry?.audioPath;
-    
+
     _setupAudioPlayer();
 
     // Record interaction on screen open
@@ -63,8 +65,12 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   }
 
   void _setupAudioPlayer() {
-    _audioPlayer.onDurationChanged.listen((d) => setState(() => _audioDuration = d));
-    _audioPlayer.onPositionChanged.listen((p) => setState(() => _audioPosition = p));
+    _audioPlayer.onDurationChanged.listen(
+      (d) => setState(() => _audioDuration = d),
+    );
+    _audioPlayer.onPositionChanged.listen(
+      (p) => setState(() => _audioPosition = p),
+    );
     _audioPlayer.onPlayerComplete.listen((_) {
       setState(() {
         _isPlayingAudio = false;
@@ -91,7 +97,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         return;
       }
 
-      final List<XFile> images = await _imagePicker.pickMultiImage(imageQuality: 80);
+      final List<XFile> images = await _imagePicker.pickMultiImage(
+        imageQuality: 80,
+      );
       if (images.isEmpty) return;
 
       final directory = await getApplicationDocumentsDirectory();
@@ -99,7 +107,8 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
       await imagesDir.create(recursive: true);
 
       for (var img in images) {
-        final fileName = 'img_${DateTime.now().millisecondsSinceEpoch}_${_imagesPaths.length}.jpg';
+        final fileName =
+            'img_${DateTime.now().millisecondsSinceEpoch}_${_imagesPaths.length}.jpg';
         final targetPath = '${imagesDir.path}/$fileName';
         await File(img.path).copy(targetPath);
         _imagesPaths.add(targetPath);
@@ -120,7 +129,10 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         return;
       }
 
-      final XFile? image = await _imagePicker.pickImage(source: ImageSource.camera, imageQuality: 80);
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+      );
       if (image == null) return;
 
       final directory = await getApplicationDocumentsDirectory();
@@ -151,7 +163,8 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
       }
 
       final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/temp_rec_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      final tempPath =
+          '${tempDir.path}/temp_rec_${DateTime.now().millisecondsSinceEpoch}.m4a';
       await _audioRecorder.start(const RecordConfig(), path: tempPath);
       setState(() => _isRecording = true);
       _showSuccess('🎤 Recording...');
@@ -204,19 +217,31 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
 
   Future<void> _deleteAudio() async {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text('Delete Recording?', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
-        content: Text('Permanently delete this voice recording?', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+        title: Text(
+          'Delete Recording?',
+          style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+        ),
+        content: Text(
+          'Permanently delete this voice recording?',
+          style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -287,11 +312,17 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   }
 
   void _showError(String msg) {
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.coral400));
+    if (mounted)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: AppColors.coral400),
+      );
   }
 
   void _showSuccess(String msg) {
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.emerald500));
+    if (mounted)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: AppColors.emerald500),
+      );
   }
 
   void _showPermissionError(String msg) {
@@ -300,7 +331,11 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         SnackBar(
           content: Text('❌ $msg'),
           backgroundColor: Colors.red,
-          action: SnackBarAction(label: 'Settings', textColor: Colors.white, onPressed: () => openAppSettings()),
+          action: SnackBarAction(
+            label: 'Settings',
+            textColor: Colors.white,
+            onPressed: () => openAppSettings(),
+          ),
         ),
       );
     }
@@ -317,20 +352,27 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
     final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = theme.brightness == Brightness.dark;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.entry == null ? 'New Entry' : 'Edit Entry'),
-        actions: [IconButton(icon: const Icon(Icons.check), onPressed: _saveEntry)],
+        actions: [
+          IconButton(icon: const Icon(Icons.check), onPressed: _saveEntry),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark ? [AppColors.slate900, AppColors.slate800] : [AppColors.lavender50, AppColors.blue50],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [AppColors.slate900, AppColors.slate800]
+                      : [AppColors.lavender50, AppColors.blue50],
+                ),
           color: isBlackMinimalism ? Colors.black : null,
         ),
         child: ListView(
@@ -358,7 +400,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   Widget _buildMoodSelector(bool isDark, bool isBlackMinimalism) {
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -386,15 +430,21 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                      ? (isBlackMinimalism ? Colors.white24 : AppColors.lavender100)
-                      : (isBlackMinimalism ? Colors.white10 : AppColors.slate50),
+                    color: isSelected
+                        ? (isBlackMinimalism
+                              ? Colors.white24
+                              : AppColors.lavender100)
+                        : (isBlackMinimalism
+                              ? Colors.white10
+                              : AppColors.slate50),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isSelected 
-                        ? (isBlackMinimalism ? Colors.white70 : AppColors.lavender500)
-                        : Colors.transparent, 
-                      width: 2
+                      color: isSelected
+                          ? (isBlackMinimalism
+                                ? Colors.white70
+                                : AppColors.lavender500)
+                          : Colors.transparent,
+                      width: 2,
                     ),
                   ),
                   child: Text(mood, style: const TextStyle(fontSize: 32)),
@@ -410,7 +460,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   Widget _buildTitleField(bool isDark, bool isBlackMinimalism) {
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -419,9 +471,13 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         controller: _titleController,
         decoration: InputDecoration(
           labelText: 'Title',
-          labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+          labelStyle: TextStyle(
+            color: isBlackMinimalism ? Colors.white70 : null,
+          ),
           hintText: 'Give your memory a title...',
-          hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white24 : null),
+          hintStyle: TextStyle(
+            color: isBlackMinimalism ? Colors.white24 : null,
+          ),
           border: InputBorder.none,
         ),
         style: TextStyle(
@@ -436,7 +492,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   Widget _buildContentField(bool isDark, bool isBlackMinimalism) {
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -445,13 +503,20 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         controller: _contentController,
         decoration: InputDecoration(
           labelText: 'What happened today?',
-          labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+          labelStyle: TextStyle(
+            color: isBlackMinimalism ? Colors.white70 : null,
+          ),
           hintText: 'Write your thoughts...',
-          hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white24 : null),
+          hintStyle: TextStyle(
+            color: isBlackMinimalism ? Colors.white24 : null,
+          ),
           border: InputBorder.none,
         ),
         maxLines: 10,
-        style: TextStyle(fontSize: 16, color: isBlackMinimalism ? Colors.white : null),
+        style: TextStyle(
+          fontSize: 16,
+          color: isBlackMinimalism ? Colors.white : null,
+        ),
       ),
     );
   }
@@ -461,7 +526,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -471,7 +538,10 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         children: [
           Row(
             children: [
-              Icon(Icons.photo_library, color: isBlackMinimalism ? Colors.white70 : AppColors.blue500),
+              Icon(
+                Icons.photo_library,
+                color: isBlackMinimalism ? Colors.white70 : AppColors.blue500,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Photos (${_imagesPaths.length})',
@@ -499,16 +569,27 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.file(File(_imagesPaths[index]), fit: BoxFit.cover),
+                    child: Image.file(
+                      File(_imagesPaths[index]),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Positioned(
                     top: 4,
                     right: 4,
                     child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white, size: 18),
-                        style: IconButton.styleFrom(backgroundColor: Colors.black54, padding: EdgeInsets.zero, minimumSize: const Size(28, 28)),
-                        onPressed: () => _removeImageAtIndex(index),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 18,
                       ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.black54,
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(28, 28),
+                      ),
+                      onPressed: () => _removeImageAtIndex(index),
+                    ),
                   ),
                 ],
               );
@@ -524,7 +605,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -534,7 +617,10 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         children: [
           Row(
             children: [
-              Icon(Icons.mic, color: isBlackMinimalism ? Colors.white70 : AppColors.coral400),
+              Icon(
+                Icons.mic,
+                color: isBlackMinimalism ? Colors.white70 : AppColors.coral400,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Voice Recording',
@@ -545,14 +631,26 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                 ),
               ),
               const Spacer(),
-              IconButton(icon: Icon(Icons.delete_outline, color: isBlackMinimalism ? Colors.white70 : AppColors.coral400), onPressed: _deleteAudio),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: isBlackMinimalism
+                      ? Colors.white70
+                      : AppColors.coral400,
+                ),
+                onPressed: _deleteAudio,
+              ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
               IconButton(
-                icon: Icon(_isPlayingAudio ? Icons.pause_circle : Icons.play_circle, size: 48, color: isBlackMinimalism ? Colors.white : AppColors.coral400),
+                icon: Icon(
+                  _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
+                  size: 48,
+                  color: isBlackMinimalism ? Colors.white : AppColors.coral400,
+                ),
                 onPressed: _playPauseAudio,
               ),
               Expanded(
@@ -560,15 +658,25 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                   children: [
                     SliderTheme(
                       data: SliderThemeData(
-                        activeTrackColor: isBlackMinimalism ? Colors.white : AppColors.coral400,
-                        inactiveTrackColor: isBlackMinimalism ? Colors.white24 : AppColors.coral100,
-                        thumbColor: isBlackMinimalism ? Colors.white : AppColors.coral400,
+                        activeTrackColor: isBlackMinimalism
+                            ? Colors.white
+                            : AppColors.coral400,
+                        inactiveTrackColor: isBlackMinimalism
+                            ? Colors.white24
+                            : AppColors.coral100,
+                        thumbColor: isBlackMinimalism
+                            ? Colors.white
+                            : AppColors.coral400,
                         trackHeight: 2,
                       ),
                       child: Slider(
                         value: _audioPosition.inSeconds.toDouble(),
-                        max: _audioDuration.inSeconds > 0 ? _audioDuration.inSeconds.toDouble() : 100,
-                        onChanged: (v) async => await _audioPlayer.seek(Duration(seconds: v.toInt())),
+                        max: _audioDuration.inSeconds > 0
+                            ? _audioDuration.inSeconds.toDouble()
+                            : 100,
+                        onChanged: (v) async => await _audioPlayer.seek(
+                          Duration(seconds: v.toInt()),
+                        ),
                       ),
                     ),
                     Padding(
@@ -576,8 +684,24 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(_formatDuration(_audioPosition), style: TextStyle(fontSize: 12, color: isBlackMinimalism ? Colors.white60 : AppColors.slate600)),
-                          Text(_formatDuration(_audioDuration), style: TextStyle(fontSize: 12, color: isBlackMinimalism ? Colors.white60 : AppColors.slate600)),
+                          Text(
+                            _formatDuration(_audioPosition),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isBlackMinimalism
+                                  ? Colors.white60
+                                  : AppColors.slate600,
+                            ),
+                          ),
+                          Text(
+                            _formatDuration(_audioDuration),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isBlackMinimalism
+                                  ? Colors.white60
+                                  : AppColors.slate600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -594,7 +718,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   Widget _buildTagsSection(bool isDark, bool isBlackMinimalism) {
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -617,13 +743,24 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
                 child: TextField(
                   controller: _tagController,
                   decoration: InputDecoration(
-                    hintText: 'Add a tag...', 
-                    border: const OutlineInputBorder(), 
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+                    hintText: 'Add a tag...',
+                    border: const OutlineInputBorder(),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    hintStyle: TextStyle(
+                      color: isBlackMinimalism ? Colors.white38 : null,
+                    ),
                   ),
-                  style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+                  style: TextStyle(
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
                   onSubmitted: (_) => _addTag(),
                 ),
               ),
@@ -631,9 +768,13 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
               ElevatedButton(
                 onPressed: _addTag,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isBlackMinimalism ? Colors.white24 : AppColors.lavender500, 
-                  foregroundColor: Colors.white, 
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                  backgroundColor: isBlackMinimalism
+                      ? Colors.white24
+                      : AppColors.lavender500,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: const Text('Add'),
               ),
@@ -644,12 +785,18 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _tags.map((tag) => Chip(
-                label: Text(tag), 
-                deleteIcon: const Icon(Icons.close, size: 18), 
-                onDeleted: () => _removeTag(tag), 
-                backgroundColor: isBlackMinimalism ? Colors.white12 : AppColors.mint100
-              )).toList(),
+              children: _tags
+                  .map(
+                    (tag) => Chip(
+                      label: Text(tag),
+                      deleteIcon: const Icon(Icons.close, size: 18),
+                      onDeleted: () => _removeTag(tag),
+                      backgroundColor: isBlackMinimalism
+                          ? Colors.white12
+                          : AppColors.mint100,
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ],
@@ -666,10 +813,14 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
             icon: const Icon(Icons.photo_library),
             label: const Text('Add Photos'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white24 : AppColors.blue400, 
-              foregroundColor: Colors.white, 
-              padding: const EdgeInsets.all(16), 
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white24
+                  : AppColors.blue400,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
         ),
@@ -677,10 +828,14 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         ElevatedButton(
           onPressed: _takePhoto,
           style: ElevatedButton.styleFrom(
-            backgroundColor: isBlackMinimalism ? Colors.white24 : AppColors.emerald400, 
-            foregroundColor: Colors.white, 
-            padding: const EdgeInsets.all(16), 
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))
+            backgroundColor: isBlackMinimalism
+                ? Colors.white24
+                : AppColors.emerald400,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
           child: const Icon(Icons.camera_alt, size: 28),
         ),
@@ -688,12 +843,16 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
         ElevatedButton(
           onPressed: _isRecording ? _stopRecording : _startRecording,
           style: ElevatedButton.styleFrom(
-            backgroundColor: _isRecording 
-              ? AppColors.coral400 
-              : (isBlackMinimalism ? Colors.white : AppColors.purple400), 
-            foregroundColor: _isRecording || !isBlackMinimalism ? Colors.white : Colors.black, 
-            padding: const EdgeInsets.all(16), 
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))
+            backgroundColor: _isRecording
+                ? AppColors.coral400
+                : (isBlackMinimalism ? Colors.white : AppColors.purple400),
+            foregroundColor: _isRecording || !isBlackMinimalism
+                ? Colors.white
+                : Colors.black,
+            padding: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
           child: Icon(_isRecording ? Icons.stop : Icons.mic, size: 28),
         ),

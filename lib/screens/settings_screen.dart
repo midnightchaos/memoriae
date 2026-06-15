@@ -55,7 +55,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -66,9 +69,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     'Settings',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: pageStyle.sectionHeaderColor,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: pageStyle.sectionHeaderColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   const SizedBox(width: 48),
@@ -79,10 +82,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // Content
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.xl),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.xl,
+                ),
                 children: [
                   // Caregiver Section
-                  const SectionHeader(title: 'Caregiver & Monitoring', icon: Icons.family_restroom_rounded),
+                  const SectionHeader(
+                    title: 'Caregiver & Monitoring',
+                    icon: Icons.family_restroom_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'Caregiver Portal',
@@ -90,13 +101,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     icon: Icons.hub_rounded,
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const CaregiverRegisterScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const CaregiverRegisterScreen(),
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: pageStyle.iconBackgroundColor.withOpacity(0.5),
                         borderRadius: AppRadius.sm,
@@ -104,28 +120,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text(
                         'Your Patient ID: $patientId',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: pageStyle.subtitleColor,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
-                            ),
+                          color: pageStyle.subtitleColor,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
 
                   // Demo Section
-                  const SectionHeader(title: 'Demo Mode', icon: Icons.developer_mode_rounded),
+                  const SectionHeader(
+                    title: 'Demo Mode',
+                    icon: Icons.developer_mode_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'Switch Role',
-                    subtitle: 'Toggle to ${AuthService.instance.currentRole == UserRole.patient ? 'Caregiver' : 'Patient'} View',
+                    subtitle:
+                        'Toggle to ${AuthService.instance.currentRole == UserRole.patient ? 'Caregiver' : 'Patient'} View',
                     icon: Icons.swap_horizontal_circle_rounded,
                     onTap: _handleRoleSwitch,
                   ),
                   const SizedBox(height: AppSpacing.xl),
 
                   // Test Notifications Section
-                  const SectionHeader(title: 'Test Notifications', icon: Icons.notifications_active_rounded),
+                  const SectionHeader(
+                    title: 'Test Notifications',
+                    icon: Icons.notifications_active_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'Medication Reminder',
@@ -164,7 +187,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppSpacing.xl),
 
                   // Appearance Section
-                  const SectionHeader(title: 'Appearance', icon: Icons.palette_rounded),
+                  const SectionHeader(
+                    title: 'Appearance',
+                    icon: Icons.palette_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'App Theme',
@@ -189,7 +215,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppSpacing.xl),
 
                   // Notifications Logic Section
-                  const SectionHeader(title: 'Preferences', icon: Icons.settings_suggest_rounded),
+                  const SectionHeader(
+                    title: 'Preferences',
+                    icon: Icons.settings_suggest_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildSwitchTile(
                     title: 'Master Notifications',
@@ -214,12 +243,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     icon: Icons.event_repeat_rounded,
                     value: _dailyRoutineReminders,
                     enabled: _notificationsEnabled,
-                    onChanged: (v) => setState(() => _dailyRoutineReminders = v),
+                    onChanged: (v) =>
+                        setState(() => _dailyRoutineReminders = v),
                   ),
                   const SizedBox(height: AppSpacing.xl),
 
                   // Security Section
-                  const SectionHeader(title: 'Security', icon: Icons.security_rounded),
+                  const SectionHeader(
+                    title: 'Security',
+                    icon: Icons.security_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildSwitchTile(
                     title: 'Biometrics',
@@ -238,17 +271,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppSpacing.xl),
 
                   // Data Section
-                  const SectionHeader(title: 'Data & Backup', icon: Icons.storage_rounded),
+                  const SectionHeader(
+                    title: 'Data & Backup',
+                    icon: Icons.storage_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
-                  _buildActionTile(title: 'Cloud Backup', subtitle: 'Sync to server', icon: Icons.cloud_upload_rounded, onTap: () {}),
+                  _buildActionTile(
+                    title: 'Cloud Backup',
+                    subtitle: 'Sync to server',
+                    icon: Icons.cloud_upload_rounded,
+                    onTap: () {},
+                  ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildActionTile(title: 'Export JSON', subtitle: 'Download data', icon: Icons.download_rounded, onTap: _exportData),
+                  _buildActionTile(
+                    title: 'Export JSON',
+                    subtitle: 'Download data',
+                    icon: Icons.download_rounded,
+                    onTap: _exportData,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildActionTile(title: 'Clear Cache', subtitle: 'Free up space', icon: Icons.delete_sweep_rounded, onTap: () {}, isDestructive: true),
+                  _buildActionTile(
+                    title: 'Clear Cache',
+                    subtitle: 'Free up space',
+                    icon: Icons.delete_sweep_rounded,
+                    onTap: () {},
+                    isDestructive: true,
+                  ),
                   const SizedBox(height: AppSpacing.xl),
 
                   // API Section
-                  const SectionHeader(title: 'Menta AI', icon: Icons.auto_awesome_rounded),
+                  const SectionHeader(
+                    title: 'Menta AI',
+                    icon: Icons.auto_awesome_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'Gemini API Key',
@@ -259,16 +314,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: AppSpacing.xl),
 
                   // About Section
-                  const SectionHeader(title: 'Information', icon: Icons.info_rounded),
+                  const SectionHeader(
+                    title: 'Information',
+                    icon: Icons.info_rounded,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   _buildActionTile(
                     title: 'About Memoriae',
                     subtitle: 'Our mission & team',
                     icon: Icons.favorite_rounded,
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AboutScreen()),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildActionTile(title: 'Privacy Policy', subtitle: 'Terms & usage', icon: Icons.privacy_tip_rounded, onTap: () {}),
+                  _buildActionTile(
+                    title: 'Privacy Policy',
+                    subtitle: 'Terms & usage',
+                    icon: Icons.privacy_tip_rounded,
+                    onTap: () {},
+                  ),
                   const SizedBox(height: AppSpacing.xl),
 
                   // Logout
@@ -279,7 +345,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onTap: () async {
                       await AuthService.instance.logout();
                       if (mounted) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/',
+                          (route) => false,
+                        );
                       }
                     },
                     isDestructive: true,
@@ -305,20 +375,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassCard(
       onTap: onTap,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 12,
+      ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: isDestructive 
-                  ? AppColors.coral500.withOpacity(0.1) 
+              color: isDestructive
+                  ? AppColors.coral500.withOpacity(0.1)
                   : pageStyle.iconBackgroundColor,
               borderRadius: AppRadius.md,
             ),
             child: Icon(
               icon,
-              color: isDestructive ? AppColors.coral500 : pageStyle.iconAccentColor,
+              color: isDestructive
+                  ? AppColors.coral500
+                  : pageStyle.iconAccentColor,
               size: 22,
             ),
           ),
@@ -330,15 +405,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDestructive ? AppColors.coral500 : pageStyle.sectionHeaderColor,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: isDestructive
+                        ? AppColors.coral500
+                        : pageStyle.sectionHeaderColor,
+                  ),
                 ),
                 Text(
                   subtitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: pageStyle.subtitleColor,
-                      ),
+                    color: pageStyle.subtitleColor,
+                  ),
                 ),
               ],
             ),
@@ -364,7 +441,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final pageStyle = Theme.of(context).extension<AppPageStyle>()!;
 
     return GlassCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 8,
+      ),
       child: Opacity(
         opacity: enabled ? 1.0 : 0.5,
         child: Row(
@@ -375,11 +455,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: pageStyle.iconBackgroundColor,
                 borderRadius: AppRadius.md,
               ),
-              child: Icon(
-                icon,
-                color: pageStyle.iconAccentColor,
-                size: 22,
-              ),
+              child: Icon(icon, color: pageStyle.iconAccentColor, size: 22),
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
@@ -389,15 +465,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: pageStyle.sectionHeaderColor,
-                        ),
+                      fontWeight: FontWeight.w600,
+                      color: pageStyle.sectionHeaderColor,
+                    ),
                   ),
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: pageStyle.subtitleColor,
-                        ),
+                      color: pageStyle.subtitleColor,
+                    ),
                   ),
                 ],
               ),
@@ -417,12 +493,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _handleRoleSwitch() async {
     final auth = AuthService.instance;
-    final newRole = auth.currentRole == UserRole.patient ? UserRole.caregiver : UserRole.patient;
+    final newRole = auth.currentRole == UserRole.patient
+        ? UserRole.caregiver
+        : UserRole.patient;
     await auth.switchRole(newRole);
     if (mounted) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => newRole == UserRole.patient ? const MainNavigationScreen() : const CaregiverDashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => newRole == UserRole.patient
+              ? const MainNavigationScreen()
+              : const CaregiverDashboardScreen(),
+        ),
         (route) => false,
       );
     }
@@ -430,7 +512,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String _geminiKeyStatus() {
     final key = _geminiService.apiKey;
-    return (key != null && key.isNotEmpty) ? 'Key Configured ✓' : 'Tap to set API Key';
+    return (key != null && key.isNotEmpty)
+        ? 'Key Configured ✓'
+        : 'Tap to set API Key';
   }
 
   String _getTextSizeLabel() {
@@ -441,9 +525,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String _getThemeLabel(AppThemeMode mode) {
     switch (mode) {
-      case AppThemeMode.light: return 'Light Calm';
-      case AppThemeMode.dark: return 'Deep Slate';
-      case AppThemeMode.blackMinimalism: return 'Black Minimalism';
+      case AppThemeMode.light:
+        return 'Light Calm';
+      case AppThemeMode.dark:
+        return 'Deep Slate';
+      case AppThemeMode.blackMinimalism:
+        return 'Black Minimalism';
     }
   }
 
@@ -462,22 +549,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SectionHeader(title: 'Choose Theme', icon: Icons.palette_rounded),
+            const SectionHeader(
+              title: 'Choose Theme',
+              icon: Icons.palette_rounded,
+            ),
             const SizedBox(height: AppSpacing.md),
-            ...AppThemeMode.values.map((mode) => ListTile(
-              title: Text(_getThemeLabel(mode)),
-              leading: Radio<AppThemeMode>(
-                value: mode,
-                groupValue: themeService.themeMode,
-                onChanged: (v) {
-                  if (v != null) {
-                    themeService.setTheme(v);
-                    Navigator.pop(context);
-                  }
-                },
+            ...AppThemeMode.values.map(
+              (mode) => ListTile(
+                title: Text(_getThemeLabel(mode)),
+                leading: Radio<AppThemeMode>(
+                  value: mode,
+                  groupValue: themeService.themeMode,
+                  onChanged: (v) {
+                    if (v != null) {
+                      themeService.setTheme(v);
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                onTap: () => themeService.setTheme(mode),
               ),
-              onTap: () => themeService.setTheme(mode),
-            )),
+            ),
           ],
         ),
       ),
@@ -494,10 +586,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           builder: (context, setDialogState) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Sample Text Appearance', style: TextStyle(fontSize: 16 * _textSize)),
+              Text(
+                'Sample Text Appearance',
+                style: TextStyle(fontSize: 16 * _textSize),
+              ),
               Slider(
                 value: _textSize,
-                min: 0.8, max: 1.4, divisions: 6,
+                min: 0.8,
+                max: 1.4,
+                divisions: 6,
                 activeColor: AppColors.lavender500,
                 onChanged: (v) {
                   setDialogState(() => _textSize = v);
@@ -507,7 +604,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Done'))],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Done'),
+          ),
+        ],
       ),
     );
   }
@@ -521,13 +623,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Language'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: langs.map((l) => ListTile(
-            title: Text(l),
-            onTap: () {
-              setState(() => _selectedLanguage = l);
-              Navigator.pop(context);
-            },
-          )).toList(),
+          children: langs
+              .map(
+                (l) => ListTile(
+                  title: Text(l),
+                  onTap: () {
+                    setState(() => _selectedLanguage = l);
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+              .toList(),
         ),
       ),
     );
@@ -544,7 +650,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           decoration: const InputDecoration(hintText: 'Enter API Key'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               _geminiService.setApiKey(controller.text);
@@ -566,13 +675,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(decoration: InputDecoration(labelText: 'Old PIN'), obscureText: true),
-            TextField(decoration: InputDecoration(labelText: 'New PIN'), obscureText: true),
+            TextField(
+              decoration: InputDecoration(labelText: 'Old PIN'),
+              obscureText: true,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'New PIN'),
+              obscureText: true,
+            ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Update')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Update'),
+          ),
         ],
       ),
     );
@@ -607,7 +728,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showCustomNotificationDialog() {
     final titleController = TextEditingController(text: 'Test Notification');
-    final bodyController = TextEditingController(text: 'This is a test notification body.');
+    final bodyController = TextEditingController(
+      text: 'This is a test notification body.',
+    );
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -615,12 +738,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: bodyController, decoration: const InputDecoration(labelText: 'Body')),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            TextField(
+              controller: bodyController,
+              decoration: const InputDecoration(labelText: 'Body'),
+            ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               final profileService = context.read<ProfileService>();
@@ -640,23 +772,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _showPendingNotifications() async {
-    final notifications = await MedicationNotificationService.instance.getPendingNotifications();
+    final notifications = await MedicationNotificationService.instance
+        .getPendingNotifications();
     if (!mounted) return;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Pending Notifications'),
-        content: notifications.isEmpty 
-            ? const Text('No pending notifications.') 
+        content: notifications.isEmpty
+            ? const Text('No pending notifications.')
             : SizedBox(
                 width: double.maxFinite,
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: notifications.length,
-                  itemBuilder: (context, index) => ListTile(title: Text(notifications[index].title ?? 'No Title')),
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(notifications[index].title ?? 'No Title'),
+                  ),
                 ),
               ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }

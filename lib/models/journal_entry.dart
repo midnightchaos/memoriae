@@ -42,7 +42,8 @@ class JournalEntry {
       content: json['content'] as String,
       date: DateTime.parse(json['date'] as String),
       imagePath: json['imagePath'] as String?,
-      imagesPaths: (json['imagesPaths'] as List<dynamic>?)?.cast<String>() ?? [],
+      imagesPaths:
+          (json['imagesPaths'] as List<dynamic>?)?.cast<String>() ?? [],
       audioPath: json['audioPath'] as String?,
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
       mood: json['mood'] as String? ?? '😊',

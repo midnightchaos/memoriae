@@ -7,43 +7,43 @@ import 'package:path_provider/path_provider.dart';
 class DatabaseMigrator {
   static const _oldDbName = 'memoriae.db';
   static const _newDbName = 'memoriae_encrypted.db';
-  
+
   // Check if we need to migrate from unencrypted to encrypted database
   static Future<bool> needsMigration() async {
     final dbPath = await getDatabasesPath();
     final oldDbPath = join(dbPath, _oldDbName);
     final newDbPath = join(dbPath, _newDbName);
-    
+
     return await File(oldDbPath).exists() && !await File(newDbPath).exists();
   }
-  
+
   // Migrate data from old unencrypted DB to new encrypted DB
   static Future<void> migrate() async {
     if (!await needsMigration()) return;
-    
+
     final dbPath = await getDatabasesPath();
     final oldDbPath = join(dbPath, _oldDbName);
-    
+
     // Open the old database
     final oldDb = await openDatabase(oldDbPath);
-    
+
     try {
       // Read all data from the old database
       final users = await oldDb.query('users');
       final journalEntries = await oldDb.query('journal_entries');
       // Add other tables as needed
-      
+
       // Close the old database
       await oldDb.close();
-      
+
       // Create new encrypted database
       final storage = FlutterSecureStorage();
       String? key = await storage.read(key: 'db_encryption_key');
-      
+
       if (key == null) {
         throw Exception('Encryption key not found');
       }
-      
+
       final newDb = await openDatabase(
         join(dbPath, _newDbName),
         password: key,
@@ -54,40 +54,40 @@ class DatabaseMigrator {
           await _createDatabaseSchema(db);
         },
       );
-      
+
       // Start a transaction
       await newDb.transaction((txn) async {
         // Insert users
         for (var user in users) {
           await txn.insert('users', user);
         }
-        
+
         // Insert journal entries
         for (var entry in journalEntries) {
           await txn.insert('journal_entries', entry);
         }
-        
+
         // Add other tables as needed
       });
-      
+
       // Close the new database
       await newDb.close();
-      
+
       // Optional: Backup the old database before deleting
       final appDocDir = await getApplicationDocumentsDirectory();
-      final backupPath = '${appDocDir.path}/backup_${DateTime.now().millisecondsSinceEpoch}.db';
+      final backupPath =
+          '${appDocDir.path}/backup_${DateTime.now().millisecondsSinceEpoch}.db';
       await File(oldDbPath).copy(backupPath);
-      
+
       // Delete the old database
       await deleteDatabase(oldDbPath);
-      
     } catch (e) {
       // If anything goes wrong, close the databases and rethrow
       await oldDb.close();
       rethrow;
     }
   }
-  
+
   // Create the database schema (same as in DatabaseHelper)
   static Future<void> _createDatabaseSchema(Database db) async {
     const idType = 'TEXT PRIMARY KEY';
@@ -137,7 +137,7 @@ class DatabaseMigrator {
 
     // Create index for faster queries
     await db.execute('CREATE INDEX idx_date ON journal_entries(date)');
-    
+
     // Add other tables as needed (familiar_faces, medications, etc.)
   }
 }

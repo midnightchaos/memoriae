@@ -6,34 +6,43 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/daily_routine.dart';
 
 class DailyRoutineNotificationService {
-  static DailyRoutineNotificationService _instance = DailyRoutineNotificationService._internal();
+  static DailyRoutineNotificationService _instance =
+      DailyRoutineNotificationService._internal();
   static DailyRoutineNotificationService get instance => _instance;
 
   @visibleForTesting
-  static set instance(DailyRoutineNotificationService service) => _instance = service;
+  static set instance(DailyRoutineNotificationService service) =>
+      _instance = service;
 
   final FlutterLocalNotificationsPlugin _notifications;
   bool _initialized = false;
 
-  DailyRoutineNotificationService._internal() : _notifications = FlutterLocalNotificationsPlugin();
+  DailyRoutineNotificationService._internal()
+    : _notifications = FlutterLocalNotificationsPlugin();
 
   @visibleForTesting
-  DailyRoutineNotificationService.test(this._notifications, {bool initialized = true}) : _initialized = initialized;
+  DailyRoutineNotificationService.test(
+    this._notifications, {
+    bool initialized = true,
+  }) : _initialized = initialized;
 
   Future<void> initialize() async {
     if (_initialized) return;
 
     tz.initializeTimeZones();
-    
+
     // Use device timezone or fallback to Asia/Kolkata
     try {
-      final String timeZoneName = (await FlutterTimezone.getLocalTimezone()).identifier;
+      final String timeZoneName =
+          (await FlutterTimezone.getLocalTimezone()).identifier;
       tz.setLocalLocation(tz.getLocation(timeZoneName));
     } catch (e) {
       tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
     }
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -75,7 +84,7 @@ class DailyRoutineNotificationService {
     // Schedule for each selected day
     for (final day in routine.days) {
       final now = tz.TZDateTime.now(tz.local);
-      
+
       // Calculate the next occurrence of this day
       var scheduledDate = tz.TZDateTime(
         tz.local,
@@ -91,7 +100,7 @@ class DailyRoutineNotificationService {
       if (daysUntilTarget == 0 && scheduledDate.isBefore(now)) {
         daysUntilTarget = 7; // Schedule for next week if time has passed today
       }
-      
+
       scheduledDate = scheduledDate.add(Duration(days: daysUntilTarget));
 
       final androidDetails = AndroidNotificationDetails(
@@ -132,7 +141,9 @@ class DailyRoutineNotificationService {
       await _notifications.zonedSchedule(
         notificationId,
         '📅 ${routine.title}',
-        routine.description.isNotEmpty ? routine.description : 'Time for your routine',
+        routine.description.isNotEmpty
+            ? routine.description
+            : 'Time for your routine',
         scheduledDate,
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -142,7 +153,9 @@ class DailyRoutineNotificationService {
         payload: 'routine_${routine.id}',
       );
 
-      print('✅ Routine reminder scheduled for ${routine.title} on day $day at ${routine.time}');
+      print(
+        '✅ Routine reminder scheduled for ${routine.title} on day $day at ${routine.time}',
+      );
     }
   }
 
@@ -168,32 +181,42 @@ class DailyRoutineNotificationService {
         await scheduleRoutineReminder(routine);
       }
     }
-    print('🔄 Rescheduled ${routines.where((r) => r.isActive).length} routines');
+    print(
+      '🔄 Rescheduled ${routines.where((r) => r.isActive).length} routines',
+    );
   }
 
   Future<bool> requestPermissions() async {
-    if (_notifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final androidImplementation = _notifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!;
-      
-      final granted = await androidImplementation.requestNotificationsPermission();
-      final exactAlarmGranted = await androidImplementation.requestExactAlarmsPermission();
-      
+            AndroidFlutterLocalNotificationsPlugin
+          >()!;
+
+      final granted = await androidImplementation
+          .requestNotificationsPermission();
+      final exactAlarmGranted = await androidImplementation
+          .requestExactAlarmsPermission();
+
       print('Notification permission: $granted');
       print('Exact alarm permission: $exactAlarmGranted');
-      
+
       return (granted ?? false) && (exactAlarmGranted ?? true);
     }
 
-    if (_notifications.resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final granted = await _notifications
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()!
+            IOSFlutterLocalNotificationsPlugin
+          >()!
           .requestPermissions(alert: true, badge: true, sound: true);
       return granted ?? false;
     }
@@ -249,12 +272,15 @@ class DailyRoutineNotificationService {
 
   // Check if notifications are enabled
   Future<bool> areNotificationsEnabled() async {
-    if (_notifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final bool? enabled = await _notifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!
+            AndroidFlutterLocalNotificationsPlugin
+          >()!
           .areNotificationsEnabled();
       return enabled ?? false;
     }
@@ -263,7 +289,16 @@ class DailyRoutineNotificationService {
 
   // Helper to get day name
   String getDayName(int day) {
-    const days = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const days = [
+      '',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
     return days[day];
   }
 }

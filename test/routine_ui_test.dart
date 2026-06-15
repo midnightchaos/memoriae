@@ -11,7 +11,9 @@ class MockThemeService extends Mock implements ThemeService {
 }
 
 void main() {
-  testWidgets('DailyRoutinesScreen show dialog test', (WidgetTester tester) async {
+  testWidgets('DailyRoutinesScreen show dialog test', (
+    WidgetTester tester,
+  ) async {
     final mockThemeService = MockThemeService();
 
     await tester.pumpWidget(
@@ -26,7 +28,7 @@ void main() {
     // This should fail if context.watch is used incorrectly in a method called on tap
     final fab = find.byType(FloatingActionButton);
     expect(fab, findsOneWidget);
-    
+
     await tester.tap(fab);
     await tester.pumpAndSettle();
 

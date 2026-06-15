@@ -32,7 +32,9 @@ class GameProgress {
       userId: map['userId'] as String,
       gameType: map['gameType'] as String,
       score: map['score'] as int,
-      completedAt: DateTime.fromMillisecondsSinceEpoch(map['completedAt'] as int),
+      completedAt: DateTime.fromMillisecondsSinceEpoch(
+        map['completedAt'] as int,
+      ),
       duration: map['duration'] as int,
     );
   }

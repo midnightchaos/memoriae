@@ -104,16 +104,10 @@ class _GlassCardState extends State<GlassCard>
               borderRadius: cardStyle.borderRadius,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: Padding(
-                  padding: widget.padding,
-                  child: widget.child,
-                ),
+                child: Padding(padding: widget.padding, child: widget.child),
               ),
             )
-          : Padding(
-              padding: widget.padding,
-              child: widget.child,
-            ),
+          : Padding(padding: widget.padding, child: widget.child),
     );
 
     if (widget.onTap != null || widget.onLongPress != null) {

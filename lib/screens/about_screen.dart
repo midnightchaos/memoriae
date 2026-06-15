@@ -10,7 +10,8 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final List<Map<String, String>> creators = [
@@ -18,35 +19,40 @@ class AboutScreen extends StatelessWidget {
         'name': 'Numbers',
         'role': 'Lead Developer & Project Manager',
         'image': 'assets/poi/numbers.jpg',
-        'bio': 'Visionary behind menta, passionate about creating accessible technology that makes a real difference in people\'s lives. Specializes in Flutter development and user experience design.',
+        'bio':
+            'Visionary behind menta, passionate about creating accessible technology that makes a real difference in people\'s lives. Specializes in Flutter development and user experience design.',
         'expertise': '🎯 Flutter • 🚀 Project Management • 💡 Innovation',
       },
       {
         'name': 'Suv',
         'role': 'Full Stack Developer',
         'image': 'assets/poi/suv.jpg',
-        'bio': 'Expert in building robust and scalable applications. Focused on creating seamless user experiences and efficient backend systems for menta.',
+        'bio':
+            'Expert in building robust and scalable applications. Focused on creating seamless user experiences and efficient backend systems for menta.',
         'expertise': '💻 Full Stack • 🔧 Backend • 📱 Mobile Dev',
       },
       {
         'name': 'Son',
         'role': 'UI/UX Designer',
         'image': 'assets/poi/son.jpg',
-        'bio': 'Crafts beautiful and accessible interfaces with empathy at the core. Ensures every interaction in menta is intuitive and delightful for users of all abilities.',
+        'bio':
+            'Crafts beautiful and accessible interfaces with empathy at the core. Ensures every interaction in menta is intuitive and delightful for users of all abilities.',
         'expertise': '🎨 UI Design • ✨ UX Research • 🌈 Accessibility',
       },
       {
         'name': 'Mal',
         'role': 'AI/ML Specialist',
         'image': 'assets/poi/mal.jpg',
-        'bio': 'Integrates cutting-edge AI features to enhance menta\'s cognitive support capabilities. Specializes in natural language processing and personalized assistance.',
+        'bio':
+            'Integrates cutting-edge AI features to enhance menta\'s cognitive support capabilities. Specializes in natural language processing and personalized assistance.',
         'expertise': '🤖 AI/ML • 🧠 NLP • 📊 Data Science',
       },
       {
         'name': 'Lak',
         'role': 'Quality Assurance & Testing',
         'image': 'assets/poi/lak.jpg',
-        'bio': 'Ensures menta works flawlessly for every user. Dedicated to delivering a bug-free, reliable experience through comprehensive testing and quality standards.',
+        'bio':
+            'Ensures menta works flawlessly for every user. Dedicated to delivering a bug-free, reliable experience through comprehensive testing and quality standards.',
         'expertise': '✅ QA Testing • 🔍 Bug Hunting • 📈 Performance',
       },
     ];
@@ -55,13 +61,23 @@ class AboutScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           color: isBlackMinimalism ? Colors.black : null,
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                : [AppColors.cream50, AppColors.lavender50, AppColors.mint50],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.cream50,
+                          AppColors.lavender50,
+                          AppColors.mint50,
+                        ],
+                ),
         ),
         child: SafeArea(
           child: Column(
@@ -72,7 +88,11 @@ class AboutScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back, size: 28, color: isBlackMinimalism ? Colors.white : null),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 28,
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     const Spacer(),
@@ -97,16 +117,22 @@ class AboutScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
-                        gradient: isBlackMinimalism ? null : LinearGradient(
-                          colors: [
-                            AppColors.lavender400.withOpacity(0.2),
-                            AppColors.teal400.withOpacity(0.2),
-                          ],
-                        ),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF1A1A1A)
+                            : null,
+                        gradient: isBlackMinimalism
+                            ? null
+                            : LinearGradient(
+                                colors: [
+                                  AppColors.lavender400.withOpacity(0.2),
+                                  AppColors.teal400.withOpacity(0.2),
+                                ],
+                              ),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: isBlackMinimalism ? Colors.white10 : AppColors.lavender400.withOpacity(0.3),
+                          color: isBlackMinimalism
+                              ? Colors.white10
+                              : AppColors.lavender400.withOpacity(0.3),
                           width: isBlackMinimalism ? 1 : 2,
                         ),
                       ),
@@ -118,7 +144,10 @@ class AboutScreen extends StatelessWidget {
                             height: 80,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [AppColors.lavender400, AppColors.teal400],
+                                colors: [
+                                  AppColors.lavender400,
+                                  AppColors.teal400,
+                                ],
                               ),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
@@ -159,7 +188,7 @@ class AboutScreen extends StatelessWidget {
                           Text(
                             'Empowering individuals with memory challenges through compassionate technology and innovative solutions.',
                             style: TextStyle(
-                              fontSize: 14, 
+                              fontSize: 14,
                               height: 1.5,
                               color: isBlackMinimalism ? Colors.white70 : null,
                             ),
@@ -191,7 +220,11 @@ class AboutScreen extends StatelessWidget {
                       'A passionate team dedicated to making a difference',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                        color: isBlackMinimalism
+                            ? Colors.white38
+                            : (isDark
+                                  ? AppColors.slate400
+                                  : AppColors.slate600),
                       ),
                     ),
 
@@ -219,16 +252,22 @@ class AboutScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF0A0A0A)
+                            : (isDark ? AppColors.slate800 : Colors.white),
                         borderRadius: BorderRadius.circular(20),
-                        border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-                        boxShadow: isBlackMinimalism ? null : [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                        border: isBlackMinimalism
+                            ? Border.all(color: Colors.white10)
+                            : null,
+                        boxShadow: isBlackMinimalism
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +281,9 @@ class AboutScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: isBlackMinimalism ? Colors.white : null,
+                                  color: isBlackMinimalism
+                                      ? Colors.white
+                                      : null,
                                 ),
                               ),
                             ],
@@ -251,7 +292,7 @@ class AboutScreen extends StatelessWidget {
                           Text(
                             'To create accessible, compassionate technology that empowers individuals facing memory challenges to live more independently, confidently, and joyfully.',
                             style: TextStyle(
-                              fontSize: 15, 
+                              fontSize: 15,
                               height: 1.6,
                               color: isBlackMinimalism ? Colors.white70 : null,
                             ),
@@ -266,16 +307,22 @@ class AboutScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF0A0A0A)
+                            : (isDark ? AppColors.slate800 : Colors.white),
                         borderRadius: BorderRadius.circular(20),
-                        border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-                        boxShadow: isBlackMinimalism ? null : [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                        border: isBlackMinimalism
+                            ? Border.all(color: Colors.white10)
+                            : null,
+                        boxShadow: isBlackMinimalism
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,17 +336,39 @@ class AboutScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: isBlackMinimalism ? Colors.white : null,
+                                  color: isBlackMinimalism
+                                      ? Colors.white
+                                      : null,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 16),
-                          _buildValueItem('Compassion', 'Every feature designed with empathy', isBlackMinimalism),
-                          _buildValueItem('Accessibility', 'Technology for everyone', isBlackMinimalism),
-                          _buildValueItem('Innovation', 'Pushing boundaries in cognitive support', isBlackMinimalism),
-                          _buildValueItem('Privacy', 'Your data, your control', isBlackMinimalism),
-                          _buildValueItem('Excellence', 'Committed to the highest quality', isBlackMinimalism),
+                          _buildValueItem(
+                            'Compassion',
+                            'Every feature designed with empathy',
+                            isBlackMinimalism,
+                          ),
+                          _buildValueItem(
+                            'Accessibility',
+                            'Technology for everyone',
+                            isBlackMinimalism,
+                          ),
+                          _buildValueItem(
+                            'Innovation',
+                            'Pushing boundaries in cognitive support',
+                            isBlackMinimalism,
+                          ),
+                          _buildValueItem(
+                            'Privacy',
+                            'Your data, your control',
+                            isBlackMinimalism,
+                          ),
+                          _buildValueItem(
+                            'Excellence',
+                            'Committed to the highest quality',
+                            isBlackMinimalism,
+                          ),
                         ],
                       ),
                     ),
@@ -310,16 +379,22 @@ class AboutScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
-                        gradient: isBlackMinimalism ? null : LinearGradient(
-                          colors: [
-                            AppColors.blue400.withOpacity(0.2),
-                            AppColors.lavender400.withOpacity(0.2),
-                          ],
-                        ),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF1A1A1A)
+                            : null,
+                        gradient: isBlackMinimalism
+                            ? null
+                            : LinearGradient(
+                                colors: [
+                                  AppColors.blue400.withOpacity(0.2),
+                                  AppColors.lavender400.withOpacity(0.2),
+                                ],
+                              ),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isBlackMinimalism ? Colors.white10 : AppColors.blue400.withOpacity(0.3),
+                          color: isBlackMinimalism
+                              ? Colors.white10
+                              : AppColors.blue400.withOpacity(0.3),
                           width: isBlackMinimalism ? 1 : 2,
                         ),
                       ),
@@ -424,16 +499,20 @@ class AboutScreen extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(24),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-        boxShadow: isBlackMinimalism ? null : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isBlackMinimalism
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 15,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         children: [
@@ -458,10 +537,7 @@ class AboutScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(colors: gradient),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 4,
-                      ),
+                      border: Border.all(color: Colors.white, width: 4),
                       boxShadow: [
                         BoxShadow(
                           color: gradient[0].withOpacity(0.4),
@@ -574,7 +650,11 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildValueItem(String title, String description, bool isBlackMinimalism) {
+  Widget _buildValueItem(
+    String title,
+    String description,
+    bool isBlackMinimalism,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -606,7 +686,9 @@ class AboutScreen extends StatelessWidget {
                   description,
                   style: TextStyle(
                     fontSize: 13,
-                    color: isBlackMinimalism ? Colors.white38 : AppColors.slate600,
+                    color: isBlackMinimalism
+                        ? Colors.white38
+                        : AppColors.slate600,
                   ),
                 ),
               ],
@@ -631,10 +713,7 @@ class AboutScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withOpacity(0.2),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.4),
-            width: 1.5,
-          ),
+          border: Border.all(color: color.withOpacity(0.4), width: 1.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -643,10 +722,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600, color: color),
             ),
           ],
         ),

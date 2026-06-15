@@ -16,7 +16,8 @@ class MemoryScreen extends StatefulWidget {
   State<MemoryScreen> createState() => _MemoryScreenState();
 }
 
-class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderStateMixin {
+class _MemoryScreenState extends State<MemoryScreen>
+    with SingleTickerProviderStateMixin {
   final JournalService _journalService = JournalService();
   List<JournalEntry> _entries = [];
   List<JournalEntry> _filteredEntries = [];
@@ -54,23 +55,27 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
 
   Future<void> _filterEntries() async {
     setState(() => _isLoading = true);
-    
+
     List<JournalEntry> filtered = _entries;
-    
+
     if (_searchQuery.isNotEmpty) {
       filtered = await _journalService.searchEntries(_searchQuery);
     }
-    
+
     if (_selectedMoodFilter != null) {
-      final moodFiltered = await _journalService.filterByMood(_selectedMoodFilter!);
+      final moodFiltered = await _journalService.filterByMood(
+        _selectedMoodFilter!,
+      );
       if (_searchQuery.isNotEmpty) {
         // If both filters are active, intersect the results
-        filtered = filtered.where((entry) => moodFiltered.any((m) => m.id == entry.id)).toList();
+        filtered = filtered
+            .where((entry) => moodFiltered.any((m) => m.id == entry.id))
+            .toList();
       } else {
         filtered = moodFiltered;
       }
     }
-    
+
     setState(() {
       _filteredEntries = filtered;
       _isLoading = false;
@@ -80,9 +85,7 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
   Future<void> _addEntry() async {
     final result = await Navigator.push<JournalEntry>(
       context,
-      MaterialPageRoute(
-        builder: (context) => const AddEditJournalScreenV2(),
-      ),
+      MaterialPageRoute(builder: (context) => const AddEditJournalScreenV2()),
     );
 
     if (result != null) {
@@ -123,19 +126,31 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
 
   Future<void> _deleteEntry(JournalEntry entry) async {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text('Delete Entry?', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
-        content: Text('This action cannot be undone.', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+        title: Text(
+          'Delete Entry?',
+          style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+        ),
+        content: Text(
+          'This action cannot be undone.',
+          style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -166,8 +181,9 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
   Future<void> _showStatistics() async {
     final stats = await _journalService.getStatistics();
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -178,13 +194,18 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isBlackMinimalism ? Colors.white12 : AppColors.lavender100,
+                color: isBlackMinimalism
+                    ? Colors.white12
+                    : AppColors.lavender100,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text('📊', style: TextStyle(fontSize: 24)),
             ),
             const SizedBox(width: 12),
-            Text('Your Statistics', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+            Text(
+              'Your Statistics',
+              style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+            ),
           ],
         ),
         content: Column(
@@ -200,14 +221,22 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
             _buildStatRow('Most Used Mood', stats['mostUsedMood']),
             const SizedBox(height: 12),
             if ((stats['topTags'] as List).isNotEmpty) ...[
-              Text('Top Tags:', style: TextStyle(fontWeight: FontWeight.bold, color: isBlackMinimalism ? Colors.white : null)),
+              Text(
+                'Top Tags:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isBlackMinimalism ? Colors.white : null,
+                ),
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 children: (stats['topTags'] as List<String>).map((tag) {
                   return Chip(
                     label: Text(tag),
-                    backgroundColor: isBlackMinimalism ? Colors.white12 : AppColors.lavender100,
+                    backgroundColor: isBlackMinimalism
+                        ? Colors.white12
+                        : AppColors.lavender100,
                   );
                 }).toList(),
               ),
@@ -218,10 +247,15 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white24 : AppColors.lavender500,
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white24
+                  : AppColors.lavender500,
               foregroundColor: Colors.white,
             ),
-            child: Text('Close', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+            child: Text(
+              'Close',
+              style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+            ),
           ),
         ],
       ),
@@ -230,12 +264,19 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
 
   Widget _buildStatRow(String label, String value) {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 16, color: isBlackMinimalism ? Colors.white70 : null)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            color: isBlackMinimalism ? Colors.white70 : null,
+          ),
+        ),
         Text(
           value,
           style: TextStyle(
@@ -253,18 +294,25 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
     final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = themeService.isDarkMode;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [AppColors.slate900, AppColors.slate800]
-                : [AppColors.lavender50, AppColors.blue50, AppColors.mint50],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [AppColors.slate900, AppColors.slate800]
+                      : [
+                          AppColors.lavender50,
+                          AppColors.blue50,
+                          AppColors.mint50,
+                        ],
+                ),
           color: isBlackMinimalism ? Colors.black : null,
         ),
         child: SafeArea(
@@ -275,15 +323,13 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const Text(
-                      '📔',
-                      style: TextStyle(fontSize: 32),
-                    ),
+                    const Text('📔', style: TextStyle(fontSize: 32)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Memory Journal',
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        style: Theme.of(context).textTheme.displaySmall
+                            ?.copyWith(
                               fontSize: 28,
                               fontWeight: FontWeight.w300,
                               color: isBlackMinimalism ? Colors.white : null,
@@ -307,16 +353,22 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isBlackMinimalism ? const Color(0xFF1A1A1A) : (isDark ? AppColors.slate800 : Colors.white),
+                    color: isBlackMinimalism
+                        ? const Color(0xFF1A1A1A)
+                        : (isDark ? AppColors.slate800 : Colors.white),
                     borderRadius: BorderRadius.circular(20),
-                    border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-                    boxShadow: isBlackMinimalism ? null : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    border: isBlackMinimalism
+                        ? Border.all(color: Colors.white10)
+                        : null,
+                    boxShadow: isBlackMinimalism
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                   ),
                   child: Row(
                     children: [
@@ -324,10 +376,18 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Search memories...',
-                            hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
-                            prefixIcon: Icon(Icons.search, color: isBlackMinimalism ? Colors.white70 : null),
+                            hintStyle: TextStyle(
+                              color: isBlackMinimalism ? Colors.white38 : null,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: isBlackMinimalism ? Colors.white70 : null,
+                            ),
                             border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
                           ),
                           onChanged: (value) {
                             setState(() => _searchQuery = value);
@@ -336,22 +396,49 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                         ),
                       ),
                       PopupMenuButton<String>(
-                        icon: Icon(Icons.filter_list, color: isBlackMinimalism ? Colors.white70 : null),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        color: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
+                        icon: Icon(
+                          Icons.filter_list,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF1A1A1A)
+                            : null,
                         onSelected: (mood) {
                           setState(() {
-                            _selectedMoodFilter = _selectedMoodFilter == mood ? null : mood;
+                            _selectedMoodFilter = _selectedMoodFilter == mood
+                                ? null
+                                : mood;
                           });
                           _filterEntries();
                         },
                         itemBuilder: (context) => [
-                          const PopupMenuItem(value: '😊', child: Text('😊 Happy')),
-                          const PopupMenuItem(value: '😔', child: Text('😔 Sad')),
-                          const PopupMenuItem(value: '😌', child: Text('😌 Calm')),
-                          const PopupMenuItem(value: '😄', child: Text('😄 Excited')),
-                          const PopupMenuItem(value: '😴', child: Text('😴 Tired')),
-                          const PopupMenuItem(value: '🤔', child: Text('🤔 Thoughtful')),
+                          const PopupMenuItem(
+                            value: '😊',
+                            child: Text('😊 Happy'),
+                          ),
+                          const PopupMenuItem(
+                            value: '😔',
+                            child: Text('😔 Sad'),
+                          ),
+                          const PopupMenuItem(
+                            value: '😌',
+                            child: Text('😌 Calm'),
+                          ),
+                          const PopupMenuItem(
+                            value: '😄',
+                            child: Text('😄 Excited'),
+                          ),
+                          const PopupMenuItem(
+                            value: '😴',
+                            child: Text('😴 Tired'),
+                          ),
+                          const PopupMenuItem(
+                            value: '🤔',
+                            child: Text('🤔 Thoughtful'),
+                          ),
                         ],
                       ),
                     ],
@@ -374,9 +461,15 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                           setState(() => _selectedMoodFilter = null);
                           _filterEntries();
                         },
-                        backgroundColor: isBlackMinimalism ? Colors.white12 : AppColors.lavender100,
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white : null),
-                        deleteIconColor: isBlackMinimalism ? Colors.white38 : null,
+                        backgroundColor: isBlackMinimalism
+                            ? Colors.white12
+                            : AppColors.lavender100,
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white : null,
+                        ),
+                        deleteIconColor: isBlackMinimalism
+                            ? Colors.white38
+                            : null,
                       ),
                     ],
                   ),
@@ -387,24 +480,29 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _filteredEntries.isEmpty
-                        ? _buildEmptyState()
-                        : AnimatedBuilder(
-                            animation: _animationController,
-                            builder: (context, child) {
-                              return Opacity(
-                                opacity: _animationController.value,
-                                child: child,
-                              );
-                            },
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(16),
-                              itemCount: _filteredEntries.length,
-                              itemBuilder: (context, index) {
-                                final entry = _filteredEntries[index];
-                                return _buildEntryCard(entry, index, isDark, isBlackMinimalism);
-                              },
-                            ),
-                          ),
+                    ? _buildEmptyState()
+                    : AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _animationController.value,
+                            child: child,
+                          );
+                        },
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _filteredEntries.length,
+                          itemBuilder: (context, index) {
+                            final entry = _filteredEntries[index];
+                            return _buildEntryCard(
+                              entry,
+                              index,
+                              isDark,
+                              isBlackMinimalism,
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),
@@ -414,7 +512,9 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
         onPressed: _addEntry,
         icon: const Icon(Icons.add),
         label: const Text('New Entry'),
-        backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender500,
+        backgroundColor: isBlackMinimalism
+            ? Colors.white
+            : AppColors.lavender500,
         foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
       ),
     );
@@ -422,8 +522,9 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
 
   Widget _buildEmptyState() {
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -431,7 +532,9 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: isBlackMinimalism ? Colors.white12 : Colors.white.withOpacity(0.5),
+              color: isBlackMinimalism
+                  ? Colors.white12
+                  : Colors.white.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
             child: const Text('📝', style: TextStyle(fontSize: 72)),
@@ -458,7 +561,12 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildEntryCard(JournalEntry entry, int index, bool isDark, bool isBlackMinimalism) {
+  Widget _buildEntryCard(
+    JournalEntry entry,
+    int index,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
       duration: Duration(milliseconds: 300 + (index * 50)),
@@ -471,16 +579,20 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
       },
       child: Container(
         decoration: BoxDecoration(
-          color: isBlackMinimalism ? const Color(0xFF1A1A1A) : (isDark ? AppColors.slate800 : Colors.white),
+          color: isBlackMinimalism
+              ? const Color(0xFF1A1A1A)
+              : (isDark ? AppColors.slate800 : Colors.white),
           borderRadius: BorderRadius.circular(20),
           border: isBlackMinimalism ? Border.all(color: Colors.white12) : null,
-          boxShadow: isBlackMinimalism ? null : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: isBlackMinimalism
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: InkWell(
           onTap: () => _editEntry(entry),
@@ -510,17 +622,24 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            DateFormat('MMM d, yyyy • h:mm a').format(entry.date),
+                            DateFormat(
+                              'MMM d, yyyy • h:mm a',
+                            ).format(entry.date),
                             style: TextStyle(
                               fontSize: 14,
-                              color: isBlackMinimalism ? Colors.white38 : Colors.grey[600],
+                              color: isBlackMinimalism
+                                  ? Colors.white38
+                                  : Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: AppColors.coral400),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: AppColors.coral400,
+                      ),
                       onPressed: () => _deleteEntry(entry),
                     ),
                   ],
@@ -532,7 +651,10 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                     entry.content,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 16, color: isBlackMinimalism ? Colors.white70 : null),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
                   ),
                 ],
 
@@ -550,11 +672,19 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                         return Container(
                           height: 120,
                           decoration: BoxDecoration(
-                            color: isBlackMinimalism ? Colors.white10 : AppColors.slate100,
+                            color: isBlackMinimalism
+                                ? Colors.white10
+                                : AppColors.slate100,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Center(
-                            child: Icon(Icons.broken_image, size: 48, color: isBlackMinimalism ? Colors.white24 : AppColors.slate400),
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 48,
+                              color: isBlackMinimalism
+                                  ? Colors.white24
+                                  : AppColors.slate400,
+                            ),
                           ),
                         );
                       },
@@ -566,19 +696,35 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                 if (entry.audioPath != null && entry.audioPath!.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      color: isBlackMinimalism ? Colors.white12 : AppColors.lavender100,
+                      color: isBlackMinimalism
+                          ? Colors.white12
+                          : AppColors.lavender100,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.mic, size: 16, color: isBlackMinimalism ? Colors.white70 : AppColors.lavender500),
+                        Icon(
+                          Icons.mic,
+                          size: 16,
+                          color: isBlackMinimalism
+                              ? Colors.white70
+                              : AppColors.lavender500,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           'Voice Recording',
-                          style: TextStyle(fontSize: 12, color: isBlackMinimalism ? Colors.white70 : AppColors.lavender500),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isBlackMinimalism
+                                ? Colors.white70
+                                : AppColors.lavender500,
+                          ),
                         ),
                       ],
                     ),
@@ -586,44 +732,60 @@ class _MemoryScreenState extends State<MemoryScreen> with SingleTickerProviderSt
                 ],
 
                 // Tags section
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isBlackMinimalism ? Colors.white12 : AppColors.lavender100,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Mood: ${entry.mood}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isBlackMinimalism ? Colors.white : AppColors.slate800,
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isBlackMinimalism
+                              ? Colors.white12
+                              : AppColors.lavender100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Mood: ${entry.mood}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isBlackMinimalism
+                                ? Colors.white
+                                : AppColors.slate800,
+                          ),
+                        ),
                       ),
-                    ),
+                      ...entry.tags.map(
+                        (tag) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isBlackMinimalism
+                                ? Colors.white12
+                                : Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '#$tag',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isBlackMinimalism
+                                  ? Colors.white38
+                                  : AppColors.slate600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  ...entry.tags.map((tag) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isBlackMinimalism ? Colors.white12 : Colors.white.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '#$tag',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isBlackMinimalism ? Colors.white38 : AppColors.slate600,
-                      ),
-                    ),
-                  )),
-                ],
-              ),
-            ),
-                ],
+                ),
+              ],
             ),
           ),
         ),
@@ -657,7 +819,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.entry?.title ?? '');
-    _contentController = TextEditingController(text: widget.entry?.content ?? '');
+    _contentController = TextEditingController(
+      text: widget.entry?.content ?? '',
+    );
     _tagController = TextEditingController();
     _selectedMood = widget.entry?.mood ?? '😊';
     _tags = List.from(widget.entry?.tags ?? []);
@@ -722,10 +886,7 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
       appBar: AppBar(
         title: Text(widget.entry == null ? 'New Entry' : 'Edit Entry'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _saveEntry,
-          ),
+          IconButton(icon: const Icon(Icons.check), onPressed: _saveEntry),
         ],
       ),
       body: Container(
@@ -743,7 +904,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
           children: [
             // Mood Selector
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -751,7 +914,10 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                   children: [
                     const Text(
                       'How are you feeling?',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Wrap(
@@ -765,14 +931,21 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.lavender100 : AppColors.slate50,
+                              color: isSelected
+                                  ? AppColors.lavender100
+                                  : AppColors.slate50,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isSelected ? AppColors.lavender500 : Colors.transparent,
+                                color: isSelected
+                                    ? AppColors.lavender500
+                                    : Colors.transparent,
                                 width: 2,
                               ),
                             ),
-                            child: Text(mood, style: const TextStyle(fontSize: 32)),
+                            child: Text(
+                              mood,
+                              style: const TextStyle(fontSize: 32),
+                            ),
                           ),
                         );
                       }).toList(),
@@ -786,7 +959,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
 
             // Title
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
@@ -796,7 +971,10 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                     hintText: 'Give your memory a title...',
                     border: InputBorder.none,
                   ),
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -805,7 +983,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
 
             // Content
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
@@ -825,7 +1005,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
 
             // Tags
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -833,7 +1015,10 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                   children: [
                     const Text(
                       'Tags',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -844,7 +1029,10 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                             decoration: const InputDecoration(
                               hintText: 'Add a tag...',
                               border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                             ),
                             onSubmitted: (_) => _addTag(),
                           ),
@@ -892,7 +1080,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Photo feature coming soon!')),
+                        const SnackBar(
+                          content: Text('Photo feature coming soon!'),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.photo_camera),
@@ -912,7 +1102,9 @@ class _AddEditJournalScreenState extends State<AddEditJournalScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Voice recording coming soon!')),
+                        const SnackBar(
+                          content: Text('Voice recording coming soon!'),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.mic),

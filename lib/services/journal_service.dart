@@ -33,7 +33,10 @@ class JournalService {
   }
 
   // Filter by date range
-  Future<List<JournalEntry>> filterByDateRange(DateTime start, DateTime end) async {
+  Future<List<JournalEntry>> filterByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
     return await _db.filterByDateRange(start, end);
   }
 

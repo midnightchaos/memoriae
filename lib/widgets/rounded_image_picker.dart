@@ -22,7 +22,8 @@ class RoundedImagePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final defaultBorderColor = isBlackMinimalism ? Colors.white24 : Colors.grey;
 
     return GestureDetector(
@@ -48,9 +49,7 @@ class RoundedImagePicker extends StatelessWidget {
                       ),
                     ],
             ),
-            child: ClipOval(
-              child: _buildImage(isBlackMinimalism),
-            ),
+            child: ClipOval(child: _buildImage(isBlackMinimalism)),
           ),
           Positioned(
             bottom: 0,
@@ -58,10 +57,14 @@ class RoundedImagePicker extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: isBlackMinimalism ? Colors.white : Theme.of(context).primaryColor,
+                color: isBlackMinimalism
+                    ? Colors.white
+                    : Theme.of(context).primaryColor,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isBlackMinimalism ? Colors.black : Theme.of(context).scaffoldBackgroundColor,
+                  color: isBlackMinimalism
+                      ? Colors.black
+                      : Theme.of(context).scaffoldBackgroundColor,
                   width: 2,
                 ),
               ),
@@ -84,7 +87,8 @@ class RoundedImagePicker extends StatelessWidget {
         fit: BoxFit.cover,
         width: radius * 2,
         height: radius * 2,
-        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(isBlackMinimalism),
+        errorBuilder: (context, error, stackTrace) =>
+            _buildPlaceholder(isBlackMinimalism),
       );
     }
     return _buildPlaceholder(isBlackMinimalism);

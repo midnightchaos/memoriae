@@ -46,11 +46,7 @@ class SectionHeader extends StatelessWidget {
                   color: pageStyle.iconBackgroundColor,
                   borderRadius: AppRadius.sm,
                 ),
-                child: Icon(
-                  icon,
-                  size: 18,
-                  color: pageStyle.iconAccentColor,
-                ),
+                child: Icon(icon, size: 18, color: pageStyle.iconAccentColor),
               ),
               const SizedBox(width: AppSpacing.sm + 4),
             ],
@@ -58,9 +54,9 @@ class SectionHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: pageStyle.sectionHeaderColor,
-                      fontSize: 20,
-                    ),
+                  color: pageStyle.sectionHeaderColor,
+                  fontSize: 20,
+                ),
               ),
             ),
             if (trailing != null) trailing!,

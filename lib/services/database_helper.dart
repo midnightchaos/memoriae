@@ -32,7 +32,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    
+
     // Check if we need to migrate from unencrypted to encrypted database
     try {
       await DatabaseMigrator.migrate();
@@ -40,37 +40,39 @@ class DatabaseHelper {
       debugPrint('Migration error: $e');
       // Continue with new database even if migration fails
     }
-    
+
     // Request biometric authentication before accessing the database
     if (_isAuthenticated == null) {
       _isAuthenticated = await _authenticateWithBiometrics();
       if (!_isAuthenticated!) {
-        debugPrint('Biometric authentication failed or was cancelled. Proceeding with caution.');
+        debugPrint(
+          'Biometric authentication failed or was cancelled. Proceeding with caution.',
+        );
       }
     }
-    
+
     _database = await _initDB('memoriae_encrypted.db');
     return _database!;
   }
-  
+
   Future<bool> _authenticateWithBiometrics() async {
     try {
       // Check if device supports biometrics
       final canAuthenticate = await _localAuth.canCheckBiometrics;
       final isDeviceSupported = await _localAuth.isDeviceSupported();
-      
+
       if (!canAuthenticate || !isDeviceSupported) {
         // Skip biometric auth if not available (e.g., emulator)
         return true;
       }
-      
+
       // Check if biometrics are enrolled
       final availableBiometrics = await _localAuth.getAvailableBiometrics();
       if (availableBiometrics.isEmpty) {
         // No biometrics enrolled, skip authentication
         return true;
       }
-      
+
       // Authenticate with biometrics
       return await _localAuth.authenticate(
         localizedReason: 'Authenticate to access your secure data',
@@ -93,20 +95,20 @@ class DatabaseHelper {
   Future<String> _getDatabaseKey() async {
     const storage = FlutterSecureStorage();
     String? key = await storage.read(key: 'db_encryption_key');
-    
+
     if (key == null) {
       final random = Random.secure();
       final values = List<int>.generate(32, (i) => random.nextInt(256));
       key = base64Url.encode(values);
       await storage.write(key: 'db_encryption_key', value: key);
     }
-    
+
     return key;
   }
 
   // Familiar Faces Table
   static const String tableFamiliarFaces = 'familiar_faces';
-  
+
   // Column names for familiar_faces table
   static const String columnId = 'id';
   static const String columnUserId = 'userId';
@@ -117,8 +119,6 @@ class DatabaseHelper {
   static const String columnPhotoPath = 'photoPath';
   static const String columnNotes = 'notes';
   static const String columnCreatedAt = 'createdAt';
-
-
 
   // Add a familiar face
   Future<FamiliarFace> createFamiliarFace(FamiliarFace face) async {
@@ -139,7 +139,7 @@ class DatabaseHelper {
       where: '$columnId = ?',
       whereArgs: [id],
     );
-    
+
     if (maps.isNotEmpty) {
       return FamiliarFace.fromMap(maps.first);
     }
@@ -155,25 +155,29 @@ class DatabaseHelper {
       whereArgs: [userId],
       orderBy: '$columnName ASC',
     );
-    
+
     return result.map((json) => FamiliarFace.fromMap(json)).toList();
   }
 
   // Search familiar faces by name, relation, email, or phone
-  Future<List<FamiliarFace>> searchFamiliarFaces(String userId, String query) async {
+  Future<List<FamiliarFace>> searchFamiliarFaces(
+    String userId,
+    String query,
+  ) async {
     if (query.isEmpty) {
       return getFamiliarFaces(userId);
     }
-    
+
     final db = await database;
     final searchTerm = '%$query%';
     final result = await db.query(
       tableFamiliarFaces,
-      where: '$columnUserId = ? AND ($columnName LIKE ? OR $columnRelation LIKE ? OR $columnEmail LIKE ? OR $columnPhoneNumber LIKE ?)',
+      where:
+          '$columnUserId = ? AND ($columnName LIKE ? OR $columnRelation LIKE ? OR $columnEmail LIKE ? OR $columnPhoneNumber LIKE ?)',
       whereArgs: [userId, searchTerm, searchTerm, searchTerm, searchTerm],
       orderBy: '$columnName ASC',
     );
-    
+
     return result.map((json) => FamiliarFace.fromMap(json)).toList();
   }
 
@@ -222,10 +226,10 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    
+
     // Get encryption key
     final key = await _getDatabaseKey();
-    
+
     return await openDatabase(
       path,
       password: key,
@@ -278,35 +282,57 @@ class DatabaseHelper {
       try {
         await db.execute('ALTER TABLE users ADD COLUMN linkedCaregiverId TEXT');
       } catch (e) {
-        debugPrint('Column linkedCaregiverId migration exception (likely exists): $e');
+        debugPrint(
+          'Column linkedCaregiverId migration exception (likely exists): $e',
+        );
       }
-      try { await _createCaregiversTable(db); } catch (_) {}
-      try { await _createActivityLogsTable(db); } catch (_) {}
-      try { await _createCaregiverAlertsTable(db); } catch (_) {}
-      try { await _createEngagementScoresTable(db); } catch (_) {}
+      try {
+        await _createCaregiversTable(db);
+      } catch (_) {}
+      try {
+        await _createActivityLogsTable(db);
+      } catch (_) {}
+      try {
+        await _createCaregiverAlertsTable(db);
+      } catch (_) {}
+      try {
+        await _createEngagementScoresTable(db);
+      } catch (_) {}
     }
     if (oldVersion < 10) {
       // Add therapyCount and feedbackCount to engagement_scores
       try {
-        await db.execute('ALTER TABLE engagement_scores ADD COLUMN therapyCount INTEGER NOT NULL DEFAULT 0');
+        await db.execute(
+          'ALTER TABLE engagement_scores ADD COLUMN therapyCount INTEGER NOT NULL DEFAULT 0',
+        );
       } catch (e) {
-        debugPrint('Column therapyCount migration exception (likely exists): $e');
+        debugPrint(
+          'Column therapyCount migration exception (likely exists): $e',
+        );
       }
       try {
-        await db.execute('ALTER TABLE engagement_scores ADD COLUMN feedbackCount INTEGER NOT NULL DEFAULT 0');
+        await db.execute(
+          'ALTER TABLE engagement_scores ADD COLUMN feedbackCount INTEGER NOT NULL DEFAULT 0',
+        );
       } catch (e) {
-        debugPrint('Column feedbackCount migration exception (likely exists): $e');
+        debugPrint(
+          'Column feedbackCount migration exception (likely exists): $e',
+        );
       }
     }
     if (oldVersion < 11) {
       // Add columns to chat_messages
       try {
-        await db.execute('ALTER TABLE ${ChatMessage.tableName} ADD COLUMN imagePath TEXT');
+        await db.execute(
+          'ALTER TABLE ${ChatMessage.tableName} ADD COLUMN imagePath TEXT',
+        );
       } catch (e) {
         debugPrint('Column imagePath migration exception: $e');
       }
       try {
-        await db.execute('ALTER TABLE ${ChatMessage.tableName} ADD COLUMN type TEXT NOT NULL DEFAULT "text"');
+        await db.execute(
+          'ALTER TABLE ${ChatMessage.tableName} ADD COLUMN type TEXT NOT NULL DEFAULT "text"',
+        );
       } catch (e) {
         debugPrint('Column type migration exception: $e');
       }
@@ -426,11 +452,7 @@ class DatabaseHelper {
   // Delete
   Future<void> deleteEntry(String id) async {
     final db = await instance.database;
-    await db.delete(
-      'journal_entries',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('journal_entries', where: 'id = ?', whereArgs: [id]);
   }
 
   // Search
@@ -459,7 +481,9 @@ class DatabaseHelper {
 
   // Filter by date range
   Future<List<JournalEntry>> filterByDateRange(
-      DateTime start, DateTime end) async {
+    DateTime start,
+    DateTime end,
+  ) async {
     final db = await instance.database;
     final result = await db.query(
       'journal_entries',
@@ -473,13 +497,17 @@ class DatabaseHelper {
   // Get statistics
   Future<Map<String, dynamic>> getStatistics() async {
     final db = await instance.database;
-    
+
     // Total entries
-    final countResult = await db.rawQuery('SELECT COUNT(*) as count FROM journal_entries');
+    final countResult = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM journal_entries',
+    );
     final totalEntries = Sqflite.firstIntValue(countResult) ?? 0;
 
     // Entries this week
-    final weekAgo = DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
+    final weekAgo = DateTime.now()
+        .subtract(const Duration(days: 7))
+        .millisecondsSinceEpoch;
     final weekResult = await db.rawQuery(
       'SELECT COUNT(*) as count FROM journal_entries WHERE date > ?',
       [weekAgo],
@@ -487,7 +515,9 @@ class DatabaseHelper {
     final entriesThisWeek = Sqflite.firstIntValue(weekResult) ?? 0;
 
     // Entries this month
-    final monthAgo = DateTime.now().subtract(const Duration(days: 30)).millisecondsSinceEpoch;
+    final monthAgo = DateTime.now()
+        .subtract(const Duration(days: 30))
+        .millisecondsSinceEpoch;
     final monthResult = await db.rawQuery(
       'SELECT COUNT(*) as count FROM journal_entries WHERE date > ?',
       [monthAgo],
@@ -502,7 +532,9 @@ class DatabaseHelper {
       ORDER BY count DESC 
       LIMIT 1
     ''');
-    final mostUsedMood = moodResult.isNotEmpty ? moodResult.first['mood'] as String : '😊';
+    final mostUsedMood = moodResult.isNotEmpty
+        ? moodResult.first['mood'] as String
+        : '😊';
 
     // Top tags
     final entries = await readAllEntries();
@@ -551,8 +583,8 @@ class DatabaseHelper {
           ? []
           : (map['imagesPaths'] as String).split('|||'),
       audioPath: map['audioPath'] as String?,
-      tags: (map['tags'] as String).isEmpty 
-          ? [] 
+      tags: (map['tags'] as String).isEmpty
+          ? []
           : (map['tags'] as String).split(','),
       mood: map['mood'] as String,
     );
@@ -562,7 +594,7 @@ class DatabaseHelper {
   Future<void> createUser(User user, String? passwordHash, String? salt) async {
     final db = await instance.database;
     await db.insert('users', user.toMap());
-    
+
     if (!user.isGuest && passwordHash != null && salt != null) {
       await db.insert('user_credentials', {
         'userId': user.id,
@@ -579,7 +611,7 @@ class DatabaseHelper {
       where: 'email = ?',
       whereArgs: [email],
     );
-    
+
     if (maps.isNotEmpty) {
       return User.fromMap(maps.first);
     }
@@ -588,12 +620,8 @@ class DatabaseHelper {
 
   Future<User?> getUserById(String userId) async {
     final db = await instance.database;
-    final maps = await db.query(
-      'users',
-      where: 'id = ?',
-      whereArgs: [userId],
-    );
-    
+    final maps = await db.query('users', where: 'id = ?', whereArgs: [userId]);
+
     if (maps.isNotEmpty) {
       return User.fromMap(maps.first);
     }
@@ -607,7 +635,7 @@ class DatabaseHelper {
       where: 'userId = ?',
       whereArgs: [userId],
     );
-    
+
     if (maps.isNotEmpty) {
       return {
         'passwordHash': maps.first['passwordHash'] as String,
@@ -627,14 +655,15 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> updateUserPassword(String userId, String passwordHash, String salt) async {
+  Future<void> updateUserPassword(
+    String userId,
+    String passwordHash,
+    String salt,
+  ) async {
     final db = await instance.database;
     await db.update(
       'user_credentials',
-      {
-        'passwordHash': passwordHash,
-        'salt': salt,
-      },
+      {'passwordHash': passwordHash, 'salt': salt},
       where: 'userId = ?',
       whereArgs: [userId],
     );
@@ -642,12 +671,16 @@ class DatabaseHelper {
 
   Future<void> deleteUser(String userId) async {
     final db = await instance.database;
-    await db.delete('user_credentials', where: 'userId = ?', whereArgs: [userId]);
+    await db.delete(
+      'user_credentials',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
     await db.delete('users', where: 'id = ?', whereArgs: [userId]);
   }
 
   // ==================== PHASE 3: NEW TABLES ====================
-  
+
   // Familiar Faces Table
   Future<void> _createFamiliarFacesTable(Database db) async {
     await db.execute('''
@@ -746,9 +779,11 @@ class DatabaseHelper {
         duration $intType
       )
     ''');
-    
+
     await db.execute('CREATE INDEX idx_game_type ON game_progress(gameType)');
-    await db.execute('CREATE INDEX idx_completed_at ON game_progress(completedAt)');
+    await db.execute(
+      'CREATE INDEX idx_completed_at ON game_progress(completedAt)',
+    );
   }
 
   // ==================== FAMILIAR FACES CRUD ====================
@@ -756,31 +791,46 @@ class DatabaseHelper {
   // to avoid duplication with the main implementation that uses proper table constants.
 
   // ==================== MEDICATIONS CRUD ====================
-  
+
   Future<void> createMedication(Medication medication) async {
     final db = await instance.database;
-    await db.insert('medications', medication.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'medications',
+      medication.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Medication>> getMedications(String userId) async {
     final db = await instance.database;
-    final result = await db.query('medications',
-        where: 'userId = ?', whereArgs: [userId], orderBy: 'name ASC');
+    final result = await db.query(
+      'medications',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'name ASC',
+    );
     return result.map((map) => Medication.fromMap(map)).toList();
   }
 
   Future<Medication?> getMedication(String id) async {
     final db = await instance.database;
-    final result = await db.query('medications',
-        where: 'id = ?', whereArgs: [id], limit: 1);
+    final result = await db.query(
+      'medications',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     return result.isNotEmpty ? Medication.fromMap(result.first) : null;
   }
 
   Future<void> updateMedication(Medication medication) async {
     final db = await instance.database;
-    await db.update('medications', medication.toMap(),
-        where: 'id = ?', whereArgs: [medication.id]);
+    await db.update(
+      'medications',
+      medication.toMap(),
+      where: 'id = ?',
+      whereArgs: [medication.id],
+    );
   }
 
   Future<void> deleteMedication(String id) async {
@@ -796,31 +846,46 @@ class DatabaseHelper {
   }
 
   // ==================== DAILY ROUTINES CRUD ====================
-  
+
   Future<void> createDailyRoutine(DailyRoutine routine) async {
     final db = await instance.database;
-    await db.insert('daily_routines', routine.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'daily_routines',
+      routine.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<DailyRoutine>> getDailyRoutines(String userId) async {
     final db = await instance.database;
-    final result = await db.query('daily_routines',
-        where: 'userId = ?', whereArgs: [userId], orderBy: 'time ASC');
+    final result = await db.query(
+      'daily_routines',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'time ASC',
+    );
     return result.map((map) => DailyRoutine.fromMap(map)).toList();
   }
 
   Future<DailyRoutine?> getDailyRoutine(String id) async {
     final db = await instance.database;
-    final result = await db.query('daily_routines',
-        where: 'id = ?', whereArgs: [id], limit: 1);
+    final result = await db.query(
+      'daily_routines',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     return result.isNotEmpty ? DailyRoutine.fromMap(result.first) : null;
   }
 
   Future<void> updateDailyRoutine(DailyRoutine routine) async {
     final db = await instance.database;
-    await db.update('daily_routines', routine.toMap(),
-        where: 'id = ?', whereArgs: [routine.id]);
+    await db.update(
+      'daily_routines',
+      routine.toMap(),
+      where: 'id = ?',
+      whereArgs: [routine.id],
+    );
   }
 
   Future<void> deleteDailyRoutine(String id) async {
@@ -836,31 +901,46 @@ class DatabaseHelper {
   }
 
   // ==================== SAFETY LOCATIONS CRUD ====================
-  
+
   Future<void> createSafetyLocation(SafetyLocation location) async {
     final db = await instance.database;
-    await db.insert('safety_locations', location.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'safety_locations',
+      location.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<SafetyLocation>> getSafetyLocations(String userId) async {
     final db = await instance.database;
-    final result = await db.query('safety_locations',
-        where: 'userId = ?', whereArgs: [userId], orderBy: 'name ASC');
+    final result = await db.query(
+      'safety_locations',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'name ASC',
+    );
     return result.map((map) => SafetyLocation.fromMap(map)).toList();
   }
 
   Future<SafetyLocation?> getSafetyLocation(String id) async {
     final db = await instance.database;
-    final result = await db.query('safety_locations',
-        where: 'id = ?', whereArgs: [id], limit: 1);
+    final result = await db.query(
+      'safety_locations',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     return result.isNotEmpty ? SafetyLocation.fromMap(result.first) : null;
   }
 
   Future<void> updateSafetyLocation(SafetyLocation location) async {
     final db = await instance.database;
-    await db.update('safety_locations', location.toMap(),
-        where: 'id = ?', whereArgs: [location.id]);
+    await db.update(
+      'safety_locations',
+      location.toMap(),
+      where: 'id = ?',
+      whereArgs: [location.id],
+    );
   }
 
   Future<void> deleteSafetyLocation(String id) async {
@@ -869,11 +949,14 @@ class DatabaseHelper {
   }
 
   // ==================== CHAT MESSAGES CRUD ====================
-  
+
   Future<void> insertChatMessage(ChatMessage message) async {
     final db = await instance.database;
-    await db.insert(ChatMessage.tableName, message.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      ChatMessage.tableName,
+      message.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<ChatMessage>> getChatMessages({int limit = 100}) async {
@@ -883,16 +966,16 @@ class DatabaseHelper {
       orderBy: 'timestamp DESC',
       limit: limit,
     );
-    return result.map((map) => ChatMessage.fromMap(map)).toList().reversed.toList();
+    return result
+        .map((map) => ChatMessage.fromMap(map))
+        .toList()
+        .reversed
+        .toList();
   }
 
   Future<void> deleteChatMessage(String id) async {
     final db = await instance.database;
-    await db.delete(
-      ChatMessage.tableName,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete(ChatMessage.tableName, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> clearChatHistory() async {
@@ -907,35 +990,52 @@ class DatabaseHelper {
   }
 
   // ==================== GAME PROGRESS CRUD ====================
-  
+
   Future<void> saveGameProgress(GameProgress progress) async {
     final db = await instance.database;
-    await db.insert('game_progress', progress.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'game_progress',
+      progress.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<GameProgress>> getGameProgress(String userId, [String? gameType]) async {
+  Future<List<GameProgress>> getGameProgress(
+    String userId, [
+    String? gameType,
+  ]) async {
     final db = await instance.database;
     if (gameType != null) {
-      final result = await db.query('game_progress',
-          where: 'userId = ? AND gameType = ?',
-          whereArgs: [userId, gameType],
-          orderBy: 'completedAt DESC');
+      final result = await db.query(
+        'game_progress',
+        where: 'userId = ? AND gameType = ?',
+        whereArgs: [userId, gameType],
+        orderBy: 'completedAt DESC',
+      );
       return result.map((map) => GameProgress.fromMap(map)).toList();
     }
-    final result = await db.query('game_progress',
-        where: 'userId = ?', whereArgs: [userId],
-        orderBy: 'completedAt DESC');
+    final result = await db.query(
+      'game_progress',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'completedAt DESC',
+    );
     return result.map((map) => GameProgress.fromMap(map)).toList();
   }
 
-  Future<List<GameProgress>> getHighScores(String userId, String gameType, {int limit = 10}) async {
+  Future<List<GameProgress>> getHighScores(
+    String userId,
+    String gameType, {
+    int limit = 10,
+  }) async {
     final db = await instance.database;
-    final result = await db.query('game_progress',
-        where: 'userId = ? AND gameType = ?',
-        whereArgs: [userId, gameType],
-        orderBy: 'score DESC',
-        limit: limit);
+    final result = await db.query(
+      'game_progress',
+      where: 'userId = ? AND gameType = ?',
+      whereArgs: [userId, gameType],
+      orderBy: 'score DESC',
+      limit: limit,
+    );
     return result.map((map) => GameProgress.fromMap(map)).toList();
   }
 
@@ -945,7 +1045,7 @@ class DatabaseHelper {
   }
 
   // ==================== MUSIC TRACKS CRUD ====================
-  
+
   // Music Tracks Table
   Future<void> _createMusicTracksTable(Database db) async {
     await db.execute('''
@@ -966,14 +1066,19 @@ class DatabaseHelper {
   // CRUD for Music Tracks
   Future<void> createMusicTrack(MusicTrack track) async {
     final db = await database;
-    await db.insert('music_tracks', track.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'music_tracks',
+      track.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<MusicTrack>> getAllMusicTracks() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('music_tracks',
-        orderBy: 'dateAdded DESC');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'music_tracks',
+      orderBy: 'dateAdded DESC',
+    );
     return List.generate(maps.length, (i) => MusicTrack.fromJson(maps[i]));
   }
 
@@ -992,8 +1097,12 @@ class DatabaseHelper {
 
   Future<void> updateMusicTrack(MusicTrack track) async {
     final db = await database;
-    await db.update('music_tracks', track.toJson(),
-        where: 'id = ?', whereArgs: [track.id]);
+    await db.update(
+      'music_tracks',
+      track.toJson(),
+      where: 'id = ?',
+      whereArgs: [track.id],
+    );
   }
 
   Future<void> deleteMusicTrack(String id) async {
@@ -1005,8 +1114,11 @@ class DatabaseHelper {
 
   Future<void> insertCaregiver(Map<String, dynamic> caregiver) async {
     final db = await instance.database;
-    await db.insert('caregivers', caregiver,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'caregivers',
+      caregiver,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getCaregiver(String id) async {
@@ -1019,11 +1131,17 @@ class DatabaseHelper {
 
   Future<void> insertActivityLog(ActivityLog log) async {
     final db = await instance.database;
-    await db.insert('activity_logs', log.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'activity_logs',
+      log.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<ActivityLog>> getActivityLogs(String patientId, {int? limit}) async {
+  Future<List<ActivityLog>> getActivityLogs(
+    String patientId, {
+    int? limit,
+  }) async {
     final db = await instance.database;
     final result = await db.query(
       'activity_logs',
@@ -1039,8 +1157,11 @@ class DatabaseHelper {
 
   Future<void> insertCaregiverAlert(CaregiverAlert alert) async {
     final db = await instance.database;
-    await db.insert('caregiver_alerts', alert.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'caregiver_alerts',
+      alert.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<CaregiverAlert>> getCaregiverAlerts(String patientId) async {
@@ -1068,11 +1189,16 @@ class DatabaseHelper {
 
   Future<void> insertEngagementScore(Map<String, dynamic> score) async {
     final db = await instance.database;
-    await db.insert('engagement_scores', score,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'engagement_scores',
+      score,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getEngagementHistory(String patientId) async {
+  Future<List<Map<String, dynamic>>> getEngagementHistory(
+    String patientId,
+  ) async {
     final db = await instance.database;
     return await db.query(
       'engagement_scores',
@@ -1167,16 +1293,24 @@ class DatabaseHelper {
 
   Future<void> insertAuditLog(dynamic log) async {
     final db = await instance.database;
-    await db.insert('audit_logs', log.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'audit_logs',
+      log.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<dynamic>> getAuditLogs({String? caregiverId}) async {
     final db = await instance.database;
     final result = caregiverId != null
-        ? await db.query('audit_logs', where: 'caregiverId = ?', whereArgs: [caregiverId], orderBy: 'timestamp DESC')
+        ? await db.query(
+            'audit_logs',
+            where: 'caregiverId = ?',
+            whereArgs: [caregiverId],
+            orderBy: 'timestamp DESC',
+          )
         : await db.query('audit_logs', orderBy: 'timestamp DESC');
-    
+
     // We'll trust the AuditLoggingService to handle the conversion
     return result;
   }

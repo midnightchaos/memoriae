@@ -12,7 +12,8 @@ class AuditLogsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
     final isDark = themeService.isDarkMode;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
@@ -30,8 +31,8 @@ class AuditLogsScreen extends StatelessWidget {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF121212)]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800]
-                    : [AppColors.blue50, AppColors.lavender50]),
+                      ? [AppColors.slate900, AppColors.slate800]
+                      : [AppColors.blue50, AppColors.lavender50]),
           ),
         ),
         child: FutureBuilder<List<AuditLog>>(
@@ -63,20 +64,24 @@ class AuditLogsScreen extends StatelessWidget {
 
   Widget _buildLogCard(AuditLog log, bool isDark, bool isBlackMinimalism) {
     final dateStr = DateFormat('MMM d, yyyy • HH:mm').format(log.timestamp);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-        boxShadow: isBlackMinimalism ? null : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isBlackMinimalism
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -104,7 +109,9 @@ class AuditLogsScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               log.details,
-              style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

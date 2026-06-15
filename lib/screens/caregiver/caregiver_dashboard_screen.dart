@@ -19,7 +19,8 @@ class CaregiverDashboardScreen extends StatefulWidget {
   const CaregiverDashboardScreen({super.key, this.caregiver});
 
   @override
-  State<CaregiverDashboardScreen> createState() => _CaregiverDashboardScreenState();
+  State<CaregiverDashboardScreen> createState() =>
+      _CaregiverDashboardScreenState();
 }
 
 class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
@@ -38,12 +39,16 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
   Future<void> _loadDashboard() async {
     setState(() => _isLoading = true);
     try {
-      _caregiver = widget.caregiver ?? await AuthService.instance.getCurrentCaregiver();
-      
+      _caregiver =
+          widget.caregiver ?? await AuthService.instance.getCurrentCaregiver();
+
       if (_caregiver == null) {
         // Handle no caregiver logged in
         if (mounted) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const WelcomeScreen()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+          );
         }
         return;
       }
@@ -58,7 +63,9 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
 
       if (patientResults.isNotEmpty) {
         _linkedPatientId = patientResults.first['id'] as String;
-        _linkedPatient = await DatabaseHelper.instance.getUserById(_linkedPatientId!);
+        _linkedPatient = await DatabaseHelper.instance.getUserById(
+          _linkedPatientId!,
+        );
         _alerts = await AlertService.instance.getAlerts(_linkedPatientId!);
         // Sort alerts by timestamp descending
         _alerts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -97,8 +104,8 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _linkedPatientId == null
-              ? _buildNoPatientLinked()
-              : _buildDashboard(),
+          ? _buildNoPatientLinked()
+          : _buildDashboard(),
     );
   }
 
@@ -127,7 +134,8 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LinkPatientScreen(caregiver: _caregiver!),
+                      builder: (context) =>
+                          LinkPatientScreen(caregiver: _caregiver!),
                     ),
                   ).then((_) => _loadDashboard());
                 }
@@ -135,8 +143,13 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
               icon: const Icon(Icons.link),
               label: const Text('Link Patient Account'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
@@ -162,7 +175,11 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
               children: [
                 const Text(
                   'Quick Actions',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 _buildQuickActionsGrid(),
@@ -172,7 +189,11 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                   children: [
                     const Text(
                       'Recent Alerts',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                     if (_alerts.isNotEmpty)
                       TextButton(
@@ -195,10 +216,20 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                   padding: EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      Icon(Icons.check_circle_outline, color: AppColors.emerald500, size: 48),
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: AppColors.emerald500,
+                        size: 48,
+                      ),
                       SizedBox(height: 12),
-                      Text('All systems normal', style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('No active alerts for the patient.', style: TextStyle(color: AppColors.slate500)),
+                      Text(
+                        'All systems normal',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'No active alerts for the patient.',
+                        style: TextStyle(color: AppColors.slate500),
+                      ),
                     ],
                   ),
                 ),
@@ -235,7 +266,10 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
           AppColors.blue500,
           () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ActivitySummaryScreen(patientId: _linkedPatientId!)),
+            MaterialPageRoute(
+              builder: (_) =>
+                  ActivitySummaryScreen(patientId: _linkedPatientId!),
+            ),
           ),
         ),
         _buildActionCard(
@@ -253,7 +287,9 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
           AppColors.coral500,
           () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => MedicationsScreen(userId: _linkedPatientId!)),
+            MaterialPageRoute(
+              builder: (_) => MedicationsScreen(userId: _linkedPatientId!),
+            ),
           ),
         ),
         _buildActionCard(
@@ -262,7 +298,9 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
           AppColors.lavender500,
           () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => DailyRoutinesScreen(userId: _linkedPatientId!)),
+            MaterialPageRoute(
+              builder: (_) => DailyRoutinesScreen(userId: _linkedPatientId!),
+            ),
           ),
         ),
         _buildActionCard(
@@ -286,14 +324,14 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
 
   void _simulateAlert() async {
     if (_linkedPatientId == null) return;
-    
+
     await AlertService.instance.createAlert(
       patientId: _linkedPatientId!,
       type: 'Safety Violation',
       message: 'Patient has left the designated "Home" safety zone.',
       severity: 'High',
     );
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('⚠️ Geofence Alert Simulated')),
@@ -302,7 +340,12 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
     }
   }
 
-  Widget _buildActionCard(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -385,12 +428,19 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.5),
+                            width: 2,
+                          ),
                         ),
                         child: const CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.white,
-                          child: Icon(Icons.person_rounded, color: AppColors.lavender500, size: 35),
+                          child: Icon(
+                            Icons.person_rounded,
+                            color: AppColors.lavender500,
+                            size: 35,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -420,19 +470,29 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                           ],
                         ),
                       ),
-                      const StatusBadge(label: 'CONNECTED', color: Colors.white),
+                      const StatusBadge(
+                        label: 'CONNECTED',
+                        color: Colors.white,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.security_rounded, color: Colors.white, size: 20),
+                        const Icon(
+                          Icons.security_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           'Safety status is optimal',
@@ -442,7 +502,11 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 14),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: Colors.white,
+                          size: 14,
+                        ),
                       ],
                     ),
                   ),
@@ -490,11 +554,11 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
             ? const Icon(Icons.check_circle, color: AppColors.emerald500)
             : IconButton(
                 icon: const Icon(Icons.check_circle_outline),
-                  onPressed: () async {
-                    if (alert.id == null) return;
-                    await AlertService.instance.resolveAlert(alert.id!);
-                    _loadDashboard();
-                  },
+                onPressed: () async {
+                  if (alert.id == null) return;
+                  await AlertService.instance.resolveAlert(alert.id!);
+                  _loadDashboard();
+                },
               ),
       ),
     );
@@ -517,7 +581,11 @@ class StatusBadge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

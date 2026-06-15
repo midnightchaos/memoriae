@@ -1,6 +1,6 @@
 class ChatMessage {
   static const String tableName = 'chat_messages';
-  
+
   final String id;
   final String content;
   final bool isUser;
@@ -66,7 +66,7 @@ class ChatMessage {
       imagePath: imagePath ?? this.imagePath,
     );
   }
-  
+
   // Get the message as a DateTime
   DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(timestamp);
 }

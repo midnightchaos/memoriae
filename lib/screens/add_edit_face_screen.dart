@@ -22,7 +22,7 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _notesController = TextEditingController();
-  
+
   String? _photoPath;
   bool _isLoading = false;
   bool _isEditMode = false;
@@ -72,16 +72,22 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
     try {
       final profileService = context.read<ProfileService>();
       final faceService = context.read<FamiliarFaceService>();
-      
+
       final face = FamiliarFace(
         id: _faceId ?? DateTime.now().millisecondsSinceEpoch.toString(),
         userId: _userId ?? profileService.profile!.id,
         name: _nameController.text.trim(),
         relation: _relationController.text.trim(),
-        phoneNumber: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
-        email: _emailController.text.trim().isNotEmpty ? _emailController.text.trim() : null,
+        phoneNumber: _phoneController.text.trim().isNotEmpty
+            ? _phoneController.text.trim()
+            : null,
+        email: _emailController.text.trim().isNotEmpty
+            ? _emailController.text.trim()
+            : null,
         photoPath: _photoPath,
-        notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+        notes: _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : null,
         createdAt: _isEditMode ? DateTime.now() : DateTime.now(),
       );
 
@@ -110,7 +116,8 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
   Future<void> _pickImage() async {
     try {
       final themeService = Provider.of<ThemeService>(context, listen: false);
-      final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+      final isBlackMinimalism =
+          themeService.themeMode == AppThemeMode.blackMinimalism;
       final faceService = context.read<FamiliarFaceService>();
       final imagePath = await showModalBottomSheet<String?>(
         context: context,
@@ -121,16 +128,32 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: Icon(Icons.photo_library, color: isBlackMinimalism ? Colors.white70 : null),
-                  title: Text('Choose from Gallery', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                  leading: Icon(
+                    Icons.photo_library,
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
+                  title: Text(
+                    'Choose from Gallery',
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
+                  ),
                   onTap: () async {
                     final path = await faceService.pickImage(fromCamera: false);
                     Navigator.of(ctx).pop(path);
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.camera_alt, color: isBlackMinimalism ? Colors.white70 : null),
-                  title: Text('Take a Photo', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                  leading: Icon(
+                    Icons.camera_alt,
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
+                  title: Text(
+                    'Take a Photo',
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
+                  ),
                   onTap: () async {
                     final path = await faceService.pickImage(fromCamera: true);
                     Navigator.of(ctx).pop(path);
@@ -147,9 +170,9 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to pick image')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to pick image')));
       }
     }
   }
@@ -158,14 +181,17 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
       appBar: AppBar(
         backgroundColor: isBlackMinimalism ? Colors.black : null,
         elevation: isBlackMinimalism ? 0 : null,
-        iconTheme: IconThemeData(color: isBlackMinimalism ? Colors.white : null),
+        iconTheme: IconThemeData(
+          color: isBlackMinimalism ? Colors.white : null,
+        ),
         title: Text(
           _isEditMode ? 'Edit Contact' : 'Add New Contact',
           style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
@@ -182,7 +208,10 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
             )
           else
             IconButton(
-              icon: Icon(Icons.check, color: isBlackMinimalism ? Colors.white : null),
+              icon: Icon(
+                Icons.check,
+                color: isBlackMinimalism ? Colors.white : null,
+              ),
               onPressed: _isLoading ? null : _submitForm,
             ),
         ],
@@ -207,13 +236,28 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                     const SizedBox(height: 24),
                     TextFormField(
                       controller: _nameController,
-                      style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Name',
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                        prefixIcon: Icon(Icons.person, color: isBlackMinimalism ? Colors.white70 : null),
-                        enabledBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                        focusedBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        enabledBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white24),
+                              )
+                            : null,
+                        focusedBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              )
+                            : null,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -225,15 +269,32 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _relationController,
-                      style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Relation',
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
                         hintText: 'e.g., Daughter, Son, Friend',
-                        hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white24 : null),
-                        prefixIcon: Icon(Icons.group, color: isBlackMinimalism ? Colors.white70 : null),
-                        enabledBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                        focusedBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                        hintStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white24 : null,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.group,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        enabledBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white24),
+                              )
+                            : null,
+                        focusedBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              )
+                            : null,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -245,39 +306,84 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _phoneController,
-                      style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Phone Number (Optional)',
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                        prefixIcon: Icon(Icons.phone, color: isBlackMinimalism ? Colors.white70 : null),
-                        enabledBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                        focusedBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.phone,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        enabledBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white24),
+                              )
+                            : null,
+                        focusedBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              )
+                            : null,
                       ),
                       keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
-                      style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Email (Optional)',
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                        prefixIcon: Icon(Icons.email, color: isBlackMinimalism ? Colors.white70 : null),
-                        enabledBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                        focusedBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        enabledBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white24),
+                              )
+                            : null,
+                        focusedBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              )
+                            : null,
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _notesController,
-                      style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Notes (Optional)',
-                        labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                        prefixIcon: Icon(Icons.notes, color: isBlackMinimalism ? Colors.white70 : null),
-                        enabledBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                        focusedBorder: isBlackMinimalism ? const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                        labelStyle: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.notes,
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                        enabledBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white24),
+                              )
+                            : null,
+                        focusedBorder: isBlackMinimalism
+                            ? const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              )
+                            : null,
                       ),
                       maxLines: 3,
                     ),
@@ -286,8 +392,12 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                       onPressed: _isLoading ? null : _submitForm,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: isBlackMinimalism ? Colors.white : null,
-                        foregroundColor: isBlackMinimalism ? Colors.black : null,
+                        backgroundColor: isBlackMinimalism
+                            ? Colors.white
+                            : null,
+                        foregroundColor: isBlackMinimalism
+                            ? Colors.black
+                            : null,
                       ),
                       child: _isLoading
                           ? SizedBox(
@@ -295,10 +405,14 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: isBlackMinimalism ? Colors.black : Colors.white,
+                                color: isBlackMinimalism
+                                    ? Colors.black
+                                    : Colors.white,
                               ),
                             )
-                          : Text(_isEditMode ? 'Update Contact' : 'Add Contact'),
+                          : Text(
+                              _isEditMode ? 'Update Contact' : 'Add Contact',
+                            ),
                     ),
                     if (_isEditMode) ...[
                       const SizedBox(height: 16),
@@ -308,7 +422,9 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                             : () => Navigator.of(context).pop(),
                         child: Text(
                           'CANCEL',
-                          style: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+                          style: TextStyle(
+                            color: isBlackMinimalism ? Colors.white38 : null,
+                          ),
                         ),
                       ),
                     ],

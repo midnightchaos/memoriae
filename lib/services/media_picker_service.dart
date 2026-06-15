@@ -21,7 +21,8 @@ class MediaPickerService {
 
       List<String> savedPaths = [];
       for (var img in images) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(img.path)}';
+        final fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${path.basename(img.path)}';
         final savePath = '${imageDir.path}/$fileName';
         await File(img.path).copy(savePath);
         savedPaths.add(savePath);
@@ -39,7 +40,7 @@ class MediaPickerService {
         type: FileType.custom,
         allowedExtensions: ['mp3', 'm4a', 'mp4', 'wav', 'aac'],
       );
-      
+
       if (result == null || result.files.isEmpty) return null;
 
       final file = File(result.files.single.path!);
@@ -47,10 +48,11 @@ class MediaPickerService {
       final audioDir = Directory('${appDir.path}/music_files');
       await audioDir.create(recursive: true);
 
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
       final savePath = '${audioDir.path}/$fileName';
       await file.copy(savePath);
-      
+
       return savePath;
     } catch (e) {
       return null;

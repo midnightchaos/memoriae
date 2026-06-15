@@ -15,7 +15,8 @@ class RelaxScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     return Scaffold(
@@ -27,8 +28,16 @@ class RelaxScreen extends StatelessWidget {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF0A0A0A), Colors.black]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.lavender50, AppColors.blue50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.lavender50,
+                          AppColors.blue50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -48,7 +57,7 @@ class RelaxScreen extends StatelessWidget {
                     Text(
                       'Relax & Unwind',
                       style: TextStyle(
-                        fontSize: 20, 
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: isBlackMinimalism ? Colors.white : null,
                       ),
@@ -67,7 +76,7 @@ class RelaxScreen extends StatelessWidget {
                     children: [
                       // Featured Relaxation Card
                       _buildFeaturedCard(context, isDark, isBlackMinimalism),
-                      
+
                       const SizedBox(height: 32),
 
                       // Therapy Options Grid
@@ -123,7 +132,8 @@ class RelaxScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const BreathingExerciseScreen(),
+                              builder: (context) =>
+                                  const BreathingExerciseScreen(),
                             ),
                           );
                         },
@@ -143,7 +153,8 @@ class RelaxScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const DrawingTherapyScreen(),
+                              builder: (context) =>
+                                  const DrawingTherapyScreen(),
                             ),
                           );
                         },
@@ -163,12 +174,13 @@ class RelaxScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const FaceMatchingGameScreen(),
+                              builder: (context) =>
+                                  const FaceMatchingGameScreen(),
                             ),
                           );
                         },
                       ),
-                      
+
                       const SizedBox(height: 20), // Bottom padding
                     ],
                   ),
@@ -181,28 +193,33 @@ class RelaxScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeaturedCard(BuildContext context, bool isDark, bool isBlackMinimalism) {
+  Widget _buildFeaturedCard(
+    BuildContext context,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: isBlackMinimalism ? const Color(0xFF0A0A0A) : null,
-        gradient: isBlackMinimalism ? null : LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.blue100,
-            AppColors.lavender100,
-          ],
-        ),
+        gradient: isBlackMinimalism
+            ? null
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.blue100, AppColors.lavender100],
+              ),
         borderRadius: BorderRadius.circular(24),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-        boxShadow: isBlackMinimalism ? null : [
-          BoxShadow(
-            color: AppColors.blue400.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: isBlackMinimalism
+            ? null
+            : [
+                BoxShadow(
+                  color: AppColors.blue400.withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -237,12 +254,11 @@ class RelaxScreen extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white : AppColors.blue400,
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white
+                  : AppColors.blue400,
               foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 14,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -274,33 +290,37 @@ class RelaxScreen extends StatelessWidget {
         height: 120,
         decoration: BoxDecoration(
           color: isBlackMinimalism ? const Color(0xFF0A0A0A) : null,
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: gradient.map((c) => c.withOpacity(0.15)).toList(),
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: gradient.map((c) => c.withOpacity(0.15)).toList(),
+                ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isBlackMinimalism ? Colors.white10 : gradient[0].withOpacity(0.3),
+            color: isBlackMinimalism
+                ? Colors.white10
+                : gradient[0].withOpacity(0.3),
             width: 2,
           ),
-          boxShadow: isBlackMinimalism ? null : [
-            BoxShadow(
-              color: gradient[0].withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: isBlackMinimalism
+              ? null
+              : [
+                  BoxShadow(
+                    color: gradient[0].withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Stack(
           children: [
             // Background pattern
             Positioned.fill(
-              child: CustomPaint(
-                painter: _WavePainter(gradient[0]),
-              ),
+              child: CustomPaint(painter: _WavePainter(gradient[0])),
             ),
-            
+
             // Content
             Padding(
               padding: const EdgeInsets.all(20),
@@ -322,14 +342,11 @@ class RelaxScreen extends StatelessWidget {
                       ],
                     ),
                     child: Center(
-                      child: Text(
-                        icon,
-                        style: const TextStyle(fontSize: 36),
-                      ),
+                      child: Text(icon, style: const TextStyle(fontSize: 36)),
                     ),
                   ),
                   const SizedBox(width: 20),
-                  
+
                   // Text
                   Expanded(
                     child: Column(
@@ -338,24 +355,36 @@ class RelaxScreen extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: isBlackMinimalism ? Colors.white : (isDark ? Colors.white : AppColors.slate900),
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: isBlackMinimalism
+                                    ? Colors.white
+                                    : (isDark
+                                          ? Colors.white
+                                          : AppColors.slate900),
+                              ),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           subtitle,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            color: (isBlackMinimalism ? Colors.white70 : (isDark ? Colors.white : AppColors.slate900)).withOpacity(0.7),
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontSize: 14,
+                                color:
+                                    (isBlackMinimalism
+                                            ? Colors.white70
+                                            : (isDark
+                                                  ? Colors.white
+                                                  : AppColors.slate900))
+                                        .withOpacity(0.7),
+                              ),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   // Arrow
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -392,11 +421,11 @@ class _WavePainter extends CustomPainter {
 
     final path = Path();
     path.moveTo(0, size.height * 0.5);
-    
+
     for (double i = 0; i < size.width; i += 20) {
       path.lineTo(i, size.height * 0.5 + 10 * (i % 40 > 20 ? 1 : -1));
     }
-    
+
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.close();

@@ -28,9 +28,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
   Future<void> _loadLocations() async {
     final dbHelper = DatabaseHelper.instance;
     final profileService = Provider.of<ProfileService>(context, listen: false);
-    final userId = profileService.profile?.id ?? 'user1'; 
+    final userId = profileService.profile?.id ?? 'user1';
     final locations = await dbHelper.getSafetyLocations(userId);
-    
+
     setState(() {
       _locations.clear();
       _locations.addAll(locations);
@@ -41,7 +41,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
@@ -53,8 +54,16 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF121212)]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.blue50, AppColors.lavender50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.blue50,
+                          AppColors.lavender50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -74,10 +83,11 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Safety Locations',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isBlackMinimalism ? Colors.white : null,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isBlackMinimalism ? Colors.white : null,
+                          ),
                     ),
                     const Spacer(),
                     IconButton(
@@ -95,9 +105,13 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+                    color: isBlackMinimalism
+                        ? const Color(0xFF0A0A0A)
+                        : (isDark ? AppColors.slate800 : Colors.white),
                     borderRadius: BorderRadius.circular(24),
-                    border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                    border: isBlackMinimalism
+                        ? Border.all(color: Colors.white10)
+                        : null,
                     boxShadow: isBlackMinimalism
                         ? null
                         : [
@@ -115,14 +129,18 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                         // Map Grid Texture
                         CustomPaint(
                           painter: MapGridPainter(
-                            color: isBlackMinimalism ? Colors.white.withOpacity(0.03) : AppColors.slate200.withOpacity(0.5),
+                            color: isBlackMinimalism
+                                ? Colors.white.withOpacity(0.03)
+                                : AppColors.slate200.withOpacity(0.5),
                           ),
                           child: Container(),
                         ),
                         // Center Pulse
                         Center(
                           child: _MapPulseIndicator(
-                            color: isBlackMinimalism ? Colors.white.withOpacity(0.1) : AppColors.lavender200.withOpacity(0.3),
+                            color: isBlackMinimalism
+                                ? Colors.white.withOpacity(0.1)
+                                : AppColors.lavender200.withOpacity(0.3),
                           ),
                         ),
                         // Location Pins
@@ -131,14 +149,16 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                           final loc = entry.value;
                           final top = 40.0 + (idx * 45.0) % 200.0;
                           final left = 50.0 + (idx * 65.0) % 300.0;
-                          
+
                           return Positioned(
                             top: top,
                             left: left,
                             child: _MapPin(
                               name: loc.name,
                               isBlackMinimalism: isBlackMinimalism,
-                              color: loc.isHome ? AppColors.lavender500 : AppColors.emerald500,
+                              color: loc.isHome
+                                  ? AppColors.lavender500
+                                  : AppColors.emerald500,
                             ),
                           );
                         }),
@@ -151,13 +171,17 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                                 Icon(
                                   Icons.map_outlined,
                                   size: 48,
-                                  color: isBlackMinimalism ? Colors.white24 : AppColors.slate300,
+                                  color: isBlackMinimalism
+                                      ? Colors.white24
+                                      : AppColors.slate300,
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
                                   'Add a safe zone to see it on the map',
                                   style: TextStyle(
-                                    color: isBlackMinimalism ? Colors.white38 : AppColors.slate400,
+                                    color: isBlackMinimalism
+                                        ? Colors.white38
+                                        : AppColors.slate400,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -175,8 +199,12 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 flex: 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.slate800.withOpacity(0.5) : Colors.white.withOpacity(0.7),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    color: isDark
+                        ? AppColors.slate800.withOpacity(0.5)
+                        : Colors.white.withOpacity(0.7),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -198,7 +226,11 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                                 itemCount: _locations.length,
                                 itemBuilder: (context, index) {
                                   final location = _locations[index];
-                                  return _buildLocationCard(location, isDark, isBlackMinimalism);
+                                  return _buildLocationCard(
+                                    location,
+                                    isDark,
+                                    isBlackMinimalism,
+                                  );
                                 },
                               ),
                       ),
@@ -212,15 +244,28 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showLocationDialog(),
-        icon: Icon(Icons.add_location_alt_outlined, color: isBlackMinimalism ? Colors.black : Colors.white),
-        label: Text('New Location', style: TextStyle(color: isBlackMinimalism ? Colors.black : Colors.white)),
-        backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender400,
+        icon: Icon(
+          Icons.add_location_alt_outlined,
+          color: isBlackMinimalism ? Colors.black : Colors.white,
+        ),
+        label: Text(
+          'New Location',
+          style: TextStyle(
+            color: isBlackMinimalism ? Colors.black : Colors.white,
+          ),
+        ),
+        backgroundColor: isBlackMinimalism
+            ? Colors.white
+            : AppColors.lavender400,
       ),
     );
   }
 
-
-  Widget _buildLocationCard(SafetyLocation location, bool isDark, bool isBlackMinimalism) {
+  Widget _buildLocationCard(
+    SafetyLocation location,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     final isSelected = _selectedLocation?.id == location.id;
 
     return Container(
@@ -229,13 +274,16 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
         color: isBlackMinimalism
             ? (isSelected ? Colors.white10 : const Color(0xFF0A0A0A))
             : (isSelected
-                ? AppColors.coral100
-                : isDark
-                    ? AppColors.slate800
-                    : Colors.white),
+                  ? AppColors.coral100
+                  : isDark
+                  ? AppColors.slate800
+                  : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: isSelected
-            ? Border.all(color: isBlackMinimalism ? Colors.white : AppColors.coral500, width: 2)
+            ? Border.all(
+                color: isBlackMinimalism ? Colors.white : AppColors.coral500,
+                width: 2,
+              )
             : (isBlackMinimalism ? Border.all(color: Colors.white10) : null),
         boxShadow: isBlackMinimalism || !isSelected
             ? null
@@ -255,8 +303,12 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: location.isHome
-                  ? (isBlackMinimalism ? [Colors.white24, Colors.white12] : [AppColors.blue400, AppColors.blue600])
-                  : (isBlackMinimalism ? [Colors.white38, Colors.white24] : [AppColors.coral400, AppColors.coral600]),
+                  ? (isBlackMinimalism
+                        ? [Colors.white24, Colors.white12]
+                        : [AppColors.blue400, AppColors.blue600])
+                  : (isBlackMinimalism
+                        ? [Colors.white38, Colors.white24]
+                        : [AppColors.coral400, AppColors.coral600]),
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -288,7 +340,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 child: Text(
                   'Home',
                   style: TextStyle(
-                    color: isBlackMinimalism ? Colors.white70 : AppColors.blue700,
+                    color: isBlackMinimalism
+                        ? Colors.white70
+                        : AppColors.blue700,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
@@ -304,7 +358,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
               location.address,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: isBlackMinimalism ? Colors.white60 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white60 : null,
+              ),
             ),
             const SizedBox(height: 8),
             Row(
@@ -312,14 +368,18 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 Icon(
                   Icons.notifications_active,
                   size: 16,
-                  color: isBlackMinimalism ? Colors.white70 : AppColors.coral500,
+                  color: isBlackMinimalism
+                      ? Colors.white70
+                      : AppColors.coral500,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Alert zone: ${location.radius.toInt()}m',
                   style: TextStyle(
                     fontSize: 12,
-                    color: isBlackMinimalism ? Colors.white70 : AppColors.coral600,
+                    color: isBlackMinimalism
+                        ? Colors.white70
+                        : AppColors.coral600,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -330,19 +390,33 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
         trailing: Theme(
           data: isBlackMinimalism
               ? Theme.of(context).copyWith(
-                  popupMenuTheme: const PopupMenuThemeData(color: Color(0xFF1A1A1A)),
+                  popupMenuTheme: const PopupMenuThemeData(
+                    color: Color(0xFF1A1A1A),
+                  ),
                 )
               : Theme.of(context),
           child: PopupMenuButton(
-            icon: Icon(Icons.more_vert, color: isBlackMinimalism ? Colors.white70 : null),
+            icon: Icon(
+              Icons.more_vert,
+              color: isBlackMinimalism ? Colors.white70 : null,
+            ),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'edit',
                 child: Row(
                   children: [
-                    Icon(Icons.edit, size: 20, color: isBlackMinimalism ? Colors.white : null),
+                    Icon(
+                      Icons.edit,
+                      size: 20,
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
                     const SizedBox(width: 8),
-                    Text('Edit', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                    Text(
+                      'Edit',
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -350,9 +424,18 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 value: 'navigate',
                 child: Row(
                   children: [
-                    Icon(Icons.directions, size: 20, color: isBlackMinimalism ? Colors.white : null),
+                    Icon(
+                      Icons.directions,
+                      size: 20,
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
                     const SizedBox(width: 8),
-                    Text('Navigate', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                    Text(
+                      'Navigate',
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -390,7 +473,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
     bool isHome = location?.isHome ?? false;
 
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     await showDialog(
@@ -408,32 +492,64 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                  style: TextStyle(
+                    color: isBlackMinimalism ? Colors.white : null,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Name',
-                    labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                    prefixIcon: Icon(Icons.label, color: isBlackMinimalism ? Colors.white70 : null),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                    labelStyle: TextStyle(
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.label,
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    focusedBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          )
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: addressController,
-                  style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                  style: TextStyle(
+                    color: isBlackMinimalism ? Colors.white : null,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Address',
-                    labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-                    prefixIcon: Icon(Icons.location_on, color: isBlackMinimalism ? Colors.white70 : null),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                    labelStyle: TextStyle(
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.location_on,
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    focusedBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          )
+                        : null,
                   ),
                   maxLines: 2,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Alert Radius: ${radius.toInt()}m',
-                  style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+                  style: TextStyle(
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
                 ),
                 Slider(
                   value: radius,
@@ -451,7 +567,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 SwitchListTile(
                   title: Text(
                     'Set as home location',
-                    style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
                   ),
                   value: isHome,
                   activeThumbColor: isBlackMinimalism ? Colors.white : null,
@@ -468,12 +586,17 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white38 : null,
+                ),
               ),
             ),
             ElevatedButton(
               onPressed: () {
-                final profileService = Provider.of<ProfileService>(context, listen: false);
+                final profileService = Provider.of<ProfileService>(
+                  context,
+                  listen: false,
+                );
                 final newLocation = SafetyLocation(
                   id: location?.id ?? const Uuid().v4(),
                   userId: profileService.profile?.id ?? 'user1',
@@ -508,7 +631,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
 
   void _deleteLocation(SafetyLocation location) {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     showDialog(
@@ -528,7 +652,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white38 : null,
+              ),
             ),
           ),
           ElevatedButton(
@@ -547,8 +673,12 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
   }
 
   Future<void> _navigateToLocation(SafetyLocation location) async {
-    final Uri googleMapsUrl = Uri.parse("https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location.address)}");
-    final Uri appleMapsUrl = Uri.parse("https://maps.apple.com/?q=${Uri.encodeComponent(location.address)}");
+    final Uri googleMapsUrl = Uri.parse(
+      "https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location.address)}",
+    );
+    final Uri appleMapsUrl = Uri.parse(
+      "https://maps.apple.com/?q=${Uri.encodeComponent(location.address)}",
+    );
 
     if (await canLaunchUrl(googleMapsUrl)) {
       await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
@@ -565,7 +695,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
 
   void _showInfoDialog() {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     showDialog(
@@ -574,7 +705,10 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
         backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
         title: Row(
           children: [
-            Icon(Icons.info_outline, color: isBlackMinimalism ? Colors.white : AppColors.coral500),
+            Icon(
+              Icons.info_outline,
+              color: isBlackMinimalism ? Colors.white : AppColors.coral500,
+            ),
             const SizedBox(width: 8),
             Text(
               'Safety Locations',
@@ -653,9 +787,21 @@ class MapGridPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
-    canvas.drawLine(Offset(0, size.height * 0.3), Offset(size.width, size.height * 0.35), roadPaint);
-    canvas.drawLine(Offset(size.width * 0.4, 0), Offset(size.width * 0.45, size.height), roadPaint);
-    canvas.drawLine(Offset(0, size.height * 0.7), Offset(size.width, size.height * 0.65), roadPaint);
+    canvas.drawLine(
+      Offset(0, size.height * 0.3),
+      Offset(size.width, size.height * 0.35),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.4, 0),
+      Offset(size.width * 0.45, size.height),
+      roadPaint,
+    );
+    canvas.drawLine(
+      Offset(0, size.height * 0.7),
+      Offset(size.width, size.height * 0.65),
+      roadPaint,
+    );
   }
 
   @override
@@ -670,7 +816,8 @@ class _MapPulseIndicator extends StatefulWidget {
   State<_MapPulseIndicator> createState() => _MapPulseIndicatorState();
 }
 
-class _MapPulseIndicatorState extends State<_MapPulseIndicator> with SingleTickerProviderStateMixin {
+class _MapPulseIndicatorState extends State<_MapPulseIndicator>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -725,11 +872,7 @@ class _MapPin extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Icons.location_on,
-          color: color,
-          size: 32,
-        ),
+        Icon(Icons.location_on, color: color, size: 32),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(

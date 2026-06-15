@@ -9,42 +9,27 @@ class BreathingExerciseScreen extends StatefulWidget {
   const BreathingExerciseScreen({super.key});
 
   @override
-  State<BreathingExerciseScreen> createState() => _BreathingExerciseScreenState();
+  State<BreathingExerciseScreen> createState() =>
+      _BreathingExerciseScreenState();
 }
 
 class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  
+
   String _currentPhase = 'Breathe In';
   int _cycleCount = 0;
   bool _isActive = false;
   Timer? _phaseTimer;
-  
+
   // Breathing patterns
   String _selectedPattern = '4-7-8';
   final Map<String, Map<String, int>> _breathingPatterns = {
-    '4-7-8': {
-      'inhale': 4,
-      'hold': 7,
-      'exhale': 8,
-    },
-    'Box': {
-      'inhale': 4,
-      'hold': 4,
-      'exhale': 4,
-      'hold2': 4,
-    },
-    'Simple': {
-      'inhale': 4,
-      'exhale': 4,
-    },
-    'Deep Calm': {
-      'inhale': 5,
-      'hold': 5,
-      'exhale': 5,
-    },
+    '4-7-8': {'inhale': 4, 'hold': 7, 'exhale': 8},
+    'Box': {'inhale': 4, 'hold': 4, 'exhale': 4, 'hold2': 4},
+    'Simple': {'inhale': 4, 'exhale': 4},
+    'Deep Calm': {'inhale': 5, 'hold': 5, 'exhale': 5},
   };
 
   @override
@@ -54,10 +39,11 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
       duration: const Duration(seconds: 4),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Record interaction on screen open
     ActivityMonitoringService.instance.recordInteraction();
@@ -89,7 +75,8 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     // Log activity
     ActivityMonitoringService.instance.logActivity(
       type: ActivityMonitoringService.TYPE_THERAPY,
-      description: 'Patient stopped breathing exercise after $_cycleCount cycles',
+      description:
+          'Patient stopped breathing exercise after $_cycleCount cycles',
     );
 
     setState(() {
@@ -104,11 +91,11 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     if (!_isActive) return;
 
     final pattern = _breathingPatterns[_selectedPattern]!;
-    
+
     // Inhale
     _breathe('Breathe In', pattern['inhale']!, true, () {
       if (!_isActive) return;
-      
+
       // Hold (if exists)
       if (pattern.containsKey('hold')) {
         _breathe('Hold', pattern['hold']!, false, () {
@@ -125,7 +112,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     // Exhale
     _breathe('Breathe Out', pattern['exhale']!, true, () {
       if (!_isActive) return;
-      
+
       // Hold after exhale (Box breathing only)
       if (pattern.containsKey('hold2')) {
         _breathe('Hold', pattern['hold2']!, false, () {
@@ -140,9 +127,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     });
   }
 
-  void _breathe(String phase, int duration, bool animate, VoidCallback onComplete) {
+  void _breathe(
+    String phase,
+    int duration,
+    bool animate,
+    VoidCallback onComplete,
+  ) {
     setState(() => _currentPhase = phase);
-    
+
     if (animate) {
       if (phase == 'Breathe In') {
         _controller.duration = Duration(seconds: duration);
@@ -152,7 +144,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
         _controller.reverse(from: 1);
       }
     }
-    
+
     _phaseTimer?.cancel();
     _phaseTimer = Timer(Duration(seconds: duration), onComplete);
   }
@@ -173,7 +165,8 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -185,8 +178,16 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF0A0A0A), Colors.black]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.blue50, AppColors.lavender50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.blue50,
+                          AppColors.lavender50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -225,9 +226,10 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                     children: [
                       Text(
                         'Choose a Pattern',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: isBlackMinimalism ? Colors.white : null,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: isBlackMinimalism ? Colors.white : null,
+                            ),
                       ),
                       const SizedBox(height: 12),
                       Wrap(
@@ -243,15 +245,27 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                 setState(() => _selectedPattern = pattern);
                               }
                             },
-                            selectedColor: isBlackMinimalism ? Colors.white : AppColors.blue400,
-                            backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
+                            selectedColor: isBlackMinimalism
+                                ? Colors.white
+                                : AppColors.blue400,
+                            backgroundColor: isBlackMinimalism
+                                ? const Color(0xFF1A1A1A)
+                                : null,
                             labelStyle: TextStyle(
-                              color: isSelected 
-                                  ? (isBlackMinimalism ? Colors.black : Colors.white) 
+                              color: isSelected
+                                  ? (isBlackMinimalism
+                                        ? Colors.black
+                                        : Colors.white)
                                   : (isBlackMinimalism ? Colors.white70 : null),
                               fontWeight: isSelected ? FontWeight.bold : null,
                             ),
-                            side: isBlackMinimalism ? BorderSide(color: isSelected ? Colors.white : Colors.white10) : null,
+                            side: isBlackMinimalism
+                                ? BorderSide(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.white10,
+                                  )
+                                : null,
                           );
                         }).toList(),
                       ),
@@ -315,20 +329,27 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
               // Cycle Counter
               if (_isActive)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
-                    color: isBlackMinimalism 
-                        ? const Color(0xFF0A0A0A) 
+                    color: isBlackMinimalism
+                        ? const Color(0xFF0A0A0A)
                         : (isDark ? AppColors.slate800 : Colors.white),
                     borderRadius: BorderRadius.circular(20),
-                    border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-                    boxShadow: isBlackMinimalism ? null : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    border: isBlackMinimalism
+                        ? Border.all(color: Colors.white10)
+                        : null,
+                    boxShadow: isBlackMinimalism
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                   ),
                   child: Text(
                     'Cycles: $_cycleCount',
@@ -346,7 +367,11 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: [
-                      const Icon(Icons.info_outline, size: 32, color: AppColors.blue400),
+                      const Icon(
+                        Icons.info_outline,
+                        size: 32,
+                        color: AppColors.blue400,
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         _getPatternInstructions(),
@@ -379,7 +404,10 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                             ),
                           ),
                           icon: const Icon(Icons.stop),
-                          label: const Text('Stop', style: TextStyle(fontSize: 18)),
+                          label: const Text(
+                            'Stop',
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
                       ),
                     ] else ...[
@@ -387,15 +415,25 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                         child: ElevatedButton.icon(
                           onPressed: _startBreathing,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: isBlackMinimalism ? Colors.white : AppColors.blue400,
-                            foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
+                            backgroundColor: isBlackMinimalism
+                                ? Colors.white
+                                : AppColors.blue400,
+                            foregroundColor: isBlackMinimalism
+                                ? Colors.black
+                                : Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           icon: const Icon(Icons.play_arrow),
-                          label: const Text('Start', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          label: const Text(
+                            'Start',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -84,10 +84,7 @@ class AppColors {
     Color(0xFFECFDF5),
   ];
 
-  static const lavenderGradient = [
-    Color(0xFFEDE9FE),
-    Color(0xFFFEE2E2),
-  ];
+  static const lavenderGradient = [Color(0xFFEDE9FE), Color(0xFFFEE2E2)];
 
   static const tealGradient = [
     Color(0xFF14B8A6),
@@ -338,11 +335,7 @@ class AppTheme {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: AppRadius.xl),
       ),
-      extensions: [
-        AppCardStyle.light,
-        AppPageStyle.light,
-        AppNavStyle.light,
-      ],
+      extensions: [AppCardStyle.light, AppPageStyle.light, AppNavStyle.light],
     );
   }
 
@@ -385,11 +378,7 @@ class AppTheme {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: AppRadius.xl),
       ),
-      extensions: [
-        AppCardStyle.dark,
-        AppPageStyle.dark,
-        AppNavStyle.dark,
-      ],
+      extensions: [AppCardStyle.dark, AppPageStyle.dark, AppNavStyle.dark],
     );
   }
 
@@ -437,11 +426,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: AppRadius.sm),
         ),
       ),
-      extensions: [
-        AppCardStyle.black,
-        AppPageStyle.black,
-        AppNavStyle.black,
-      ],
+      extensions: [AppCardStyle.black, AppPageStyle.black, AppNavStyle.black],
     );
   }
 }

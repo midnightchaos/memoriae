@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 
 class DailyRoutinesScreen extends StatefulWidget {
   final String userId;
-  
+
   const DailyRoutinesScreen({super.key, required this.userId});
 
   @override
@@ -29,14 +29,18 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
 
   Future<void> _loadRoutines() async {
     try {
-      final routines = await DatabaseHelper.instance.getDailyRoutines(widget.userId);
+      final routines = await DatabaseHelper.instance.getDailyRoutines(
+        widget.userId,
+      );
       setState(() {
         _routines.clear();
         _routines.addAll(routines);
       });
-      
+
       // Reschedule all routine notifications
-      await DailyRoutineNotificationService.instance.rescheduleAllRoutines(routines);
+      await DailyRoutineNotificationService.instance.rescheduleAllRoutines(
+        routines,
+      );
     } catch (e) {
       print('Error loading routines: $e');
     }
@@ -48,7 +52,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
 
     switch (_selectedFilter) {
       case 'today':
-        return _routines.where((r) => r.days.contains(today) && r.isActive).toList();
+        return _routines
+            .where((r) => r.days.contains(today) && r.isActive)
+            .toList();
       case 'active':
         return _routines.where((r) => r.isActive).toList();
       default:
@@ -61,20 +67,24 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    final sortedRoutines = _filteredRoutines..sort((a, b) => a.time.compareTo(b.time));
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+    final sortedRoutines = _filteredRoutines
+      ..sort((a, b) => a.time.compareTo(b.time));
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           color: isBlackMinimalism ? Colors.black : null,
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [AppColors.slate900, AppColors.slate800]
-                : [AppColors.mint50, AppColors.lavender50],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [AppColors.slate900, AppColors.slate800]
+                      : [AppColors.mint50, AppColors.lavender50],
+                ),
         ),
         child: SafeArea(
           child: Column(
@@ -88,7 +98,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                       icon: const Icon(Icons.arrow_back, size: 28),
                       onPressed: () => Navigator.pop(context),
                       style: IconButton.styleFrom(
-                        foregroundColor: isDark ? AppColors.slate400 : AppColors.slate600,
+                        foregroundColor: isDark
+                            ? AppColors.slate400
+                            : AppColors.slate600,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -107,9 +119,19 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                   children: [
                     _buildFilterChip('All', 'all', isDark, isBlackMinimalism),
                     const SizedBox(width: 8),
-                    _buildFilterChip('Today', 'today', isDark, isBlackMinimalism),
+                    _buildFilterChip(
+                      'Today',
+                      'today',
+                      isDark,
+                      isBlackMinimalism,
+                    ),
                     const SizedBox(width: 8),
-                    _buildFilterChip('Active', 'active', isDark, isBlackMinimalism),
+                    _buildFilterChip(
+                      'Active',
+                      'active',
+                      isDark,
+                      isBlackMinimalism,
+                    ),
                   ],
                 ),
               ),
@@ -127,16 +149,22 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                             const SizedBox(height: 16),
                             Text(
                               'No routines scheduled',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: isBlackMinimalism ? Colors.white70 : null,
-                              ),
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(
+                                    color: isBlackMinimalism
+                                        ? Colors.white70
+                                        : null,
+                                  ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Tap + to create your first routine',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: isBlackMinimalism ? Colors.white38 : null,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: isBlackMinimalism
+                                        ? Colors.white38
+                                        : null,
+                                  ),
                             ),
                           ],
                         ),
@@ -146,7 +174,11 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                         itemCount: sortedRoutines.length,
                         itemBuilder: (context, index) {
                           final routine = sortedRoutines[index];
-                          return _buildRoutineCard(routine, isDark, isBlackMinimalism);
+                          return _buildRoutineCard(
+                            routine,
+                            isDark,
+                            isBlackMinimalism,
+                          );
                         },
                       ),
               ),
@@ -164,7 +196,12 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
     );
   }
 
-  Widget _buildFilterChip(String label, String value, bool isDark, bool isBlackMinimalism) {
+  Widget _buildFilterChip(
+    String label,
+    String value,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     final isSelected = _selectedFilter == value;
     return InkWell(
       onTap: () => setState(() => _selectedFilter = value),
@@ -173,11 +210,13 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? (isBlackMinimalism ? Colors.white : AppColors.mint500)
-              : isBlackMinimalism 
-                ? Colors.white10
-                : (isDark ? AppColors.slate700 : Colors.white),
+              : isBlackMinimalism
+              ? Colors.white10
+              : (isDark ? AppColors.slate700 : Colors.white),
           borderRadius: BorderRadius.circular(20),
-          border: isBlackMinimalism ? Border.all(color: isSelected ? Colors.white : Colors.white12) : null,
+          border: isBlackMinimalism
+              ? Border.all(color: isSelected ? Colors.white : Colors.white12)
+              : null,
           boxShadow: (isSelected && !isBlackMinimalism)
               ? [
                   BoxShadow(
@@ -191,7 +230,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? (isBlackMinimalism ? Colors.black : Colors.white) : (isBlackMinimalism ? Colors.white70 : null),
+            color: isSelected
+                ? (isBlackMinimalism ? Colors.black : Colors.white)
+                : (isBlackMinimalism ? Colors.white70 : null),
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -199,29 +240,38 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
     );
   }
 
-  Widget _buildRoutineCard(DailyRoutine routine, bool isDark, bool isBlackMinimalism) {
+  Widget _buildRoutineCard(
+    DailyRoutine routine,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     final now = DateTime.now();
     final routineTime = TimeOfDay(
       hour: int.parse(routine.time.split(':')[0]),
       minute: int.parse(routine.time.split(':')[1]),
     );
-    final isUpcoming = routineTime.hour > now.hour ||
+    final isUpcoming =
+        routineTime.hour > now.hour ||
         (routineTime.hour == now.hour && routineTime.minute > now.minute);
     final isToday = routine.days.contains(now.weekday);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-        boxShadow: isBlackMinimalism ? null : [
-          BoxShadow(
-            color: AppColors.mint500.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: isBlackMinimalism
+            ? null
+            : [
+                BoxShadow(
+                  color: AppColors.mint500.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -229,14 +279,16 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            gradient: isBlackMinimalism ? null : LinearGradient(
-              colors: isToday && isUpcoming
-                  ? [AppColors.mint400, AppColors.mint600]
-                  : [AppColors.slate300, AppColors.slate400],
-            ),
-            color: isBlackMinimalism 
-              ? (isToday && isUpcoming ? Colors.white : Colors.white10)
-              : null,
+            gradient: isBlackMinimalism
+                ? null
+                : LinearGradient(
+                    colors: isToday && isUpcoming
+                        ? [AppColors.mint400, AppColors.mint600]
+                        : [AppColors.slate300, AppColors.slate400],
+                  ),
+            color: isBlackMinimalism
+                ? (isToday && isUpcoming ? Colors.white : Colors.white10)
+                : null,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -247,14 +299,20 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: isBlackMinimalism ? (isToday && isUpcoming ? Colors.black : Colors.white) : Colors.white,
+                  color: isBlackMinimalism
+                      ? (isToday && isUpcoming ? Colors.black : Colors.white)
+                      : Colors.white,
                 ),
               ),
               Text(
                 routine.time.split(':')[1],
                 style: TextStyle(
                   fontSize: 14,
-                  color: isBlackMinimalism ? (isToday && isUpcoming ? Colors.black54 : Colors.white70) : Colors.white,
+                  color: isBlackMinimalism
+                      ? (isToday && isUpcoming
+                            ? Colors.black54
+                            : Colors.white70)
+                      : Colors.white,
                 ),
               ),
             ],
@@ -263,7 +321,7 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         title: Text(
           routine.title,
           style: TextStyle(
-            fontSize: 18, 
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isBlackMinimalism ? Colors.white : null,
           ),
@@ -274,7 +332,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
             const SizedBox(height: 4),
             Text(
               routine.description,
-              style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -303,15 +363,27 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                 ),
               ),
             PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: isBlackMinimalism ? Colors.white70 : null),
+              icon: Icon(
+                Icons.more_vert,
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
               itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
-                      Icon(Icons.edit, size: 20, color: isBlackMinimalism ? Colors.white : null),
+                      Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
                       const SizedBox(width: 8),
-                      Text('Edit', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                      Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: isBlackMinimalism ? Colors.white : null,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -348,9 +420,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         width: 24,
         height: 24,
         decoration: BoxDecoration(
-          color: isActive 
-            ? (isBlackMinimalism ? Colors.white : AppColors.mint500) 
-            : (isBlackMinimalism ? Colors.white10 : AppColors.slate200),
+          color: isActive
+              ? (isBlackMinimalism ? Colors.white : AppColors.mint500)
+              : (isBlackMinimalism ? Colors.white10 : AppColors.slate200),
           shape: BoxShape.circle,
         ),
         child: Center(
@@ -358,9 +430,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
             dayNames[index],
             style: TextStyle(
               fontSize: 10,
-              color: isActive 
-                ? (isBlackMinimalism ? Colors.black : Colors.white) 
-                : (isBlackMinimalism ? Colors.white38 : AppColors.slate500),
+              color: isActive
+                  ? (isBlackMinimalism ? Colors.black : Colors.white)
+                  : (isBlackMinimalism ? Colors.white38 : AppColors.slate500),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -381,14 +453,17 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
     List<int> selectedDays = routine?.days.toList() ?? [1, 2, 3, 4, 5, 6, 7];
 
     final themeService = context.read<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           title: Text(
             routine == null ? 'Add Routine' : 'Edit Routine',
             style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
@@ -402,10 +477,18 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                   decoration: InputDecoration(
                     labelText: 'Title',
                     border: const OutlineInputBorder(),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -413,19 +496,34 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                   decoration: InputDecoration(
                     labelText: 'Description',
                     border: const OutlineInputBorder(),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                   maxLines: 2,
                 ),
                 const SizedBox(height: 16),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text('Time', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+                  title: Text(
+                    'Time',
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white70 : null,
+                    ),
+                  ),
                   trailing: Text(
                     selectedTime.format(context),
-                    style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
                   ),
                   onTap: () async {
                     final time = await showTimePicker(
@@ -449,7 +547,15 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                 Wrap(
                   spacing: 8,
                   children: List.generate(7, (index) {
-                    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    const dayNames = [
+                      'Mon',
+                      'Tue',
+                      'Wed',
+                      'Thu',
+                      'Fri',
+                      'Sat',
+                      'Sun',
+                    ];
                     final dayNum = index + 1;
                     final isSelected = selectedDays.contains(dayNum);
                     return FilterChip(
@@ -458,9 +564,9 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                       selectedColor: isBlackMinimalism ? Colors.white : null,
                       checkmarkColor: isBlackMinimalism ? Colors.black : null,
                       labelStyle: TextStyle(
-                        color: isSelected 
-                          ? (isBlackMinimalism ? Colors.black : Colors.white)
-                          : (isBlackMinimalism ? Colors.white70 : null),
+                        color: isSelected
+                            ? (isBlackMinimalism ? Colors.black : Colors.white)
+                            : (isBlackMinimalism ? Colors.white70 : null),
                       ),
                       onSelected: (selected) {
                         setDialogState(() {
@@ -480,7 +586,12 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white70 : null,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -490,20 +601,23 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                   );
                   return;
                 }
-                
+
                 if (selectedDays.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please select at least one day')),
+                    const SnackBar(
+                      content: Text('Please select at least one day'),
+                    ),
                   );
                   return;
                 }
-                
+
                 final newRoutine = DailyRoutine(
                   id: routine?.id ?? const Uuid().v4(),
                   userId: widget.userId,
                   title: titleController.text.trim(),
                   description: descController.text.trim(),
-                  time: '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
+                  time:
+                      '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
                   days: selectedDays,
                   createdAt: routine?.createdAt ?? DateTime.now(),
                 );
@@ -530,31 +644,38 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
       } else {
         await DatabaseHelper.instance.createDailyRoutine(routine);
       }
-      
+
       // Schedule notification if active
       if (routine.isActive) {
-        await DailyRoutineNotificationService.instance.scheduleRoutineReminder(routine);
+        await DailyRoutineNotificationService.instance.scheduleRoutineReminder(
+          routine,
+        );
       }
-      
+
       await _loadRoutines();
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Routine ${index >= 0 ? 'updated' : 'added'} successfully')),
+          SnackBar(
+            content: Text(
+              'Routine ${index >= 0 ? 'updated' : 'added'} successfully',
+            ),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving routine: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving routine: $e')));
       }
     }
   }
 
   Future<void> _deleteRoutine(DailyRoutine routine) async {
     final themeService = context.read<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     final confirm = await showDialog<bool>(
       context: context,
@@ -571,7 +692,12 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -581,24 +707,26 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
         ],
       ),
     );
-    
+
     if (confirm == true) {
       try {
         // Cancel notifications first
-        await DailyRoutineNotificationService.instance.cancelRoutineReminder(routine.id);
+        await DailyRoutineNotificationService.instance.cancelRoutineReminder(
+          routine.id,
+        );
         await DatabaseHelper.instance.deleteDailyRoutine(routine.id);
         await _loadRoutines();
-        
+
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('"${routine.title}" deleted')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('"${routine.title}" deleted')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error deleting routine: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error deleting routine: $e')));
         }
       }
     }

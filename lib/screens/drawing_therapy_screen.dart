@@ -51,7 +51,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
 
     try {
       // Create image from canvas
-      final boundary = _canvasKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final boundary =
+          _canvasKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final buffer = byteData!.buffer.asUint8List();
@@ -82,9 +84,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving: $e')));
       }
     } finally {
       setState(() => _isSaving = false);
@@ -94,7 +96,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
   Future<void> _shareDrawing() async {
     if (_points.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nothing to share! Draw something first.')),
+        const SnackBar(
+          content: Text('Nothing to share! Draw something first.'),
+        ),
       );
       return;
     }
@@ -103,7 +107,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
 
     try {
       // Create image from canvas
-      final boundary = _canvasKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final boundary =
+          _canvasKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final buffer = byteData!.buffer.asUint8List();
@@ -122,15 +128,14 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
       );
 
       // Share the file
-      await Share.shareXFiles(
-        [XFile(path)],
-        text: 'Check out my drawing from Drawing Therapy!',
-      );
+      await Share.shareXFiles([
+        XFile(path),
+      ], text: 'Check out my drawing from Drawing Therapy!');
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sharing: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error sharing: $e')));
       }
     } finally {
       setState(() => _isSaving = false);
@@ -139,18 +144,21 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
 
   Future<void> _showGalleryDialog() async {
     final directory = await getApplicationDocumentsDirectory();
-    final files = directory
-        .listSync()
-        .where((f) => f.path.endsWith('.png') && f.path.contains('drawing_'))
-        .toList()
-      ..sort((a, b) => b.path.compareTo(a.path)); // Most recent first
+    final files =
+        directory
+            .listSync()
+            .where(
+              (f) => f.path.endsWith('.png') && f.path.contains('drawing_'),
+            )
+            .toList()
+          ..sort((a, b) => b.path.compareTo(a.path)); // Most recent first
 
     if (!mounted) return;
 
     if (files.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No saved drawings yet!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No saved drawings yet!')));
       return;
     }
 
@@ -182,10 +190,7 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      file,
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.file(file, fit: BoxFit.cover),
                   ),
                 ),
               );
@@ -231,7 +236,10 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                       );
                     },
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                    label: const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               ),
@@ -245,7 +253,8 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     return Scaffold(
@@ -257,8 +266,16 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF0A0A0A), Colors.black]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.cream50, AppColors.lavender50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.cream50,
+                          AppColors.lavender50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -297,9 +314,15 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isBlackMinimalism ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.9),
+                    color: isBlackMinimalism
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: isBlackMinimalism ? Colors.white10 : AppColors.lavender200),
+                    border: Border.all(
+                      color: isBlackMinimalism
+                          ? Colors.white10
+                          : AppColors.lavender200,
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -314,7 +337,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: isBlackMinimalism ? Colors.white38 : AppColors.lavender500,
+                                color: isBlackMinimalism
+                                    ? Colors.white38
+                                    : AppColors.lavender500,
                               ),
                             ),
                             const Text(
@@ -344,12 +369,14 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                     key: _canvasKey,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFFE0E0E0) : Colors.white,
+                        color: isBlackMinimalism
+                            ? const Color(0xFFE0E0E0)
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: isBlackMinimalism 
-                                ? Colors.black.withOpacity(0.5) 
+                            color: isBlackMinimalism
+                                ? Colors.black.withOpacity(0.5)
                                 : AppColors.lavender400.withOpacity(0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
@@ -361,10 +388,12 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                         child: GestureDetector(
                           onPanUpdate: (details) {
                             setState(() {
-                              _points.add(DrawingPoint(
-                                details.localPosition,
-                                _selectedColor,
-                              ));
+                              _points.add(
+                                DrawingPoint(
+                                  details.localPosition,
+                                  _selectedColor,
+                                ),
+                              );
                             });
                           },
                           onPanEnd: (details) {
@@ -404,7 +433,11 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                           color: color,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? (isBlackMinimalism ? Colors.white : Colors.white) : Colors.transparent,
+                            color: isSelected
+                                ? (isBlackMinimalism
+                                      ? Colors.white
+                                      : Colors.white)
+                                : Colors.transparent,
                             width: 3,
                           ),
                           boxShadow: [
@@ -432,8 +465,12 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                       child: ElevatedButton.icon(
                         onPressed: _isSaving ? null : _saveDrawing,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender500,
-                          foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
+                          backgroundColor: isBlackMinimalism
+                              ? Colors.white
+                              : AppColors.lavender500,
+                          foregroundColor: isBlackMinimalism
+                              ? Colors.black
+                              : Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         icon: _isSaving
@@ -455,8 +492,12 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                         onPressed: _isSaving ? null : _shareDrawing,
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: isBlackMinimalism ? const BorderSide(color: Colors.white24) : null,
-                          foregroundColor: isBlackMinimalism ? Colors.white : null,
+                          side: isBlackMinimalism
+                              ? const BorderSide(color: Colors.white24)
+                              : null,
+                          foregroundColor: isBlackMinimalism
+                              ? Colors.white
+                              : null,
                         ),
                         icon: const Icon(Icons.share),
                         label: const Text('Share'),
@@ -471,7 +512,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                           context: context,
                           builder: (context) => AlertDialog(
                             title: const Text('Clear Canvas'),
-                            content: const Text('Are you sure you want to clear your drawing?'),
+                            content: const Text(
+                              'Are you sure you want to clear your drawing?',
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),

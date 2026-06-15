@@ -16,20 +16,14 @@ class FamiliarFaceCard extends StatelessWidget {
   });
 
   Future<void> _makeCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     }
   }
 
   Future<void> _sendMessage(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'sms',
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: 'sms', path: phoneNumber);
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     }
@@ -42,10 +36,7 @@ class FamiliarFaceCard extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         leading: _buildAvatar(),
-        title: Text(
-          face.name,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        title: Text(face.name, style: Theme.of(context).textTheme.titleMedium),
         subtitle: Text(
           face.relation,
           style: Theme.of(context).textTheme.bodyMedium,
@@ -108,7 +99,8 @@ class FamiliarFaceCard extends StatelessWidget {
               width: 80,
               height: 80,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
             )
           : Container(
               width: 80,

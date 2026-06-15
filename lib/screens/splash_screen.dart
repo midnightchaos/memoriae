@@ -79,10 +79,13 @@ class _SplashScreenState extends State<SplashScreen>
           Widget destination;
           if (user != null) {
             if (mounted) {
-              final profileService = Provider.of<ProfileService>(context, listen: false);
+              final profileService = Provider.of<ProfileService>(
+                context,
+                listen: false,
+              );
               await profileService.syncWithUser(user);
             }
-            
+
             destination = auth.isCaregiver
                 ? const CaregiverDashboardScreen()
                 : const MainNavigationScreen();
@@ -97,8 +100,8 @@ class _SplashScreenState extends State<SplashScreen>
                     destination,
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
+                      return FadeTransition(opacity: animation, child: child);
+                    },
                 transitionDuration: AppDurations.pageTransition,
               ),
               (route) => false,
@@ -129,9 +132,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          color: theme.scaffoldBackgroundColor,
-        ),
+        decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
         child: Center(
           child: AnimatedBuilder(
             animation: _controller,
@@ -172,10 +173,7 @@ class _SplashScreenState extends State<SplashScreen>
                             ],
                           ),
                           child: const Center(
-                            child: Text(
-                              '💜',
-                              style: TextStyle(fontSize: 56),
-                            ),
+                            child: Text('💜', style: TextStyle(fontSize: 56)),
                           ),
                         ),
                       ),
@@ -207,8 +205,9 @@ class _SplashScreenState extends State<SplashScreen>
                         style: GoogleFonts.dmSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: theme.textTheme.bodyLarge?.color
-                              ?.withOpacity(0.7),
+                          color: theme.textTheme.bodyLarge?.color?.withOpacity(
+                            0.7,
+                          ),
                           letterSpacing: 1.0,
                         ),
                       ),
@@ -217,9 +216,7 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(height: AppSpacing.xxl),
 
                     // Loading dots
-                    _LoadingDots(
-                      color: AppColors.lavender400,
-                    ),
+                    _LoadingDots(color: AppColors.lavender400),
                   ],
                 ),
               );
@@ -258,9 +255,10 @@ class _LoadingDotsState extends State<_LoadingDots>
     );
 
     _animations = _controllers.map((c) {
-      return Tween<double>(begin: 0.3, end: 1.0).animate(
-        CurvedAnimation(parent: c, curve: Curves.easeInOut),
-      );
+      return Tween<double>(
+        begin: 0.3,
+        end: 1.0,
+      ).animate(CurvedAnimation(parent: c, curve: Curves.easeInOut));
     }).toList();
 
     // Stagger the dot animations

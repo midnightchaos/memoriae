@@ -33,20 +33,20 @@ class UserProfile {
   }
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'email': email,
-        'age': age,
-        'caregiverAccess': caregiverAccess ? 1 : 0,
-        'linkedCaregiverId': linkedCaregiverId,
-      };
+    'id': id,
+    'name': name,
+    'email': email,
+    'age': age,
+    'caregiverAccess': caregiverAccess ? 1 : 0,
+    'linkedCaregiverId': linkedCaregiverId,
+  };
 
   factory UserProfile.fromMap(Map<String, dynamic> m) => UserProfile(
-        id: m['id'],
-        name: m['name'],
-        email: m['email'],
-        age: m['age'] as int?,
-        caregiverAccess: (m['caregiverAccess'] ?? 0) == 1,
-        linkedCaregiverId: m['linkedCaregiverId'],
-      );
+    id: m['id'],
+    name: m['name'],
+    email: m['email'],
+    age: m['age'] as int?,
+    caregiverAccess: (m['caregiverAccess'] ?? 0) == 1,
+    linkedCaregiverId: m['linkedCaregiverId'],
+  );
 }

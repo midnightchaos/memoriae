@@ -79,24 +79,28 @@ class DataExportService {
     try {
       final report = await generateReport(userId);
       final jsonString = JsonEncoder.withIndent('  ').convert(report);
-      
+
       // Get the app's documents directory
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'memoriae_export_${DateTime.now().millisecondsSinceEpoch}.json';
+      final fileName =
+          'memoriae_export_${DateTime.now().millisecondsSinceEpoch}.json';
       final file = File(path.join(directory.path, fileName));
-      
+
       // Write the file
       await file.writeAsString(jsonString);
-      
+
       // Share the file
       await Share.shareXFiles(
         [XFile(file.path)],
         subject: 'Memoriae Data Export',
         text: 'Here is your Memoriae data export from ${DateTime.now()}',
       );
-      
+
       // Update last export date
-      await _prefs.setString(_lastExportDateKey, DateTime.now().toIso8601String());
+      await _prefs.setString(
+        _lastExportDateKey,
+        DateTime.now().toIso8601String(),
+      );
     } catch (e) {
       throw Exception('Failed to export data: $e');
     }
@@ -112,10 +116,11 @@ class DataExportService {
 
       final report = await generateReport(userId);
       final jsonString = JsonEncoder.withIndent('  ').convert(report);
-      
+
       // Get the app's documents directory
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'memoriae_export_${DateTime.now().millisecondsSinceEpoch}.json';
+      final fileName =
+          'memoriae_export_${DateTime.now().millisecondsSinceEpoch}.json';
       final file = File(path.join(directory.path, fileName));
       await file.writeAsString(jsonString);
 
@@ -134,17 +139,18 @@ class DataExportService {
       final message = Message()
         ..from = const Address('noreply@memoriae.app', 'Memoriae App')
         ..recipients.add(email)
-        ..subject = 'Memoriae Data Export - ${DateTime.now()}' 
+        ..subject = 'Memoriae Data Export - ${DateTime.now()}'
         ..text = 'Please find attached your Memoriae data export.'
-        ..attachments = [
-          FileAttachment(file)..location = Location.inline
-        ];
+        ..attachments = [FileAttachment(file)..location = Location.inline];
 
       // Send the email
       await send(message, smtpServer);
-      
+
       // Update last export date
-      await _prefs.setString(_lastExportDateKey, DateTime.now().toIso8601String());
+      await _prefs.setString(
+        _lastExportDateKey,
+        DateTime.now().toIso8601String(),
+      );
     } catch (e) {
       throw Exception('Failed to send email: $e');
     }
@@ -154,19 +160,19 @@ class DataExportService {
   bool isScheduledExportDue() {
     final lastExport = _prefs.getString(_lastExportDateKey);
     if (lastExport == null) return false;
-    
+
     final lastExportDate = DateTime.parse(lastExport);
     final frequency = _prefs.getString(_exportFrequencyKey) ?? 'manual';
     final now = DateTime.now();
-    
+
     switch (frequency) {
       case 'daily':
         return now.difference(lastExportDate).inHours >= 24;
       case 'weekly':
         return now.difference(lastExportDate).inDays >= 7;
       case 'monthly':
-        return now.year > lastExportDate.year || 
-               now.month > lastExportDate.month;
+        return now.year > lastExportDate.year ||
+            now.month > lastExportDate.month;
       default:
         return false;
     }

@@ -43,7 +43,9 @@ class User {
       age: map['age'] as int?,
       profileImagePath: map['profileImagePath'] as String?,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      lastLoginAt: DateTime.fromMillisecondsSinceEpoch(map['lastLoginAt'] as int),
+      lastLoginAt: DateTime.fromMillisecondsSinceEpoch(
+        map['lastLoginAt'] as int,
+      ),
       isGuest: map['isGuest'] == 1,
       isActive: map['isActive'] == 1,
     );

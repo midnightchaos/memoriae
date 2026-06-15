@@ -19,9 +19,10 @@ class IntentHelper {
       }
       return false;
     } catch (e) {
-      developer.log('Error checking package: $packageName - $e', 
+      developer.log(
+        'Error checking package: $packageName - $e',
         name: 'IntentHelper',
-        error: e
+        error: e,
       );
       return false;
     }
@@ -42,7 +43,7 @@ class IntentHelper {
   /// Launch WhatsApp with pre-filled text
   /// Shows user-friendly error if WhatsApp is not installed
   static Future<bool> launchWhatsApp(
-    BuildContext context, 
+    BuildContext context,
     String message, {
     String? phoneNumber,
   }) async {
@@ -57,7 +58,7 @@ class IntentHelper {
 
       // Check if WhatsApp is installed
       final canLaunch = await canLaunchUrl(whatsappUrl);
-      
+
       if (!canLaunch) {
         if (context.mounted) {
           _showAppNotInstalledDialog(
@@ -82,12 +83,13 @@ class IntentHelper {
 
       return launched;
     } catch (e) {
-      developer.log('WhatsApp launch error: $e', 
+      developer.log(
+        'WhatsApp launch error: $e',
         name: 'IntentHelper',
         error: e,
-        stackTrace: StackTrace.current
+        stackTrace: StackTrace.current,
       );
-      
+
       if (context.mounted) {
         _showLaunchErrorDialog(context, 'WhatsApp', e.toString());
       }
@@ -114,16 +116,19 @@ class IntentHelper {
           .join('&');
 
       final emailUrl = Uri.parse(
-        recipient != null 
+        recipient != null
             ? 'mailto:$recipient${queryString.isNotEmpty ? '?$queryString' : ''}'
-            : 'mailto:${queryString.isNotEmpty ? '?$queryString' : ''}'
+            : 'mailto:${queryString.isNotEmpty ? '?$queryString' : ''}',
       );
 
-      developer.log('Attempting to launch email client...', name: 'IntentHelper');
+      developer.log(
+        'Attempting to launch email client...',
+        name: 'IntentHelper',
+      );
 
       // Check if email client is available
       final canLaunch = await canLaunchUrl(emailUrl);
-      
+
       if (!canLaunch) {
         if (context.mounted) {
           _showEmailClientMissingDialog(context);
@@ -143,12 +148,13 @@ class IntentHelper {
 
       return launched;
     } catch (e) {
-      developer.log('Email launch error: $e', 
+      developer.log(
+        'Email launch error: $e',
         name: 'IntentHelper',
         error: e,
-        stackTrace: StackTrace.current
+        stackTrace: StackTrace.current,
       );
-      
+
       if (context.mounted) {
         _showLaunchErrorDialog(context, 'Email', e.toString());
       }
@@ -158,7 +164,7 @@ class IntentHelper {
 
   /// Launch SMS with pre-filled message
   static Future<bool> launchSms(
-    BuildContext context, 
+    BuildContext context,
     String message, {
     String? phoneNumber,
   }) async {
@@ -170,7 +176,7 @@ class IntentHelper {
       developer.log('Attempting to launch SMS...', name: 'IntentHelper');
 
       final canLaunch = await canLaunchUrl(smsUrl);
-      
+
       if (!canLaunch) {
         if (context.mounted) {
           _showSimpleError(context, 'SMS is not available on this device');
@@ -189,12 +195,13 @@ class IntentHelper {
 
       return launched;
     } catch (e) {
-      developer.log('SMS launch error: $e', 
+      developer.log(
+        'SMS launch error: $e',
         name: 'IntentHelper',
         error: e,
-        stackTrace: StackTrace.current
+        stackTrace: StackTrace.current,
       );
-      
+
       if (context.mounted) {
         _showLaunchErrorDialog(context, 'SMS', e.toString());
       }
@@ -314,8 +321,9 @@ class IntentHelper {
     String error,
   ) {
     // Simplify error message for user
-    String userMessage = 'An unexpected error occurred while trying to open $appName.';
-    
+    String userMessage =
+        'An unexpected error occurred while trying to open $appName.';
+
     if (error.contains('ActivityNotFoundException')) {
       userMessage = '$appName is not installed or not configured correctly.';
     } else if (error.contains('SecurityException')) {
@@ -385,7 +393,11 @@ class IntentHelper {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.message_outlined, color: Colors.blue, size: 32),
+              leading: const Icon(
+                Icons.message_outlined,
+                color: Colors.blue,
+                size: 32,
+              ),
               title: const Text('SMS'),
               subtitle: const Text('Share via text message'),
               onTap: () => Navigator.pop(context, 'sms'),

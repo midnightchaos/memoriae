@@ -30,7 +30,9 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
   Future<void> _loadFaces() async {
     final profileService = context.read<ProfileService>();
     if (profileService.profile != null) {
-      await context.read<FamiliarFaceService>().loadFaces(profileService.profile!.id);
+      await context.read<FamiliarFaceService>().loadFaces(
+        profileService.profile!.id,
+      );
     }
   }
 
@@ -46,7 +48,10 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
               child: Row(
                 children: [
                   if (Navigator.of(context).canPop())
@@ -58,9 +63,9 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                   Text(
                     'Familiar Faces',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: pageStyle.sectionHeaderColor,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: pageStyle.sectionHeaderColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -68,7 +73,11 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                     onPressed: () {
                       showSearch(
                         context: context,
-                        delegate: _FacesSearchDelegate(faceService, _loadFaces, context),
+                        delegate: _FacesSearchDelegate(
+                          faceService,
+                          _loadFaces,
+                          context,
+                        ),
                       );
                     },
                   ),
@@ -81,12 +90,14 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
               child: faceService.isLoading
                   ? Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.lavender400),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.lavender400,
+                        ),
                       ),
                     )
                   : faces.isEmpty
-                      ? _buildEmptyState()
-                      : _buildFacesGrid(faces),
+                  ? _buildEmptyState()
+                  : _buildFacesGrid(faces),
             ),
           ],
         ),
@@ -102,7 +113,10 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
           }
         },
         icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: const Text('Add Person', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text(
+          'Add Person',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.lavender500,
         elevation: 8,
       ),
@@ -127,16 +141,16 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
           Text(
             'No familiar faces yet',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: pageStyle.sectionHeaderColor,
-                ),
+              color: pageStyle.sectionHeaderColor,
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             'Add photos of family and friends\nto help with recognition.',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: pageStyle.subtitleColor,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: pageStyle.subtitleColor),
           ),
         ],
       ),
@@ -145,7 +159,10 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
 
   Widget _buildFacesGrid(List<FamiliarFace> faces) {
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: AppSpacing.md,
@@ -177,7 +194,9 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
           // Photo
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
               child: face.photoPath != null
                   ? Image.file(
                       File(face.photoPath!),
@@ -214,9 +233,14 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                 ),
                 const SizedBox(height: 2),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: isBlack ? Colors.white10 : AppColors.lavender500.withOpacity(0.1),
+                    color: isBlack
+                        ? Colors.white10
+                        : AppColors.lavender500.withOpacity(0.1),
                     borderRadius: AppRadius.sm,
                   ),
                   child: Text(
@@ -252,19 +276,30 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
         title: const Text('Delete Face'),
         content: Text('Remove ${face.name} from familiar faces?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () async {
               Navigator.pop(ctx);
               final profileId = context.read<ProfileService>().profile?.id;
               if (profileId != null) {
-                await context.read<FamiliarFaceService>().deleteFace(face.id, profileId);
+                await context.read<FamiliarFaceService>().deleteFace(
+                  face.id,
+                  profileId,
+                );
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${face.name} removed')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${face.name} removed')),
+                  );
                 }
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),
@@ -277,11 +312,18 @@ class _FacesSearchDelegate extends SearchDelegate {
   final VoidCallback onSearchComplete;
   final BuildContext parentContext;
 
-  _FacesSearchDelegate(this.faceService, this.onSearchComplete, this.parentContext);
+  _FacesSearchDelegate(
+    this.faceService,
+    this.onSearchComplete,
+    this.parentContext,
+  );
 
   @override
   List<Widget> buildActions(BuildContext context) => [
-    IconButton(icon: const Icon(Icons.clear_rounded), onPressed: () => query = '')
+    IconButton(
+      icon: const Icon(Icons.clear_rounded),
+      onPressed: () => query = '',
+    ),
   ];
 
   @override
@@ -305,15 +347,23 @@ class _FacesSearchDelegate extends SearchDelegate {
           return const Center(child: CircularProgressIndicator());
         }
         final results = snapshot.data ?? [];
-        if (results.isEmpty) return const Center(child: Text('No matches found'));
+        if (results.isEmpty)
+          return const Center(child: Text('No matches found'));
 
         return GridView.builder(
           padding: const EdgeInsets.all(AppSpacing.lg),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: 0.8
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.8,
           ),
           itemCount: results.length,
-          itemBuilder: (context, index) => _SearchResultCard(results[index], onSearchComplete, () => close(context, null)),
+          itemBuilder: (context, index) => _SearchResultCard(
+            results[index],
+            onSearchComplete,
+            () => close(context, null),
+          ),
         );
       },
     );
@@ -331,22 +381,38 @@ class _SearchResultCard extends StatelessWidget {
     return GlassCard(
       onTap: () {
         onClose();
-        Navigator.pushNamed(context, AddEditFaceScreen.routeName, arguments: face).then((_) => onRefresh());
+        Navigator.pushNamed(
+          context,
+          AddEditFaceScreen.routeName,
+          arguments: face,
+        ).then((_) => onRefresh());
       },
       padding: EdgeInsets.zero,
       child: Column(
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              child: face.photoPath != null 
-                  ? Image.file(File(face.photoPath!), fit: BoxFit.cover, width: double.infinity)
-                  : Container(color: Colors.grey[200], child: const Icon(Icons.person, size: 48)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+              child: face.photoPath != null
+                  ? Image.file(
+                      File(face.photoPath!),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    )
+                  : Container(
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.person, size: 48),
+                    ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(face.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              face.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),

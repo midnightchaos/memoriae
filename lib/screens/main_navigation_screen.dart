@@ -56,60 +56,66 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       },
       child: Scaffold(
         body: AnimatedSwitcher(
-        duration: AppDurations.normal,
-        child: _screens[_currentIndex],
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: navStyle.barBackground,
-          border: Border(
-            top: BorderSide(
-              color: navStyle.barBorderColor,
-              width: 1,
+          duration: AppDurations.normal,
+          child: _screens[_currentIndex],
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: navStyle.barBackground,
+            border: Border(
+              top: BorderSide(color: navStyle.barBorderColor, width: 1),
             ),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm + 4,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(_items.length, (index) {
-                final isSelected = _currentIndex == index;
-                return _buildNavItem(_items[index], isSelected, index, navStyle);
-              }),
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: _currentIndex != 2
-          ? Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: AppShadows.glowWith(AppColors.lavender400),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm + 4,
               ),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChatbotScreen(),
-                    ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(_items.length, (index) {
+                  final isSelected = _currentIndex == index;
+                  return _buildNavItem(
+                    _items[index],
+                    isSelected,
+                    index,
+                    navStyle,
                   );
-                },
-                child: const Icon(Icons.chat_rounded, size: 24),
+                }),
               ),
-            )
-          : null,
+            ),
+          ),
+        ),
+        floatingActionButton: _currentIndex != 2
+            ? Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: AppShadows.glowWith(AppColors.lavender400),
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChatbotScreen(),
+                      ),
+                    );
+                  },
+                  child: const Icon(Icons.chat_rounded, size: 24),
+                ),
+              )
+            : null,
       ),
     );
   }
 
   Widget _buildNavItem(
-      _NavItem item, bool isSelected, int index, AppNavStyle navStyle) {
+    _NavItem item,
+    bool isSelected,
+    int index,
+    AppNavStyle navStyle,
+  ) {
     return InkWell(
       onTap: () => setState(() => _currentIndex = index),
       borderRadius: AppRadius.xxl,

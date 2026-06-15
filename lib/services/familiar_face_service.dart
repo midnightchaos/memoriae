@@ -10,7 +10,7 @@ import 'database_helper.dart';
 class FamiliarFaceService with ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
   final ImagePicker _imagePicker = ImagePicker();
-  
+
   List<FamiliarFace> _faces = [];
   List<FamiliarFace> get faces => _faces;
   bool _isLoading = false;
@@ -94,8 +94,11 @@ class FamiliarFaceService with ChangeNotifier {
       if (pickedFile != null) {
         // Save the image to app's documents directory
         final appDir = await getApplicationDocumentsDirectory();
-        final fileName = 'face_${DateTime.now().millisecondsSinceEpoch}${path.extension(pickedFile.path)}';
-        final savedImage = await File(pickedFile.path).copy('${appDir.path}/$fileName');
+        final fileName =
+            'face_${DateTime.now().millisecondsSinceEpoch}${path.extension(pickedFile.path)}';
+        final savedImage = await File(
+          pickedFile.path,
+        ).copy('${appDir.path}/$fileName');
         return savedImage.path;
       }
       return null;

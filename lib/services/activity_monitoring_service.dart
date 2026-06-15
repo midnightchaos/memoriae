@@ -7,7 +7,8 @@ import 'analytics_service.dart';
 import 'dart:async';
 
 class ActivityMonitoringService extends ChangeNotifier {
-  static final ActivityMonitoringService instance = ActivityMonitoringService._init();
+  static final ActivityMonitoringService instance =
+      ActivityMonitoringService._init();
   ActivityMonitoringService._init();
 
   // Activity Types
@@ -42,7 +43,7 @@ class ActivityMonitoringService extends ChangeNotifier {
       _lastInteractionTime = DateTime.now();
       AnalyticsService.instance.invalidateCache();
       notifyListeners();
-      
+
       // Update engagement score for today
       await updateDailyEngagementScore(currentUser.id);
     } catch (e) {
@@ -61,23 +62,37 @@ class ActivityMonitoringService extends ChangeNotifier {
     try {
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
-      
+
       // Get logs for today
       final logs = await DatabaseHelper.instance.getActivityLogs(patientId);
-      final todayLogs = logs.where((l) => 
-        l.timestamp.year == today.year && 
-        l.timestamp.month == today.month && 
-        l.timestamp.day == today.day
-      ).toList();
+      final todayLogs = logs
+          .where(
+            (l) =>
+                l.timestamp.year == today.year &&
+                l.timestamp.month == today.month &&
+                l.timestamp.day == today.day,
+          )
+          .toList();
 
-      int chatCount = todayLogs.where((l) => l.activityType == TYPE_CHAT).length;
-      int journalCount = todayLogs.where((l) => l.activityType == TYPE_JOURNAL).length;
-      int gameCount = todayLogs.where((l) => l.activityType == TYPE_GAME).length;
-      int therapyCount = todayLogs.where((l) => l.activityType == TYPE_THERAPY).length;
-      int feedbackCount = todayLogs.where((l) => l.activityType == TYPE_FEEDBACK).length;
+      int chatCount = todayLogs
+          .where((l) => l.activityType == TYPE_CHAT)
+          .length;
+      int journalCount = todayLogs
+          .where((l) => l.activityType == TYPE_JOURNAL)
+          .length;
+      int gameCount = todayLogs
+          .where((l) => l.activityType == TYPE_GAME)
+          .length;
+      int therapyCount = todayLogs
+          .where((l) => l.activityType == TYPE_THERAPY)
+          .length;
+      int feedbackCount = todayLogs
+          .where((l) => l.activityType == TYPE_FEEDBACK)
+          .length;
 
       // E = 2C + 10J + 5G
-      double score = (2.0 * chatCount) + (10.0 * journalCount) + (5.0 * gameCount);
+      double score =
+          (2.0 * chatCount) + (10.0 * journalCount) + (5.0 * gameCount);
 
       await DatabaseHelper.instance.insertEngagementScore({
         'id': '${patientId}_${today.year}_${today.month}_${today.day}',
@@ -90,9 +105,9 @@ class ActivityMonitoringService extends ChangeNotifier {
         'therapyCount': therapyCount,
         'feedbackCount': feedbackCount,
       });
-      
+
       debugPrint('Updated engagement score for $today: $score');
-      
+
       // Check for low engagement and trigger encouragement if needed
       await _checkForLowEngagement(patientId, score);
     } catch (e) {
@@ -101,15 +116,21 @@ class ActivityMonitoringService extends ChangeNotifier {
   }
 
   /// Get today's engagement score
-  Future<Map<String, dynamic>?> getTodayEngagementScore(String patientId) async {
+  Future<Map<String, dynamic>?> getTodayEngagementScore(
+    String patientId,
+  ) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final history = await DatabaseHelper.instance.getEngagementHistory(patientId);
-    
+    final history = await DatabaseHelper.instance.getEngagementHistory(
+      patientId,
+    );
+
     try {
       return history.firstWhere((s) {
         final date = DateTime.parse(s['date']);
-        return date.year == today.year && date.month == today.month && date.day == today.day;
+        return date.year == today.year &&
+            date.month == today.month &&
+            date.day == today.day;
       });
     } catch (_) {
       return null;
@@ -119,7 +140,7 @@ class ActivityMonitoringService extends ChangeNotifier {
   /// Trigger encouragement if engagement is low
   Future<void> _checkForLowEngagement(String patientId, double score) async {
     final now = DateTime.now();
-    
+
     // Only check after 2 PM to give user time to be active
     if (now.hour < 14) return;
 
@@ -130,10 +151,11 @@ class ActivityMonitoringService extends ChangeNotifier {
       await AlertService.instance.createAlert(
         patientId: patientId,
         type: 'Low Engagement',
-        message: 'Patient engagement score is low today ($score). Consider a gentle check-in or suggestive activity.',
+        message:
+            'Patient engagement score is low today ($score). Consider a gentle check-in or suggestive activity.',
         severity: 'Medium',
       );
-      
+
       debugPrint('Low engagement detected for $patientId: $score');
     }
   }

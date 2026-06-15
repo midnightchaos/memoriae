@@ -42,7 +42,7 @@ class MusicTrack {
       filePath: json['filePath'] as String,
       type: json['type'] as String,
       dateAdded: DateTime.parse(json['dateAdded'] as String),
-      duration: json['duration'] != null 
+      duration: json['duration'] != null
           ? Duration(seconds: json['duration'] as int)
           : null,
       subtitle: json['subtitle'] as String?,

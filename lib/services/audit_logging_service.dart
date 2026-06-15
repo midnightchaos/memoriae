@@ -63,7 +63,11 @@ class AuditLoggingService extends ChangeNotifier {
   }
 
   Future<List<AuditLog>> getLogs({String? caregiverId}) async {
-    final result = await DatabaseHelper.instance.getAuditLogs(caregiverId: caregiverId);
-    return result.map((m) => AuditLog.fromMap(m as Map<String, dynamic>)).toList();
+    final result = await DatabaseHelper.instance.getAuditLogs(
+      caregiverId: caregiverId,
+    );
+    return result
+        .map((m) => AuditLog.fromMap(m as Map<String, dynamic>))
+        .toList();
   }
 }

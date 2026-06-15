@@ -83,54 +83,64 @@ Stay in Care Mode unless explicitly asked technical questions.
     Map<String, dynamic>? recentData,
   }) {
     final contextBuffer = StringBuffer(basePrompt);
-    
-    contextBuffer.writeln('\n# 📊 CURRENT USER CONTEXT (Fresh from Database)\n');
-    
+
+    contextBuffer.writeln(
+      '\n# 📊 CURRENT USER CONTEXT (Fresh from Database)\n',
+    );
+
     if (userName != null) {
       contextBuffer.writeln('User Name: $userName');
     }
-    
+
     if (currentDate != null) {
       contextBuffer.writeln('Current Date: $currentDate');
     }
-    
+
     if (currentTime != null) {
       contextBuffer.writeln('Current Time: $currentTime');
     }
-    
+
     if (recentData != null) {
       // Corrected keys to match GeminiService output
-      
+
       if (recentData['journals'] != null) {
         contextBuffer.writeln('\n📔 RECENT JOURNAL ENTRIES:');
         final journals = recentData['journals'] as List;
         for (var j in journals) {
-          contextBuffer.writeln('- ${j['date']}: ${j['title']} (Mood: ${j['mood']})');
+          contextBuffer.writeln(
+            '- ${j['date']}: ${j['title']} (Mood: ${j['mood']})',
+          );
           contextBuffer.writeln('  "${j['content']}"');
         }
       }
-      
+
       if (recentData['medications'] != null) {
         contextBuffer.writeln('\n💊 MEDICATIONS:');
         final meds = recentData['medications'] as List;
         for (var m in meds) {
-          contextBuffer.writeln('- ${m['name']} (${m['dosage']}): ${m['frequency']} at ${m['timeOfDay']}');
+          contextBuffer.writeln(
+            '- ${m['name']} (${m['dosage']}): ${m['frequency']} at ${m['timeOfDay']}',
+          );
         }
       }
-      
+
       if (recentData['routines'] != null) {
         contextBuffer.writeln('\n📅 DAILY ROUTINES:');
         final routines = recentData['routines'] as List;
         for (var r in routines) {
-          contextBuffer.writeln('- ${r['time']}: ${r['title']} (${r['description']})');
+          contextBuffer.writeln(
+            '- ${r['time']}: ${r['title']} (${r['description']})',
+          );
         }
       }
-      
+
       if (recentData['familiarFaces'] != null) {
         contextBuffer.writeln('\n👥 FAMILIAR FACES:');
         final faces = recentData['familiarFaces'] as List;
         for (var f in faces) {
-          contextBuffer.writeln('- ${f['name']} (${f['relation']}): ${f['notes']}');
+          contextBuffer.writeln(
+            '- ${f['name']} (${f['relation']}): ${f['notes']}',
+          );
         }
       }
 
@@ -157,9 +167,11 @@ Stay in Care Mode unless explicitly asked technical questions.
         }
       }
     }
-    
-    contextBuffer.writeln('\nINSTRUCTIONS: Use the data above to answer the user specifically. If they ask about their meds, check the 💊 section. If they ask who someone is, check 👥.');
-    
+
+    contextBuffer.writeln(
+      '\nINSTRUCTIONS: Use the data above to answer the user specifically. If they ask about their meds, check the 💊 section. If they ask who someone is, check 👥.',
+    );
+
     return contextBuffer.toString();
   }
 }

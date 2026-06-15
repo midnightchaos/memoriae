@@ -8,7 +8,9 @@ class ThemeService extends ChangeNotifier {
   AppThemeMode _themeMode = AppThemeMode.light;
   AppThemeMode get themeMode => _themeMode;
 
-  bool get isDark => _themeMode == AppThemeMode.dark || _themeMode == AppThemeMode.blackMinimalism;
+  bool get isDark =>
+      _themeMode == AppThemeMode.dark ||
+      _themeMode == AppThemeMode.blackMinimalism;
   bool get isDarkMode => isDark;
 
   ThemeService() {

@@ -202,7 +202,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
     try {
       await _audioPlayer.play(AssetSource('audio/${track['file']}'));
-      
+
       // Log activity
       ActivityMonitoringService.instance.logActivity(
         type: ActivityMonitoringService.TYPE_THERAPY,
@@ -241,7 +241,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
       _currentCustomTrack = track;
       _isPlaying = true;
     });
-    
+
     try {
       await _audioPlayer.play(DeviceFileSource(track.filePath));
       if (mounted) {
@@ -255,10 +255,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('❌ Error: $e'), backgroundColor: Colors.red),
         );
       }
       setState(() => _isPlaying = false);
@@ -267,7 +264,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
   void _playNextTrack() {
     if (_currentPlayingIndex == null) return;
-    
+
     if (_currentPlayingIndex! + 1 < _tracks.length) {
       _playTrack(_currentPlayingIndex! + 1);
     } else {
@@ -277,7 +274,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
   void _playPreviousTrack() {
     if (_currentPlayingIndex == null) return;
-    
+
     if (_currentPlayingIndex! - 1 >= 0) {
       _playTrack(_currentPlayingIndex! - 1);
     } else {
@@ -302,7 +299,8 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
   }
 
   String _getCurrentTrackSubtitle() {
-    if (_currentCustomTrack != null) return _currentCustomTrack!.subtitle ?? 'Custom audio';
+    if (_currentCustomTrack != null)
+      return _currentCustomTrack!.subtitle ?? 'Custom audio';
     if (_currentPlayingIndex == null) return 'Select a track to play';
     return _tracks[_currentPlayingIndex!]['subtitle'];
   }
@@ -310,7 +308,8 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     return Scaffold(
@@ -322,8 +321,16 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF0A0A0A), Colors.black]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.lavender50, AppColors.blue50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.lavender50,
+                          AppColors.blue50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -341,7 +348,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                     Text(
                       'Music Therapy',
                       style: TextStyle(
-                        fontSize: 20, 
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: isBlackMinimalism ? Colors.white : null,
                       ),
@@ -354,18 +361,37 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
               // Mood Filters
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _buildMoodChip('🧘 Relax', AppColors.teal400, isBlackMinimalism),
+                      _buildMoodChip(
+                        '🧘 Relax',
+                        AppColors.teal400,
+                        isBlackMinimalism,
+                      ),
                       const SizedBox(width: 8),
-                      _buildMoodChip('☀️ Energetic', AppColors.rose400, isBlackMinimalism),
+                      _buildMoodChip(
+                        '☀️ Energetic',
+                        AppColors.rose400,
+                        isBlackMinimalism,
+                      ),
                       const SizedBox(width: 8),
-                      _buildMoodChip('🌙 Sleep', AppColors.blue500, isBlackMinimalism),
+                      _buildMoodChip(
+                        '🌙 Sleep',
+                        AppColors.blue500,
+                        isBlackMinimalism,
+                      ),
                       const SizedBox(width: 8),
-                      _buildMoodChip('🧠 Focus', AppColors.blue400, isBlackMinimalism),
+                      _buildMoodChip(
+                        '🧠 Focus',
+                        AppColors.blue400,
+                        isBlackMinimalism,
+                      ),
                     ],
                   ),
                 ),
@@ -379,7 +405,10 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
               // Add Music Controls
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Expanded(
@@ -388,10 +417,16 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                         icon: const Icon(Icons.add_circle_outline),
                         label: const Text('Add Music'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isBlackMinimalism ? Colors.white : AppColors.purple400,
-                          foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
+                          backgroundColor: isBlackMinimalism
+                              ? Colors.white
+                              : AppColors.purple400,
+                          foregroundColor: isBlackMinimalism
+                              ? Colors.black
+                              : Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
                       ),
                     ),
@@ -402,14 +437,20 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                         icon: Icon(_isRecordingMusic ? Icons.stop : Icons.mic),
                         label: Text(_isRecordingMusic ? 'Stop' : 'Record'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _isRecordingMusic 
-                              ? AppColors.coral400 
-                              : (isBlackMinimalism ? Colors.white : AppColors.emerald400),
-                          foregroundColor: _isRecordingMusic 
-                              ? Colors.white 
-                              : (isBlackMinimalism ? Colors.black : Colors.white),
+                          backgroundColor: _isRecordingMusic
+                              ? AppColors.coral400
+                              : (isBlackMinimalism
+                                    ? Colors.white
+                                    : AppColors.emerald400),
+                          foregroundColor: _isRecordingMusic
+                              ? Colors.white
+                              : (isBlackMinimalism
+                                    ? Colors.black
+                                    : Colors.white),
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
                       ),
                     ),
@@ -442,7 +483,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                     } else {
                       final customIndex = index - _tracks.length;
                       final track = _customTracks[customIndex];
-                      return _buildCustomTrackTile(track, isDark, isBlackMinimalism);
+                      return _buildCustomTrackTile(
+                        track,
+                        isDark,
+                        isBlackMinimalism,
+                      );
                     }
                   },
                 ),
@@ -454,7 +499,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
     );
   }
 
-  Widget _buildCustomTrackTile(MusicTrack track, bool isDark, bool isBlackMinimalism) {
+  Widget _buildCustomTrackTile(
+    MusicTrack track,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     final isPlaying = _currentCustomTrack?.id == track.id;
     return Dismissible(
       key: Key(track.id),
@@ -473,22 +522,37 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
           context: context,
           builder: (context) => AlertDialog(
             backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
-            title: Text('Delete Track?', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
-          content: Text('Remove "${track.name}"?', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+            title: Text(
+              'Delete Track?',
+              style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
             ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.coral400),
-              child: const Text('Delete'),
+            content: Text(
+              'Remove "${track.name}"?',
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
             ),
-          ],
-        ),
-      );
-    },
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.coral400,
+                ),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+      },
       onDismissed: (direction) async {
         await _musicService.deleteTrack(track.id);
         await _loadCustomTracks();
@@ -503,16 +567,27 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             decoration: BoxDecoration(
               gradient: isPlaying
                   ? LinearGradient(
-                      colors: [Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.3), 
-                               Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.1)],
+                      colors: [
+                        Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.3),
+                        Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.1),
+                      ],
                     )
                   : null,
-              color: isPlaying ? null : (isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white)),
+              color: isPlaying
+                  ? null
+                  : (isBlackMinimalism
+                        ? const Color(0xFF0A0A0A)
+                        : (isDark ? AppColors.slate800 : Colors.white)),
               borderRadius: BorderRadius.circular(16),
-              border: isPlaying 
-                  ? Border.all(color: Color(track.colorValue ?? 0xFF9333EA), width: 2)
+              border: isPlaying
+                  ? Border.all(
+                      color: Color(track.colorValue ?? 0xFF9333EA),
+                      width: 2,
+                    )
                   : Border.all(
-                      color: isBlackMinimalism ? Colors.white10 : (isDark ? AppColors.slate700 : AppColors.slate200),
+                      color: isBlackMinimalism
+                          ? Colors.white10
+                          : (isDark ? AppColors.slate700 : AppColors.slate200),
                     ),
             ),
             child: Row(
@@ -521,11 +596,16 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.2),
+                    color: Color(
+                      track.colorValue ?? 0xFF9333EA,
+                    ).withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
-                    child: Text(track.icon ?? '🎵', style: const TextStyle(fontSize: 24)),
+                    child: Text(
+                      track.icon ?? '🎵',
+                      style: const TextStyle(fontSize: 24),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -536,7 +616,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                       Text(
                         track.name,
                         style: TextStyle(
-                          fontSize: 17, 
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: isBlackMinimalism ? Colors.white : null,
                         ),
@@ -548,7 +628,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                         track.subtitle ?? 'Custom audio',
                         style: TextStyle(
                           fontSize: 13,
-                          color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                          color: isBlackMinimalism
+                              ? Colors.white38
+                              : (isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate600),
                         ),
                       ),
                     ],
@@ -557,11 +641,17 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.2),
+                    color: Color(
+                      track.colorValue ?? 0xFF9333EA,
+                    ).withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    isPlaying ? Icons.equalizer : (track.type == 'recorded' ? Icons.mic : Icons.music_note),
+                    isPlaying
+                        ? Icons.equalizer
+                        : (track.type == 'recorded'
+                              ? Icons.mic
+                              : Icons.music_note),
                     color: Color(track.colorValue ?? 0xFF9333EA),
                     size: 24,
                   ),
@@ -575,8 +665,8 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
   }
 
   Widget _buildNowPlayingCard(bool isDark, bool isBlackMinimalism) {
-    final currentTrack = _currentPlayingIndex != null 
-        ? _tracks[_currentPlayingIndex!] 
+    final currentTrack = _currentPlayingIndex != null
+        ? _tracks[_currentPlayingIndex!]
         : null;
 
     if (_currentPlayingIndex == null && _currentCustomTrack == null) {
@@ -588,19 +678,25 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: currentTrack != null 
-              ? [currentTrack['color'], (currentTrack['color'] as Color).withOpacity(0.7)]
+          colors: currentTrack != null
+              ? [
+                  currentTrack['color'],
+                  (currentTrack['color'] as Color).withOpacity(0.7),
+                ]
               : [AppColors.lavender400, AppColors.purple400],
         ),
         borderRadius: BorderRadius.circular(24),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
-        boxShadow: isBlackMinimalism ? null : [
-          BoxShadow(
-            color: (currentTrack?['color'] ?? AppColors.lavender400).withOpacity(0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: isBlackMinimalism
+            ? null
+            : [
+                BoxShadow(
+                  color: (currentTrack?['color'] ?? AppColors.lavender400)
+                      .withOpacity(0.4),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
       ),
       child: Column(
         children: [
@@ -615,7 +711,8 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    currentTrack?['icon'] ?? (_currentCustomTrack?.icon ?? '🎵'),
+                    currentTrack?['icon'] ??
+                        (_currentCustomTrack?.icon ?? '🎵'),
                     style: const TextStyle(fontSize: 40),
                   ),
                 ),
@@ -648,7 +745,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
 
           SliderTheme(
@@ -709,7 +806,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               IconButton(
                 icon: const Icon(Icons.skip_previous, color: Colors.white),
                 iconSize: 36,
-                onPressed: _currentPlayingIndex != null ? _playPreviousTrack : null,
+                onPressed: _currentPlayingIndex != null
+                    ? _playPreviousTrack
+                    : null,
               ),
 
               Container(
@@ -730,7 +829,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                     color: currentTrack?['color'] ?? AppColors.lavender400,
                   ),
                   iconSize: 40,
-                  onPressed: (_currentPlayingIndex != null || _currentCustomTrack != null) ? _playPause : null,
+                  onPressed:
+                      (_currentPlayingIndex != null ||
+                          _currentCustomTrack != null)
+                      ? _playPause
+                      : null,
                 ),
               ),
 
@@ -743,7 +846,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               IconButton(
                 icon: const Icon(Icons.stop, color: Colors.white),
                 iconSize: 28,
-                onPressed: (_currentPlayingIndex != null || _currentCustomTrack != null) ? _stopPlayback : null,
+                onPressed:
+                    (_currentPlayingIndex != null ||
+                        _currentCustomTrack != null)
+                    ? _stopPlayback
+                    : null,
               ),
             ],
           ),
@@ -775,21 +882,27 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               : null,
           color: isPlaying
               ? null
-              : (isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white)),
+              : (isBlackMinimalism
+                    ? const Color(0xFF0A0A0A)
+                    : (isDark ? AppColors.slate800 : Colors.white)),
           borderRadius: BorderRadius.circular(16),
-          border: isPlaying 
-              ? Border.all(color: color, width: 2) 
+          border: isPlaying
+              ? Border.all(color: color, width: 2)
               : Border.all(
-                  color: isBlackMinimalism ? Colors.white10 : (isDark ? AppColors.slate700 : AppColors.slate200),
+                  color: isBlackMinimalism
+                      ? Colors.white10
+                      : (isDark ? AppColors.slate700 : AppColors.slate200),
                   width: 1,
                 ),
-          boxShadow: isBlackMinimalism ? null : [
-            BoxShadow(
-              color: (isPlaying ? color : Colors.black).withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: isBlackMinimalism
+              ? null
+              : [
+                  BoxShadow(
+                    color: (isPlaying ? color : Colors.black).withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           children: [
@@ -810,7 +923,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               ),
             ),
             const SizedBox(width: 16),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -820,7 +933,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color: isPlaying ? color : (isBlackMinimalism ? Colors.white : null),
+                      color: isPlaying
+                          ? color
+                          : (isBlackMinimalism ? Colors.white : null),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -828,13 +943,15 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                     track['subtitle'],
                     style: TextStyle(
                       fontSize: 13,
-                      color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                      color: isBlackMinimalism
+                          ? Colors.white38
+                          : (isDark ? AppColors.slate400 : AppColors.slate600),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -857,7 +974,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? Colors.white.withOpacity(0.05) : color.withOpacity(0.1),
+        color: isBlackMinimalism
+            ? Colors.white.withOpacity(0.05)
+            : color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3),

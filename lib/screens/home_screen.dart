@@ -86,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
                 gradient: isBlack ? null : AppGradients.primary,
                 color: isBlack ? Colors.black : null,
                 border: isBlack
-                    ? const Border(
-                        bottom: BorderSide(color: Colors.white12))
+                    ? const Border(bottom: BorderSide(color: Colors.white12))
                     : null,
               ),
               child: Column(
@@ -125,16 +124,24 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
             ),
-            _drawerItem(Icons.home_rounded, 'Home', () => Navigator.pop(context)),
+            _drawerItem(
+              Icons.home_rounded,
+              'Home',
+              () => Navigator.pop(context),
+            ),
             _drawerItem(Icons.chat_rounded, 'Chat with Menta', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const ChatbotScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ChatbotScreen()),
+              );
             }),
             _drawerItem(Icons.book_rounded, 'Memory Journal', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const MemoryScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MemoryScreen()),
+              );
             }),
             _drawerItem(Icons.people_rounded, 'Familiar Faces', () {
               Navigator.pop(context);
@@ -146,44 +153,62 @@ class _HomeScreenState extends State<HomeScreen>
                 context,
                 MaterialPageRoute(
                   builder: (_) => DailyRoutinesScreen(
-                      userId: profileService.profile?.id ?? 'user1'),
+                    userId: profileService.profile?.id ?? 'user1',
+                  ),
                 ),
               );
             }),
             _drawerItem(Icons.medical_services_rounded, 'Medications', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (_) => MedicationsScreen(userId: profileService.profile?.id ?? 'user1')));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => MedicationsScreen(
+                    userId: profileService.profile?.id ?? 'user1',
+                  ),
+                ),
+              );
             }),
             Divider(color: pageStyle.subtitleColor.withOpacity(0.15)),
             _drawerItem(Icons.brush_rounded, 'Drawing Therapy', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (_) => const DrawingTherapyScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DrawingTherapyScreen()),
+              );
             }),
             _drawerItem(Icons.spa_rounded, 'Relax & Breathe', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const RelaxScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const RelaxScreen()),
+              );
             }),
-            _drawerItem(Icons.connect_without_contact_rounded,
-                'Connect & Support', () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const ConnectScreen()));
-            }),
+            _drawerItem(
+              Icons.connect_without_contact_rounded,
+              'Connect & Support',
+              () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ConnectScreen()),
+                );
+              },
+            ),
             Divider(color: pageStyle.subtitleColor.withOpacity(0.15)),
             _drawerItem(Icons.person_rounded, 'My Profile', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              );
             }),
             _drawerItem(Icons.settings_rounded, 'Settings', () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const SettingsScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
             }),
           ],
         ),
@@ -199,9 +224,9 @@ class _HomeScreenState extends State<HomeScreen>
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: pageStyle.sectionHeaderColor,
-              fontSize: 15,
-            ),
+          color: pageStyle.sectionHeaderColor,
+          fontSize: 15,
+        ),
       ),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: AppRadius.sm),
@@ -232,7 +257,8 @@ class _HomeScreenState extends State<HomeScreen>
         sublabel: 'Faces & Connections',
         backgroundImage: 'assets/images/2.png',
         index: 1,
-        onTap: () => Navigator.pushNamed(context, FamiliarFacesScreen.routeName),
+        onTap: () =>
+            Navigator.pushNamed(context, FamiliarFacesScreen.routeName),
       ),
       FeatureTile(
         icon: Icons.wb_sunny_rounded,
@@ -244,7 +270,8 @@ class _HomeScreenState extends State<HomeScreen>
           context,
           MaterialPageRoute(
             builder: (_) => DailyRoutinesScreen(
-                userId: profileService.profile?.id ?? 'user1'),
+              userId: profileService.profile?.id ?? 'user1',
+            ),
           ),
         ),
       ),
@@ -268,7 +295,10 @@ class _HomeScreenState extends State<HomeScreen>
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => MedicationsScreen(userId: profileService.profile?.id ?? 'user1')),
+            builder: (_) => MedicationsScreen(
+              userId: profileService.profile?.id ?? 'user1',
+            ),
+          ),
         ),
       ),
       FeatureTile(
@@ -363,10 +393,7 @@ class _HomeScreenState extends State<HomeScreen>
                         duration: const Duration(seconds: 2),
                         curve: Curves.easeInOut,
                         builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: value,
-                            child: child,
-                          );
+                          return Transform.scale(scale: value, child: child);
                         },
                         child: Container(
                           width: 56,
@@ -386,7 +413,9 @@ class _HomeScreenState extends State<HomeScreen>
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 26,
                           fontWeight: FontWeight.w400,
-                          color: Theme.of(context).textTheme.displayMedium?.color,
+                          color: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.color,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -400,8 +429,11 @@ class _HomeScreenState extends State<HomeScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.wb_sunny_rounded,
-                              size: 18, color: AppColors.amber400),
+                          const Icon(
+                            Icons.wb_sunny_rounded,
+                            size: 18,
+                            color: AppColors.amber400,
+                          ),
                           const SizedBox(width: AppSpacing.sm),
                           Text(
                             weather,
@@ -420,9 +452,7 @@ class _HomeScreenState extends State<HomeScreen>
             // Features
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 itemCount: features.length + 1,
                 itemBuilder: (context, index) {
                   if (index < features.length) {
@@ -442,7 +472,8 @@ class _HomeScreenState extends State<HomeScreen>
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => const SettingsScreen()),
+                            builder: (_) => const SettingsScreen(),
+                          ),
                         ),
                       ),
                     );

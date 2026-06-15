@@ -26,7 +26,7 @@ class _LinkPatientScreenState extends State<LinkPatientScreen> {
     try {
       // In this local simulation, we link by setting the caregiver ID on the user record
       final db = await DatabaseHelper.instance.database;
-      
+
       // Update the user profile with the linked caregiver ID
       final count = await db.update(
         'users',
@@ -36,30 +36,40 @@ class _LinkPatientScreenState extends State<LinkPatientScreen> {
       );
 
       if (count == 0) {
-        throw Exception('Patient ID not found. Please double-check the ID in the Patient\'s Profile tab.');
+        throw Exception(
+          'Patient ID not found. Please double-check the ID in the Patient\'s Profile tab.',
+        );
       }
 
       // Log audit action
       await AuditLoggingService.instance.logAction(
         action: 'Linked Patient',
-        details: 'Caregiver ${widget.caregiver.name} linked to patient $patientId',
+        details:
+            'Caregiver ${widget.caregiver.name} linked to patient $patientId',
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ Patient linked successfully!'), backgroundColor: AppColors.emerald500),
+          const SnackBar(
+            content: Text('✅ Patient linked successfully!'),
+            backgroundColor: AppColors.emerald500,
+          ),
         );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => CaregiverDashboardScreen(caregiver: widget.caregiver),
+            builder: (context) =>
+                CaregiverDashboardScreen(caregiver: widget.caregiver),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.coral400),
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: AppColors.coral400,
+          ),
         );
       }
     } finally {
@@ -104,9 +114,11 @@ class _LinkPatientScreenState extends State<LinkPatientScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: AppColors.blue500,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: _isLoading 
+              child: _isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : const Text('Link Account', style: TextStyle(fontSize: 18)),
             ),
@@ -129,9 +141,14 @@ class _LinkPatientScreenState extends State<LinkPatientScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Demo Note'),
-        content: const Text('In this application, the Patient ID is usually the ID generated when you first set up the profile. You can find it in the "You" tab of the patient interface.'),
+        content: const Text(
+          'In this application, the Patient ID is usually the ID generated when you first set up the profile. You can find it in the "You" tab of the patient interface.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Got it'),
+          ),
         ],
       ),
     );

@@ -10,7 +10,7 @@ enum UserRole { patient, caregiver }
 class AuthService {
   static final AuthService instance = AuthService._init();
   AuthService._init();
-  
+
   // Add default constructor for dependency injection
   AuthService();
 
@@ -192,7 +192,9 @@ class AuthService {
   }) async {
     try {
       // Get caregiver by email
-      final caregiverMap = await _db.getCaregiverByEmail(email.trim().toLowerCase());
+      final caregiverMap = await _db.getCaregiverByEmail(
+        email.trim().toLowerCase(),
+      );
       if (caregiverMap == null) {
         return CaregiverLoginResult(
           success: false,
@@ -221,7 +223,11 @@ class AuthService {
       }
 
       // Save login state
-      await _saveLoginState(caregiver.id, role: UserRole.caregiver, rememberMe: rememberMe);
+      await _saveLoginState(
+        caregiver.id,
+        role: UserRole.caregiver,
+        rememberMe: rememberMe,
+      );
       _currentRole = UserRole.caregiver;
 
       return CaregiverLoginResult(
@@ -279,9 +285,9 @@ class AuthService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString(_currentUserIdKey);
-      
+
       if (userId == null) return null;
-      
+
       final user = await _db.getUserById(userId);
       if (user != null) {
         _currentRole = UserRole.patient;
@@ -304,9 +310,9 @@ class AuthService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString(_currentUserIdKey);
-      
+
       if (userId == null) return null;
-      
+
       final caregiverMap = await _db.getCaregiverById(userId);
       if (caregiverMap != null) {
         return Caregiver.fromMap(caregiverMap);
@@ -352,10 +358,7 @@ class AuthService {
     try {
       final user = await _db.getUserById(userId);
       if (user == null || user.isGuest) {
-        return PasswordChangeResult(
-          success: false,
-          message: 'User not found',
-        );
+        return PasswordChangeResult(success: false, message: 'User not found');
       }
 
       // Verify current password
@@ -367,7 +370,10 @@ class AuthService {
         );
       }
 
-      final currentPasswordHash = hashPassword(currentPassword, credentials['salt']!);
+      final currentPasswordHash = hashPassword(
+        currentPassword,
+        credentials['salt']!,
+      );
       if (currentPasswordHash != credentials['passwordHash']) {
         return PasswordChangeResult(
           success: false,
@@ -414,7 +420,11 @@ class AuthService {
   }
 
   // Private helper methods
-  Future<void> _saveLoginState(String userId, {UserRole role = UserRole.patient, required bool rememberMe}) async {
+  Future<void> _saveLoginState(
+    String userId, {
+    UserRole role = UserRole.patient,
+    required bool rememberMe,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_currentUserIdKey, userId);
     await prefs.setString(_currentUserRoleKey, role.toString());
@@ -448,21 +458,14 @@ class UserLoginResult {
   final String message;
   final User? user;
 
-  UserLoginResult({
-    required this.success,
-    required this.message,
-    this.user,
-  });
+  UserLoginResult({required this.success, required this.message, this.user});
 }
 
 class PasswordChangeResult {
   final bool success;
   final String message;
 
-  PasswordChangeResult({
-    required this.success,
-    required this.message,
-  });
+  PasswordChangeResult({required this.success, required this.message});
 }
 
 class CaregiverLoginResult {

@@ -12,33 +12,33 @@ class UserAnalytics {
   final String? gender;
   final String userType;
   final Duration accountAge;
-  
+
   // Chat Activity
   final int totalChats;
   final double avgChatsPerDay;
   final double avgChatsPerWeek;
   final Map<int, int> chatsByHour; // Hour -> count
   final int chatStreak;
-  
+
   // Engagement Metrics
   final Duration totalTimeSpent;
   final int sessionCount;
   final double avgSessionDuration;
   final int currentStreak;
   final int longestStreak;
-  
+
   // Content & Media
   final int journalEntries;
   final Map<String, int> moodDistribution;
   final List<String> topTags;
   final int gamesPlayed;
   final Map<String, int> gamesByType;
-  
+
   // Progress Trends
   final Map<String, dynamic> weeklyTrends;
   final Map<String, dynamic> monthlyTrends;
   final List<Map<String, dynamic>> engagementHistory; // For graphs
-  
+
   UserAnalytics({
     required this.userId,
     required this.name,
@@ -78,8 +78,8 @@ class AnalyticsService extends ChangeNotifier {
   /// Get comprehensive user analytics
   Future<UserAnalytics> getUserAnalytics() async {
     // Return cached data if valid
-    if (_cachedAnalytics != null && 
-        _lastCacheTime != null && 
+    if (_cachedAnalytics != null &&
+        _lastCacheTime != null &&
         DateTime.now().difference(_lastCacheTime!) < _cacheValidity) {
       return _cachedAnalytics!;
     }
@@ -90,7 +90,7 @@ class AnalyticsService extends ChangeNotifier {
     }
 
     final db = DatabaseHelper.instance;
-    
+
     // Gather all analytics data
     final analytics = UserAnalytics(
       userId: user.id,
@@ -99,28 +99,28 @@ class AnalyticsService extends ChangeNotifier {
       gender: null, // Not stored yet
       userType: user.isGuest ? 'Guest User' : 'Patient',
       accountAge: DateTime.now().difference(user.createdAt),
-      
+
       // Chat analytics
       totalChats: await _getTotalChats(),
       avgChatsPerDay: await _getAvgChatsPerDay(user.createdAt),
       avgChatsPerWeek: await _getAvgChatsPerWeek(user.createdAt),
       chatsByHour: await _getChatsByHour(),
       chatStreak: await _getChatStreak(),
-      
+
       // Engagement metrics
       totalTimeSpent: await _estimateTotalTimeSpent(),
       sessionCount: await _getSessionCount(),
       avgSessionDuration: await _getAvgSessionDuration(),
       currentStreak: await _getCurrentStreak(),
       longestStreak: await _getLongestStreak(),
-      
+
       // Content & Media
       journalEntries: await _getJournalEntryCount(),
       moodDistribution: await _getMoodDistribution(),
       topTags: await _getTopTags(),
       gamesPlayed: await _getTotalGamesPlayed(user.id),
       gamesByType: await _getGamesByType(user.id),
-      
+
       // Progress trends
       weeklyTrends: await _getWeeklyTrends(user.id),
       monthlyTrends: await _getMonthlyTrends(user.id),
@@ -130,7 +130,7 @@ class AnalyticsService extends ChangeNotifier {
     // Cache the results
     _cachedAnalytics = analytics;
     _lastCacheTime = DateTime.now();
-    
+
     return analytics;
   }
 
@@ -142,11 +142,13 @@ class AnalyticsService extends ChangeNotifier {
   }
 
   // ==================== CHAT ANALYTICS ====================
-  
+
   Future<int> _getTotalChats() async {
     try {
       final db = await DatabaseHelper.instance.database;
-      final result = await db.rawQuery('SELECT COUNT(*) FROM chat_messages WHERE isUser = 1');
+      final result = await db.rawQuery(
+        'SELECT COUNT(*) FROM chat_messages WHERE isUser = 1',
+      );
       return Sqflite.firstIntValue(result) ?? 0;
     } catch (e) {
       debugPrint('Error getting total chats: $e');
@@ -176,7 +178,7 @@ class AnalyticsService extends ChangeNotifier {
         WHERE isUser = 1 
         GROUP BY hour
       ''');
-      
+
       final hourCounts = <int, int>{};
       for (var row in result) {
         if (row['hour'] != null && row['count'] != null) {
@@ -200,25 +202,33 @@ class AnalyticsService extends ChangeNotifier {
         WHERE isUser = 1 
         ORDER BY day_date DESC
       ''');
-      
+
       if (result.isEmpty) return 0;
-      
-      final dates = result.map((r) => DateTime.parse(r['day_date'] as String)).toList();
-      
+
+      final dates = result
+          .map((r) => DateTime.parse(r['day_date'] as String))
+          .toList();
+
       int streak = 0;
       DateTime expectedDate = DateTime.now();
-      expectedDate = DateTime(expectedDate.year, expectedDate.month, expectedDate.day);
-      
+      expectedDate = DateTime(
+        expectedDate.year,
+        expectedDate.month,
+        expectedDate.day,
+      );
+
       for (var date in dates) {
-        if (date.isAtSameMomentAs(expectedDate) || 
-            date.isAtSameMomentAs(expectedDate.subtract(const Duration(days: 1)))) {
+        if (date.isAtSameMomentAs(expectedDate) ||
+            date.isAtSameMomentAs(
+              expectedDate.subtract(const Duration(days: 1)),
+            )) {
           streak++;
           expectedDate = date.subtract(const Duration(days: 1));
         } else {
           break;
         }
       }
-      
+
       return streak;
     } catch (e) {
       debugPrint('Error calculating chat streak: $e');
@@ -227,16 +237,16 @@ class AnalyticsService extends ChangeNotifier {
   }
 
   // ==================== ENGAGEMENT METRICS ====================
-  
+
   Future<Duration> _estimateTotalTimeSpent() async {
     // Estimate based on number of interactions
     // Assume average session = 15 minutes, average chat = 2 minutes
     final chats = await _getTotalChats();
     final journals = await _getJournalEntryCount();
     final games = await _getTotalGamesPlayed(
-      (await AuthService.instance.getCurrentUser())?.id ?? ''
+      (await AuthService.instance.getCurrentUser())?.id ?? '',
     );
-    
+
     final estimatedMinutes = (chats * 2) + (journals * 10) + (games * 5);
     return Duration(minutes: estimatedMinutes);
   }
@@ -245,12 +255,16 @@ class AnalyticsService extends ChangeNotifier {
     // Approximate sessions based on message clusters
     // Messages within 30 minutes = same session
     try {
-      final messages = await DatabaseHelper.instance.getChatMessages(limit: 10000);
+      final messages = await DatabaseHelper.instance.getChatMessages(
+        limit: 10000,
+      );
       if (messages.isEmpty) return 0;
-      
+
       int sessions = 1;
       for (int i = 1; i < messages.length; i++) {
-        final timeDiff = messages[i].dateTime.difference(messages[i-1].dateTime);
+        final timeDiff = messages[i].dateTime.difference(
+          messages[i - 1].dateTime,
+        );
         if (timeDiff.inMinutes > 30) {
           sessions++;
         }
@@ -282,16 +296,18 @@ class AnalyticsService extends ChangeNotifier {
         WHERE isUser = 1 
         ORDER BY day_date ASC
       ''');
-      
+
       if (result.isEmpty) return 0;
-      
-      final dates = result.map((r) => DateTime.parse(r['day_date'] as String)).toList();
-      
+
+      final dates = result
+          .map((r) => DateTime.parse(r['day_date'] as String))
+          .toList();
+
       int maxStreak = 0;
       int currentStreak = 1;
-      
+
       for (int i = 1; i < dates.length; i++) {
-        if (dates[i].difference(dates[i-1]).inDays == 1) {
+        if (dates[i].difference(dates[i - 1]).inDays == 1) {
           currentStreak++;
         } else {
           maxStreak = currentStreak > maxStreak ? currentStreak : maxStreak;
@@ -299,7 +315,7 @@ class AnalyticsService extends ChangeNotifier {
         }
       }
       maxStreak = currentStreak > maxStreak ? currentStreak : maxStreak;
-      
+
       return maxStreak;
     } catch (e) {
       debugPrint('Error calculating longest streak: $e');
@@ -308,7 +324,7 @@ class AnalyticsService extends ChangeNotifier {
   }
 
   // ==================== CONTENT & MEDIA ====================
-  
+
   Future<int> _getJournalEntryCount() async {
     try {
       final entries = await DatabaseHelper.instance.readAllEntries();
@@ -323,11 +339,11 @@ class AnalyticsService extends ChangeNotifier {
     try {
       final entries = await DatabaseHelper.instance.readAllEntries();
       final moodCounts = <String, int>{};
-      
+
       for (var entry in entries) {
         moodCounts[entry.mood] = (moodCounts[entry.mood] ?? 0) + 1;
       }
-      
+
       return moodCounts;
     } catch (e) {
       debugPrint('Error getting mood distribution: $e');
@@ -339,16 +355,16 @@ class AnalyticsService extends ChangeNotifier {
     try {
       final entries = await DatabaseHelper.instance.readAllEntries();
       final tagCounts = <String, int>{};
-      
+
       for (var entry in entries) {
         for (var tag in entry.tags) {
           tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
         }
       }
-      
+
       final sorted = tagCounts.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
-      
+
       return sorted.take(5).map((e) => e.key).toList();
     } catch (e) {
       debugPrint('Error getting top tags: $e');
@@ -370,11 +386,11 @@ class AnalyticsService extends ChangeNotifier {
     try {
       final progress = await DatabaseHelper.instance.getGameProgress(userId);
       final typeCounts = <String, int>{};
-      
+
       for (var game in progress) {
         typeCounts[game.gameType] = (typeCounts[game.gameType] ?? 0) + 1;
       }
-      
+
       return typeCounts;
     } catch (e) {
       debugPrint('Error getting games by type: $e');
@@ -383,21 +399,28 @@ class AnalyticsService extends ChangeNotifier {
   }
 
   // ==================== PROGRESS TRENDS ====================
-  
+
   Future<Map<String, dynamic>> _getWeeklyTrends(String userId) async {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
-    
+
     try {
-      final messages = await DatabaseHelper.instance.getChatMessages(limit: 10000);
-      final recentMessages = messages.where((m) => 
-        m.isUser && m.dateTime.isAfter(weekAgo)
-      ).length;
-      
-      final journals = await DatabaseHelper.instance.filterByDateRange(weekAgo, now);
+      final messages = await DatabaseHelper.instance.getChatMessages(
+        limit: 10000,
+      );
+      final recentMessages = messages
+          .where((m) => m.isUser && m.dateTime.isAfter(weekAgo))
+          .length;
+
+      final journals = await DatabaseHelper.instance.filterByDateRange(
+        weekAgo,
+        now,
+      );
       final games = await DatabaseHelper.instance.getGameProgress(userId);
-      final recentGames = games.where((g) => g.completedAt.isAfter(weekAgo)).length;
-      
+      final recentGames = games
+          .where((g) => g.completedAt.isAfter(weekAgo))
+          .length;
+
       return {
         'chats': recentMessages,
         'journals': journals.length,
@@ -412,17 +435,24 @@ class AnalyticsService extends ChangeNotifier {
   Future<Map<String, dynamic>> _getMonthlyTrends(String userId) async {
     final now = DateTime.now();
     final monthAgo = now.subtract(const Duration(days: 30));
-    
+
     try {
-      final messages = await DatabaseHelper.instance.getChatMessages(limit: 10000);
-      final recentMessages = messages.where((m) => 
-        m.isUser && m.dateTime.isAfter(monthAgo)
-      ).length;
-      
-      final journals = await DatabaseHelper.instance.filterByDateRange(monthAgo, now);
+      final messages = await DatabaseHelper.instance.getChatMessages(
+        limit: 10000,
+      );
+      final recentMessages = messages
+          .where((m) => m.isUser && m.dateTime.isAfter(monthAgo))
+          .length;
+
+      final journals = await DatabaseHelper.instance.filterByDateRange(
+        monthAgo,
+        now,
+      );
       final games = await DatabaseHelper.instance.getGameProgress(userId);
-      final recentGames = games.where((g) => g.completedAt.isAfter(monthAgo)).length;
-      
+      final recentGames = games
+          .where((g) => g.completedAt.isAfter(monthAgo))
+          .length;
+
       return {
         'chats': recentMessages,
         'journals': journals.length,
@@ -434,37 +464,46 @@ class AnalyticsService extends ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> _getEngagementHistory(String userId) async {
+  Future<List<Map<String, dynamic>>> _getEngagementHistory(
+    String userId,
+  ) async {
     // Get daily engagement for the last 30 days
     final now = DateTime.now();
     final history = <Map<String, dynamic>>[];
-    
+
     try {
-      final messages = await DatabaseHelper.instance.getChatMessages(limit: 10000);
+      final messages = await DatabaseHelper.instance.getChatMessages(
+        limit: 10000,
+      );
       final journals = await DatabaseHelper.instance.readAllEntries();
       final games = await DatabaseHelper.instance.getGameProgress(userId);
-      
+
       for (int i = 29; i >= 0; i--) {
         final date = now.subtract(Duration(days: i));
         final dayStart = DateTime(date.year, date.month, date.day);
         final dayEnd = dayStart.add(const Duration(days: 1));
-        
-        final dayChats = messages.where((m) => 
-          m.isUser && 
-          m.dateTime.isAfter(dayStart) && 
-          m.dateTime.isBefore(dayEnd)
-        ).length;
-        
-        final dayJournals = journals.where((j) => 
-          j.date.isAfter(dayStart) && 
-          j.date.isBefore(dayEnd)
-        ).length;
-        
-        final dayGames = games.where((g) => 
-          g.completedAt.isAfter(dayStart) && 
-          g.completedAt.isBefore(dayEnd)
-        ).length;
-        
+
+        final dayChats = messages
+            .where(
+              (m) =>
+                  m.isUser &&
+                  m.dateTime.isAfter(dayStart) &&
+                  m.dateTime.isBefore(dayEnd),
+            )
+            .length;
+
+        final dayJournals = journals
+            .where((j) => j.date.isAfter(dayStart) && j.date.isBefore(dayEnd))
+            .length;
+
+        final dayGames = games
+            .where(
+              (g) =>
+                  g.completedAt.isAfter(dayStart) &&
+                  g.completedAt.isBefore(dayEnd),
+            )
+            .length;
+
         history.add({
           'date': dayStart,
           'chats': dayChats,
@@ -473,7 +512,7 @@ class AnalyticsService extends ChangeNotifier {
           'total': dayChats + dayJournals + dayGames,
         });
       }
-      
+
       return history;
     } catch (e) {
       debugPrint('Error getting engagement history: $e');

@@ -10,7 +10,7 @@ class AudioService {
   Future<String> saveAudioFile(File sourceFile, String fileName) async {
     final directory = await getApplicationDocumentsDirectory();
     final audioDir = Directory('${directory.path}/audio');
-    
+
     // Create audio directory if it doesn't exist
     if (!await audioDir.exists()) {
       await audioDir.create(recursive: true);
@@ -36,12 +36,14 @@ class AudioService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final tracksJson = prefs.getString(_customTracksKey);
-      
+
       if (tracksJson == null) return [];
-      
+
       final List<dynamic> tracksList = jsonDecode(tracksJson);
-      final tracks = tracksList.map((track) => Map<String, dynamic>.from(track)).toList();
-      
+      final tracks = tracksList
+          .map((track) => Map<String, dynamic>.from(track))
+          .toList();
+
       // Filter out tracks whose files no longer exist
       final validTracks = <Map<String, dynamic>>[];
       for (final track in tracks) {
@@ -50,12 +52,12 @@ class AudioService {
           validTracks.add(track);
         }
       }
-      
+
       // Save back the filtered list if any tracks were removed
       if (validTracks.length != tracks.length) {
         await saveCustomTracks(validTracks);
       }
-      
+
       return validTracks;
     } catch (e) {
       return [];
@@ -80,7 +82,7 @@ class AudioService {
       if (await file.exists()) {
         await file.delete();
       }
-      
+
       // Remove from saved tracks
       final tracks = await loadCustomTracks();
       tracks.removeWhere((track) => track['file'] == filePath);
@@ -108,7 +110,7 @@ class AudioService {
           await file.delete();
         }
       }
-      
+
       // Clear from SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_customTracksKey);

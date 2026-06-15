@@ -6,21 +6,18 @@ import '../theme/app_theme.dart';
 class MentaAssistant extends StatefulWidget {
   final bool floating;
   final Function(String)? onNavigate;
-  
-  const MentaAssistant({
-    super.key, 
-    this.floating = true,
-    this.onNavigate,
-  });
+
+  const MentaAssistant({super.key, this.floating = true, this.onNavigate});
 
   @override
   State<MentaAssistant> createState() => _MentaAssistantState();
 }
 
-class _MentaAssistantState extends State<MentaAssistant> with SingleTickerProviderStateMixin {
+class _MentaAssistantState extends State<MentaAssistant>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -28,39 +25,38 @@ class _MentaAssistantState extends State<MentaAssistant> with SingleTickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    
+
     // Initialize Menta service
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeMenta();
     });
   }
-  
+
   Future<void> _initializeMenta() async {
     final menta = context.read<MentaService>();
     if (!menta.isInitialized) {
       await menta.initialize();
       if (mounted) {
-        await menta.speak('Hello! I\'m Menta, your personal assistant. How can I help you today?');
+        await menta.speak(
+          'Hello! I\'m Menta, your personal assistant. How can I help you today?',
+        );
       }
     }
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _toggleListening() async {
     final menta = context.read<MentaService>();
-    
+
     if (menta.state == MentaState.listening) {
       await menta.stopListening();
       _animationController.reverse();
@@ -80,7 +76,7 @@ class _MentaAssistantState extends State<MentaAssistant> with SingleTickerProvid
       }
     }
   }
-  
+
   Widget _buildFloatingButton() {
     return Consumer<MentaService>(
       builder: (context, menta, _) {
@@ -100,7 +96,7 @@ class _MentaAssistantState extends State<MentaAssistant> with SingleTickerProvid
       },
     );
   }
-  
+
   Widget _buildButtonIcon(MentaState state) {
     switch (state) {
       case MentaState.listening:
@@ -123,17 +119,13 @@ class _MentaAssistantState extends State<MentaAssistant> with SingleTickerProvid
         return const Icon(Icons.mic_none, color: Colors.white);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (widget.floating) {
-      return Positioned(
-        bottom: 24,
-        right: 24,
-        child: _buildFloatingButton(),
-      );
+      return Positioned(bottom: 24, right: 24, child: _buildFloatingButton());
     }
-    
+
     return _buildFloatingButton();
   }
 }

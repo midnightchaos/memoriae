@@ -38,18 +38,20 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       _applyFilters();
       _isLoading = false;
     });
-    
+
     // Reschedule all medication notifications
     await MedicationNotificationService.instance.rescheduleAllMedications(meds);
   }
 
   void _applyFilters() {
     _filteredMedications = _medications.where((med) {
-      final matchesSearch = _searchQuery.isEmpty ||
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           med.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
           med.dosage.toLowerCase().contains(_searchQuery.toLowerCase());
-      
-      final matchesStatus = _filterStatus == 'all' ||
+
+      final matchesStatus =
+          _filterStatus == 'all' ||
           (_filterStatus == 'active' && med.isActive) ||
           (_filterStatus == 'inactive' && !med.isActive);
 
@@ -73,9 +75,10 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       context: context,
       builder: (context) {
         final themeService = Provider.of<ThemeService>(context, listen: false);
-        final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    final isDark = themeService.isDarkMode;
-        
+        final isBlackMinimalism =
+            themeService.themeMode == AppThemeMode.blackMinimalism;
+        final isDark = themeService.isDarkMode;
+
         return AlertDialog(
           backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
           title: Text(
@@ -91,7 +94,9 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               onPressed: () => Navigator.pop(context, false),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white38 : null,
+                ),
               ),
             ),
             TextButton(
@@ -106,13 +111,15 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
 
     if (confirm == true) {
       // Cancel notification before deleting
-      await MedicationNotificationService.instance.cancelMedicationReminder(medication.id);
+      await MedicationNotificationService.instance.cancelMedicationReminder(
+        medication.id,
+      );
       await _dbHelper.deleteMedication(medication.id);
       _loadMedications();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${medication.name} deleted')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${medication.name} deleted')));
       }
     }
   }
@@ -120,14 +127,18 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
   Future<void> _toggleActive(Medication medication) async {
     final updated = medication.copyWith(isActive: !medication.isActive);
     await _dbHelper.updateMedication(updated);
-    
+
     // Update notification based on active status
     if (updated.isActive) {
-      await MedicationNotificationService.instance.scheduleMedicationReminder(updated);
+      await MedicationNotificationService.instance.scheduleMedicationReminder(
+        updated,
+      );
     } else {
-      await MedicationNotificationService.instance.cancelMedicationReminder(updated.id);
+      await MedicationNotificationService.instance.cancelMedicationReminder(
+        updated.id,
+      );
     }
-    
+
     _loadMedications();
   }
 
@@ -136,21 +147,27 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = themeService.isDarkMode;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
       appBar: AppBar(
         backgroundColor: isBlackMinimalism ? Colors.black : null,
         elevation: isBlackMinimalism ? 0 : null,
-        iconTheme: IconThemeData(color: isBlackMinimalism ? Colors.white : null),
+        iconTheme: IconThemeData(
+          color: isBlackMinimalism ? Colors.white : null,
+        ),
         title: Text(
           'Medications',
           style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list, color: isBlackMinimalism ? Colors.white : null),
+            icon: Icon(
+              Icons.filter_list,
+              color: isBlackMinimalism ? Colors.white : null,
+            ),
             onPressed: _showFilterMenu,
           ),
         ],
@@ -158,11 +175,15 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       body: Container(
         decoration: BoxDecoration(
           color: isBlackMinimalism ? Colors.black : null,
-          gradient: isBlackMinimalism ? null : LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark ? [AppColors.slate900, AppColors.slate800] : [AppColors.lavender50, Colors.white],
-          ),
+          gradient: isBlackMinimalism
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [AppColors.slate900, AppColors.slate800]
+                      : [AppColors.lavender50, Colors.white],
+                ),
         ),
         child: Column(
           children: [
@@ -170,9 +191,13 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               padding: const EdgeInsets.all(16),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isBlackMinimalism ? const Color(0xFF1A1A1A) : (isDark ? AppColors.slate800 : Colors.white),
+                  color: isBlackMinimalism
+                      ? const Color(0xFF1A1A1A)
+                      : (isDark ? AppColors.slate800 : Colors.white),
                   borderRadius: BorderRadius.circular(12),
-                  border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                  border: isBlackMinimalism
+                      ? Border.all(color: Colors.white10)
+                      : null,
                 ),
                 child: TextField(
                   decoration: InputDecoration(
@@ -190,7 +215,10 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                           )
                         : null,
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -208,7 +236,9 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                   children: [
                     Chip(
                       label: Text('Filter: ${_filterStatus.toUpperCase()}'),
-                      backgroundColor: isBlackMinimalism ? Colors.white12 : null,
+                      backgroundColor: isBlackMinimalism
+                          ? Colors.white12
+                          : null,
                       onDeleted: () {
                         setState(() {
                           _filterStatus = 'all';
@@ -223,24 +253,38 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : _filteredMedications.isEmpty
-                      ? _buildEmptyState(isBlackMinimalism)
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filteredMedications.length,
-                          itemBuilder: (context, index) {
-                            final med = _filteredMedications[index];
-                            return _buildMedicationCard(med, isDark, isBlackMinimalism);
-                          },
-                        ),
+                  ? _buildEmptyState(isBlackMinimalism)
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filteredMedications.length,
+                      itemBuilder: (context, index) {
+                        final med = _filteredMedications[index];
+                        return _buildMedicationCard(
+                          med,
+                          isDark,
+                          isBlackMinimalism,
+                        );
+                      },
+                    ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddEditDialog(),
-        icon: Icon(Icons.add, color: isBlackMinimalism ? Colors.black : Colors.white),
-        label: Text('Add Medication', style: TextStyle(color: isBlackMinimalism ? Colors.black : Colors.white)),
-        backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender400,
+        icon: Icon(
+          Icons.add,
+          color: isBlackMinimalism ? Colors.black : Colors.white,
+        ),
+        label: Text(
+          'Add Medication',
+          style: TextStyle(
+            color: isBlackMinimalism ? Colors.black : Colors.white,
+          ),
+        ),
+        backgroundColor: isBlackMinimalism
+            ? Colors.white
+            : AppColors.lavender400,
       ),
     );
   }
@@ -250,32 +294,47 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.medication, size: 80, color: isBlackMinimalism ? Colors.white12 : Colors.grey[400]),
+          Icon(
+            Icons.medication,
+            size: 80,
+            color: isBlackMinimalism ? Colors.white12 : Colors.grey[400],
+          ),
           const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty
                 ? 'No medications yet'
                 : 'No medications found',
-            style: TextStyle(fontSize: 18, color: isBlackMinimalism ? Colors.white38 : Colors.grey[600]),
+            style: TextStyle(
+              fontSize: 18,
+              color: isBlackMinimalism ? Colors.white38 : Colors.grey[600],
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             _searchQuery.isEmpty
                 ? 'Tap the button below to add one'
                 : 'Try a different search',
-            style: TextStyle(color: isBlackMinimalism ? Colors.white24 : Colors.grey[500]),
+            style: TextStyle(
+              color: isBlackMinimalism ? Colors.white24 : Colors.grey[500],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMedicationCard(Medication medication, bool isDark, bool isBlackMinimalism) {
+  Widget _buildMedicationCard(
+    Medication medication,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -291,9 +350,9 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
           ),
           child: Icon(
             Icons.medication,
-            color: medication.isActive 
-              ? (isBlackMinimalism ? Colors.white : Colors.green[700]) 
-              : (isBlackMinimalism ? Colors.white24 : Colors.grey[600]),
+            color: medication.isActive
+                ? (isBlackMinimalism ? Colors.white : Colors.green[700])
+                : (isBlackMinimalism ? Colors.white24 : Colors.grey[600]),
           ),
         ),
         title: Text(
@@ -310,11 +369,15 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             const SizedBox(height: 4),
             Text(
               '${medication.dosage} • ${medication.frequency}',
-              style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
             ),
             Text(
               'Time: ${medication.timeOfDay}',
-              style: TextStyle(color: isBlackMinimalism ? Colors.white60 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white60 : null,
+              ),
             ),
             if (medication.notes?.isNotEmpty ?? false)
               Text(
@@ -339,7 +402,10 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                 )
               : theme,
           child: PopupMenuButton(
-            icon: Icon(Icons.more_vert, color: isBlackMinimalism ? Colors.white70 : null),
+            icon: Icon(
+              Icons.more_vert,
+              color: isBlackMinimalism ? Colors.white70 : null,
+            ),
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: ListTile(
@@ -350,36 +416,60 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                   ),
                   title: Text(
                     medication.isActive ? 'Deactivate' : 'Activate',
-                    style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
                   ),
                   contentPadding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
                 ),
-                onTap: () => Future.delayed(Duration.zero, () => _toggleActive(medication)),
+                onTap: () => Future.delayed(
+                  Duration.zero,
+                  () => _toggleActive(medication),
+                ),
               ),
               PopupMenuItem(
                 child: ListTile(
-                  leading: Icon(Icons.edit, size: 20, color: isBlackMinimalism ? Colors.white : null),
+                  leading: Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: isBlackMinimalism ? Colors.white : null,
+                  ),
                   title: Text(
                     'Edit',
-                    style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
                   ),
                   contentPadding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
                 ),
                 onTap: () {
-                  Future.delayed(Duration.zero, () => _showAddEditDialog(medication));
+                  Future.delayed(
+                    Duration.zero,
+                    () => _showAddEditDialog(medication),
+                  );
                 },
               ),
               PopupMenuItem(
                 child: ListTile(
-                  leading: const Icon(Icons.delete, size: 20, color: Colors.red),
-                  title: const Text('Delete', style: TextStyle(color: Colors.red)),
+                  leading: const Icon(
+                    Icons.delete,
+                    size: 20,
+                    color: Colors.red,
+                  ),
+                  title: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
                   contentPadding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
                 ),
                 onTap: () {
-                  Future.delayed(Duration.zero, () => _deleteMedication(medication));
+                  Future.delayed(
+                    Duration.zero,
+                    () => _deleteMedication(medication),
+                  );
                 },
               ),
             ],
@@ -392,7 +482,8 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
 
   void _showFilterMenu() {
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     showModalBottomSheet(
@@ -420,7 +511,12 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             ),
             const SizedBox(height: 16),
             RadioListTile<String>(
-              title: Text('All Medications', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+              title: Text(
+                'All Medications',
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white : null,
+                ),
+              ),
               value: 'all',
               groupValue: _filterStatus,
               activeColor: isBlackMinimalism ? Colors.white : null,
@@ -433,7 +529,12 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               },
             ),
             RadioListTile<String>(
-              title: Text('Active Only', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+              title: Text(
+                'Active Only',
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white : null,
+                ),
+              ),
               value: 'active',
               groupValue: _filterStatus,
               activeColor: isBlackMinimalism ? Colors.white : null,
@@ -446,7 +547,12 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               },
             ),
             RadioListTile<String>(
-              title: Text('Inactive Only', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+              title: Text(
+                'Inactive Only',
+                style: TextStyle(
+                  color: isBlackMinimalism ? Colors.white : null,
+                ),
+              ),
               value: 'inactive',
               groupValue: _filterStatus,
               activeColor: isBlackMinimalism ? Colors.white : null,
@@ -486,7 +592,7 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
   final _nameController = TextEditingController();
   final _dosageController = TextEditingController();
   final _notesController = TextEditingController();
-  
+
   String _frequency = 'Daily';
   TimeOfDay _timeOfDay = TimeOfDay.now();
   bool _isActive = true;
@@ -509,7 +615,7 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
       _notesController.text = widget.medication!.notes ?? '';
       _frequency = widget.medication!.frequency;
       _isActive = widget.medication!.isActive;
-      
+
       final timeParts = widget.medication!.timeOfDay.split(':');
       _timeOfDay = TimeOfDay(
         hour: int.parse(timeParts[0]),
@@ -541,8 +647,9 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
 
     setState(() => _isSaving = true);
 
-    final timeString = '${_timeOfDay.hour.toString().padLeft(2, '0')}:${_timeOfDay.minute.toString().padLeft(2, '0')}';
-    
+    final timeString =
+        '${_timeOfDay.hour.toString().padLeft(2, '0')}:${_timeOfDay.minute.toString().padLeft(2, '0')}';
+
     final medication = Medication(
       id: widget.medication?.id ?? const Uuid().v4(),
       userId: widget.userId,
@@ -550,7 +657,9 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
       dosage: _dosageController.text.trim(),
       frequency: _frequency,
       timeOfDay: timeString,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      notes: _notesController.text.trim().isEmpty
+          ? null
+          : _notesController.text.trim(),
       isActive: _isActive,
       createdAt: widget.medication?.createdAt ?? DateTime.now(),
     );
@@ -561,30 +670,36 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
       } else {
         await DatabaseHelper.instance.updateMedication(medication);
       }
-      
+
       // Schedule notification for active medications
       if (medication.isActive) {
-        await MedicationNotificationService.instance.scheduleMedicationReminder(medication);
+        await MedicationNotificationService.instance.scheduleMedicationReminder(
+          medication,
+        );
       } else {
-        await MedicationNotificationService.instance.cancelMedicationReminder(medication.id);
+        await MedicationNotificationService.instance.cancelMedicationReminder(
+          medication.id,
+        );
       }
-      
+
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.medication == null
-                ? 'Medication added with reminder'
-                : 'Medication updated'),
+            content: Text(
+              widget.medication == null
+                  ? 'Medication added with reminder'
+                  : 'Medication updated',
+            ),
           ),
         );
         widget.onSaved();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -594,7 +709,8 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
   @override
   Widget build(BuildContext context) {
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
     final isDark = themeService.isDarkMode;
 
     return Dialog(
@@ -626,10 +742,18 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                     labelText: 'Medication Name',
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.medication),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter medication name';
@@ -644,10 +768,18 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                     labelText: 'Dosage (e.g., 10mg, 2 tablets)',
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.healing),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter dosage';
@@ -662,17 +794,33 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                     labelText: 'Frequency',
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.repeat),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
-                    focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
+                    focusedBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          )
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                   items: _frequencies.map((freq) {
                     return DropdownMenuItem(
                       value: freq,
                       child: Text(
                         freq,
-                        style: TextStyle(color: isBlackMinimalism ? Colors.white : (isDark ? Colors.white : Colors.black)),
+                        style: TextStyle(
+                          color: isBlackMinimalism
+                              ? Colors.white
+                              : (isDark ? Colors.white : Colors.black),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -683,14 +831,35 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                 const SizedBox(height: 16),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.access_time, color: isBlackMinimalism ? Colors.white70 : null),
-                  title: Text('Time', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
-                  subtitle: Text(_timeOfDay.format(context), style: TextStyle(color: isBlackMinimalism ? Colors.white60 : null)),
-                  trailing: Icon(Icons.arrow_forward_ios, size: 16, color: isBlackMinimalism ? Colors.white60 : null),
+                  leading: Icon(
+                    Icons.access_time,
+                    color: isBlackMinimalism ? Colors.white70 : null,
+                  ),
+                  title: Text(
+                    'Time',
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
+                  ),
+                  subtitle: Text(
+                    _timeOfDay.format(context),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white60 : null,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: isBlackMinimalism ? Colors.white60 : null,
+                  ),
                   onTap: _selectTime,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: isBlackMinimalism ? Colors.white10 : Colors.grey[300]!),
+                    side: BorderSide(
+                      color: isBlackMinimalism
+                          ? Colors.white10
+                          : Colors.grey[300]!,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -700,20 +869,39 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                     labelText: 'Notes',
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.notes),
-                    enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-                    labelStyle: isBlackMinimalism ? const TextStyle(color: Colors.white60) : null,
-                    focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+                    enabledBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24),
+                          )
+                        : null,
+                    labelStyle: isBlackMinimalism
+                        ? const TextStyle(color: Colors.white60)
+                        : null,
+                    focusedBorder: isBlackMinimalism
+                        ? const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          )
+                        : null,
                   ),
-                  style: isBlackMinimalism ? const TextStyle(color: Colors.white) : null,
+                  style: isBlackMinimalism
+                      ? const TextStyle(color: Colors.white)
+                      : null,
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text('Active', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+                  title: Text(
+                    'Active',
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white : null,
+                    ),
+                  ),
                   subtitle: Text(
                     _isActive ? 'Medication is active' : 'Medication is paused',
-                    style: TextStyle(color: isBlackMinimalism ? Colors.white60 : null),
+                    style: TextStyle(
+                      color: isBlackMinimalism ? Colors.white60 : null,
+                    ),
                   ),
                   activeThumbColor: isBlackMinimalism ? Colors.white : null,
                   value: _isActive,
@@ -726,15 +914,26 @@ class _MedicationFormDialogState extends State<MedicationFormDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: _isSaving ? null : () => Navigator.pop(context),
-                      child: Text('Cancel', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+                      onPressed: _isSaving
+                          ? null
+                          : () => Navigator.pop(context),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: isBlackMinimalism ? Colors.white70 : null,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: _isSaving ? null : _save,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isBlackMinimalism ? Colors.white : null,
-                        foregroundColor: isBlackMinimalism ? Colors.black : null,
+                        backgroundColor: isBlackMinimalism
+                            ? Colors.white
+                            : null,
+                        foregroundColor: isBlackMinimalism
+                            ? Colors.black
+                            : null,
                       ),
                       child: _isSaving
                           ? const SizedBox(

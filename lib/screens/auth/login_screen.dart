@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService.instance;
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   late UserRole _selectedRole;
@@ -59,9 +59,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result.success) {
         if (mounted) {
-          final profileService = Provider.of<ProfileService>(context, listen: false);
+          final profileService = Provider.of<ProfileService>(
+            context,
+            listen: false,
+          );
           await profileService.syncWithUser(result.user!);
-          
+
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -88,10 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.coral400,
-      ),
+      SnackBar(content: Text(message), backgroundColor: AppColors.coral400),
     );
   }
 
@@ -150,29 +150,36 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: _RoleButton(
                               text: 'Patient',
                               isSelected: _selectedRole == UserRole.patient,
-                              onTap: () => setState(() => _selectedRole = UserRole.patient),
+                              onTap: () => setState(
+                                () => _selectedRole = UserRole.patient,
+                              ),
                             ),
                           ),
                           Expanded(
                             child: _RoleButton(
                               text: 'Caregiver',
                               isSelected: _selectedRole == UserRole.caregiver,
-                              onTap: () => setState(() => _selectedRole = UserRole.caregiver),
+                              onTap: () => setState(
+                                () => _selectedRole = UserRole.caregiver,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Title
                     Text(
-                      _selectedRole == UserRole.patient ? 'Welcome Back' : 'Caregiver Portal',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: AppColors.slate900,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 32,
-                      ),
+                      _selectedRole == UserRole.patient
+                          ? 'Welcome Back'
+                          : 'Caregiver Portal',
+                      style: Theme.of(context).textTheme.displayMedium
+                          ?.copyWith(
+                            color: AppColors.slate900,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 32,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
@@ -184,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Email Field
                     Container(
                       decoration: BoxDecoration(
@@ -223,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Password Field
                     Container(
                       decoration: BoxDecoration(
@@ -274,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Login Button
                     SizedBox(
                       height: 56,
@@ -309,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Back Button
                     // Register option
                     Row(
@@ -322,9 +329,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextButton(
                           onPressed: () {
                             if (_selectedRole == UserRole.patient) {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => RegistrationScreen()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => RegistrationScreen(),
+                                ),
+                              );
                             } else {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => const CaregiverRegisterScreen()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const CaregiverRegisterScreen(),
+                                ),
+                              );
                             }
                           },
                           child: const Text('Register'),

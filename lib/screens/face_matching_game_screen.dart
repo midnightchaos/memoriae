@@ -30,10 +30,10 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
   List<FamiliarFace> _gameFaces = [];
   List<String> _shuffledNames = [];
   List<Color> _faceColors = [];
-  
+
   int? _selectedFaceIndex;
   int? _selectedNameIndex;
-  
+
   List<int> _matchedFaces = [];
   int _score = 0;
   int _attempts = 0;
@@ -63,7 +63,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
     );
     _loadGame();
-    
+
     // Record interaction on screen open
     ActivityMonitoringService.instance.recordInteraction();
   }
@@ -77,9 +77,11 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         description: 'Patient started Face Matching Game',
       );
 
-      await context.read<FamiliarFaceService>().loadFaces(profileService.profile!.id);
+      await context.read<FamiliarFaceService>().loadFaces(
+        profileService.profile!.id,
+      );
       final faceService = context.read<FamiliarFaceService>();
-      
+
       if (faceService.faces.length < 3) {
         setState(() {
           _isLoading = false;
@@ -91,7 +93,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       final allFaces = List<FamiliarFace>.from(faceService.faces);
       allFaces.shuffle();
       final gameSize = min(6, max(3, allFaces.length));
-      
+
       setState(() {
         _gameFaces = allFaces.take(gameSize).toList();
         _shuffledNames = _gameFaces.map((f) => f.name).toList()..shuffle();
@@ -106,7 +108,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
 
   void _onFaceTap(int index) {
     if (_matchedFaces.contains(index)) return;
-    
+
     setState(() {
       _selectedFaceIndex = index;
       _checkMatch();
@@ -120,7 +122,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       });
       return;
     }
-    
+
     setState(() {
       _selectedNameIndex = index;
       _checkMatch();
@@ -142,7 +144,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       _animationController.forward().then((_) {
         _animationController.reverse();
       });
-      
+
       setState(() {
         _matchedFaces.add(_selectedFaceIndex!);
         _score += 10;
@@ -163,7 +165,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             completedAt: DateTime.now(),
             duration: 0, // Could calculate this if needed
           );
-          
+
           DatabaseHelper.instance.saveGameProgress(progress).then((_) {
             // Invalidate analytics cache so profile updates
             AnalyticsService.instance.invalidateCache();
@@ -173,7 +175,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         // Log game completion
         ActivityMonitoringService.instance.logActivity(
           type: ActivityMonitoringService.TYPE_GAME,
-          description: 'Patient completed Face Matching Game with score $_score',
+          description:
+              'Patient completed Face Matching Game with score $_score',
         );
 
         setState(() {
@@ -197,8 +200,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
   void _showCompletionDialog() {
     final accuracy = (_score / (_attempts * 10) * 100).toStringAsFixed(0);
     final themeService = Provider.of<ThemeService>(context, listen: false);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -206,7 +210,10 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
         title: Row(
           children: [
-            Text('🎉 Congratulations! 🎉', style: TextStyle(color: isBlackMinimalism ? Colors.white : null)),
+            Text(
+              '🎉 Congratulations! 🎉',
+              style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
+            ),
           ],
         ),
         content: Column(
@@ -232,7 +239,12 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               Navigator.of(ctx).pop();
               Navigator.of(context).pop();
             },
-            child: Text('Exit', style: TextStyle(color: isBlackMinimalism ? Colors.white70 : null)),
+            child: Text(
+              'Exit',
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white70 : null,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -240,7 +252,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               _resetGame();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white : AppColors.emerald400,
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white
+                  : AppColors.emerald400,
               foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
             ),
             child: const Text('Play Again'),
@@ -256,7 +270,13 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 16, color: isBlackMinimalism ? Colors.white70 : null)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              color: isBlackMinimalism ? Colors.white70 : null,
+            ),
+          ),
           Text(
             value,
             style: TextStyle(
@@ -292,7 +312,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeService = Provider.of<ThemeService>(context);
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       body: Container(
@@ -303,8 +324,16 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF121212)]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.lavender50, AppColors.blue50, AppColors.mint50]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          AppColors.lavender50,
+                          AppColors.blue50,
+                          AppColors.mint50,
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -356,10 +385,16 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                         : [AppColors.lavender400, AppColors.blue400],
                   ),
                   borderRadius: BorderRadius.circular(16),
-                  border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                  border: isBlackMinimalism
+                      ? Border.all(color: Colors.white10)
+                      : null,
                   boxShadow: [
                     BoxShadow(
-                      color: (isBlackMinimalism ? Colors.black : AppColors.lavender400).withOpacity(0.3),
+                      color:
+                          (isBlackMinimalism
+                                  ? Colors.black
+                                  : AppColors.lavender400)
+                              .withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -374,7 +409,10 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                       height: 24,
                       color: Colors.white.withOpacity(0.3),
                     ),
-                    _buildScoreItem('Matched', '${_matchedFaces.length}/${_gameFaces.length}'),
+                    _buildScoreItem(
+                      'Matched',
+                      '${_matchedFaces.length}/${_gameFaces.length}',
+                    ),
                     Container(
                       width: 2,
                       height: 24,
@@ -392,8 +430,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _gameFaces.length < 3
-                        ? _buildInsufficientFaces(isBlackMinimalism)
-                        : _buildGameContent(isDark, isBlackMinimalism),
+                    ? _buildInsufficientFaces(isBlackMinimalism)
+                    : _buildGameContent(isDark, isBlackMinimalism),
               ),
             ],
           ),
@@ -415,10 +453,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.white.withOpacity(0.9),
-          ),
+          style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
         ),
       ],
     );
@@ -448,7 +483,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender400,
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white
+                  : AppColors.lavender400,
               foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
@@ -470,16 +507,25 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             decoration: BoxDecoration(
               color: isBlackMinimalism
                   ? const Color(0xFF0A0A0A)
-                  : (isDark ? AppColors.slate800.withOpacity(0.5) : Colors.white.withOpacity(0.7)),
+                  : (isDark
+                        ? AppColors.slate800.withOpacity(0.5)
+                        : Colors.white.withOpacity(0.7)),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isBlackMinimalism ? Colors.white10 : AppColors.lavender400.withOpacity(0.3),
+                color: isBlackMinimalism
+                    ? Colors.white10
+                    : AppColors.lavender400.withOpacity(0.3),
                 width: 2,
               ),
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, color: isBlackMinimalism ? Colors.white70 : AppColors.lavender500),
+                Icon(
+                  Icons.info_outline,
+                  color: isBlackMinimalism
+                      ? Colors.white70
+                      : AppColors.lavender500,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -507,7 +553,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             ),
           ),
           const SizedBox(height: 12),
-          
+
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -518,7 +564,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               childAspectRatio: 0.8,
             ),
             itemCount: _gameFaces.length,
-            itemBuilder: (context, index) => _buildFaceCard(index, isDark, isBlackMinimalism),
+            itemBuilder: (context, index) =>
+                _buildFaceCard(index, isDark, isBlackMinimalism),
           ),
 
           const SizedBox(height: 32),
@@ -533,7 +580,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             ),
           ),
           const SizedBox(height: 12),
-          
+
           Wrap(
             spacing: 12,
             runSpacing: 12,
@@ -565,14 +612,18 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
           opacity: isMatched ? 0.4 : 1.0,
           child: Container(
             decoration: BoxDecoration(
-              color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+              color: isBlackMinimalism
+                  ? const Color(0xFF0A0A0A)
+                  : (isDark ? AppColors.slate800 : Colors.white),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected
                     ? color
                     : isMatched
-                        ? AppColors.emerald400
-                        : (isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3)),
+                    ? AppColors.emerald400
+                    : (isBlackMinimalism
+                          ? Colors.white10
+                          : color.withOpacity(0.3)),
                 width: isSelected || isMatched ? 3 : 2,
               ),
               boxShadow: [
@@ -655,14 +706,16 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
   Widget _buildNameChip(int index, bool isDark, bool isBlackMinimalism) {
     final name = _shuffledNames[index];
     final isSelected = _selectedNameIndex == index;
-    
+
     // Find if this name is already matched
     final matchedFaceIndex = _matchedFaces.firstWhere(
       (faceIndex) => _gameFaces[faceIndex].name == name,
       orElse: () => -1,
     );
     final isMatched = matchedFaceIndex != -1;
-    final color = isMatched ? _faceColors[matchedFaceIndex] : AppColors.lavender400;
+    final color = isMatched
+        ? _faceColors[matchedFaceIndex]
+        : AppColors.lavender400;
 
     return AnimatedScale(
       scale: isSelected ? 1.05 : 1.0,
@@ -675,22 +728,22 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               gradient: isSelected
-                  ? LinearGradient(
-                      colors: [color, color.withOpacity(0.7)],
-                    )
+                  ? LinearGradient(colors: [color, color.withOpacity(0.7)])
                   : null,
               color: isSelected
                   ? null
                   : isBlackMinimalism
-                      ? const Color(0xFF0A0A0A)
-                      : (isDark ? AppColors.slate800 : Colors.white),
+                  ? const Color(0xFF0A0A0A)
+                  : (isDark ? AppColors.slate800 : Colors.white),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected
                     ? color
                     : isMatched
-                        ? AppColors.emerald400
-                        : (isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3)),
+                    ? AppColors.emerald400
+                    : (isBlackMinimalism
+                          ? Colors.white10
+                          : color.withOpacity(0.3)),
                 width: isSelected || isMatched ? 2 : 1.5,
               ),
               boxShadow: [
@@ -712,8 +765,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                     color: isSelected
                         ? Colors.white
                         : isBlackMinimalism
-                            ? Colors.white70
-                            : (isDark ? Colors.white : AppColors.slate900),
+                        ? Colors.white70
+                        : (isDark ? Colors.white : AppColors.slate900),
                   ),
                 ),
                 if (isMatched) ...[

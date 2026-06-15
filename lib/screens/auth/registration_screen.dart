@@ -19,7 +19,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _authService = AuthService();
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -50,11 +50,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
       if (result.success) {
         if (mounted) {
-          final profileService = Provider.of<ProfileService>(context, listen: false);
+          final profileService = Provider.of<ProfileService>(
+            context,
+            listen: false,
+          );
           await profileService.syncWithUser(result.user!);
-          
+
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+            MaterialPageRoute(
+              builder: (context) => const MainNavigationScreen(),
+            ),
             (route) => false,
           );
         }
@@ -74,10 +79,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.coral400,
-      ),
+      SnackBar(content: Text(message), backgroundColor: AppColors.coral400),
     );
   }
 
@@ -124,15 +126,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Title
                     Text(
                       'Create Account',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: AppColors.slate900,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 32,
-                      ),
+                      style: Theme.of(context).textTheme.displayMedium
+                          ?.copyWith(
+                            color: AppColors.slate900,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 32,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
@@ -144,7 +147,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Name Field
                     Container(
                       decoration: BoxDecoration(
@@ -179,7 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Email Field
                     Container(
                       decoration: BoxDecoration(
@@ -218,7 +221,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Password Field
                     Container(
                       decoration: BoxDecoration(
@@ -269,7 +272,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Confirm Password Field
                     Container(
                       decoration: BoxDecoration(
@@ -297,7 +300,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword;
                               });
                             },
                           ),
@@ -320,7 +324,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Register Button
                     SizedBox(
                       height: 56,
@@ -355,7 +359,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Back Button
                     TextButton(
                       onPressed: () => Navigator.pop(context),

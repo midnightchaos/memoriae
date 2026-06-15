@@ -19,7 +19,7 @@ import 'services/inactivity_detection_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -27,36 +27,42 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-  
+
   // Initialize shared preferences
   final sharedPrefs = await SharedPreferences.getInstance();
-  
+
   // Don't initialize database here - let it initialize lazily when first accessed
   // This prevents authentication issues during app startup
-  
+
   // Initialize services
   final profileService = ProfileService();
   await profileService.load();
-  
+
   final themeService = ThemeService();
   await themeService.load();
 
   // Start background monitoring
   InactivityDetectionService.instance.startMonitoring();
-  
+
   // Run the app with providers
   runApp(
     MultiProvider(
       providers: [
         Provider<SharedPreferences>.value(value: sharedPrefs),
-        ChangeNotifierProvider(create: (context) => ExportProvider(sharedPrefs)),
+        ChangeNotifierProvider(
+          create: (context) => ExportProvider(sharedPrefs),
+        ),
         ChangeNotifierProvider(create: (context) => MentaService()),
         ChangeNotifierProvider(create: (context) => profileService),
         ChangeNotifierProvider(create: (context) => themeService),
         ChangeNotifierProvider(create: (context) => FamiliarFaceService()),
-        ChangeNotifierProvider(create: (context) => ActivityMonitoringService.instance),
+        ChangeNotifierProvider(
+          create: (context) => ActivityMonitoringService.instance,
+        ),
         ChangeNotifierProvider(create: (context) => AlertService.instance),
-        ChangeNotifierProvider(create: (context) => InactivityDetectionService.instance),
+        ChangeNotifierProvider(
+          create: (context) => InactivityDetectionService.instance,
+        ),
       ],
       child: const MemoriaeApp(),
     ),
@@ -69,7 +75,7 @@ class MemoriaeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
-    
+
     ThemeData getTheme() {
       switch (themeService.themeMode) {
         case AppThemeMode.light:

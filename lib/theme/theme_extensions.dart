@@ -21,39 +21,39 @@ class AppCardStyle extends ThemeExtension<AppCardStyle> {
 
   // Light theme card
   static AppCardStyle get light => AppCardStyle(
-        background: Colors.white,
-        borderColor: Colors.transparent,
-        borderWidth: 0,
-        borderRadius: AppRadius.xl,
-        shadows: AppShadows.medium,
-      );
+    background: Colors.white,
+    borderColor: Colors.transparent,
+    borderWidth: 0,
+    borderRadius: AppRadius.xl,
+    shadows: AppShadows.medium,
+  );
 
   // Dark theme card
   static AppCardStyle get dark => AppCardStyle(
-        background: AppColors.slate800,
-        borderColor: Colors.transparent,
-        borderWidth: 0,
-        borderRadius: AppRadius.xl,
-        shadows: AppShadows.subtle,
-      );
+    background: AppColors.slate800,
+    borderColor: Colors.transparent,
+    borderWidth: 0,
+    borderRadius: AppRadius.xl,
+    shadows: AppShadows.subtle,
+  );
 
   // Black minimalism card
   static AppCardStyle get black => AppCardStyle(
-        background: const Color(0xFF0A0A0A),
-        borderColor: Colors.white10,
-        borderWidth: 1,
-        borderRadius: AppRadius.lg,
-        shadows: const [],
-      );
+    background: const Color(0xFF0A0A0A),
+    borderColor: Colors.white10,
+    borderWidth: 1,
+    borderRadius: AppRadius.lg,
+    shadows: const [],
+  );
 
   BoxDecoration get decoration => BoxDecoration(
-        color: background,
-        borderRadius: borderRadius,
-        border: borderWidth > 0
-            ? Border.all(color: borderColor, width: borderWidth)
-            : null,
-        boxShadow: shadows.isNotEmpty ? shadows : null,
-      );
+    color: background,
+    borderRadius: borderRadius,
+    border: borderWidth > 0
+        ? Border.all(color: borderColor, width: borderWidth)
+        : null,
+    boxShadow: shadows.isNotEmpty ? shadows : null,
+  );
 
   @override
   AppCardStyle copyWith({
@@ -105,35 +105,33 @@ class AppPageStyle extends ThemeExtension<AppPageStyle> {
   });
 
   static AppPageStyle get light => AppPageStyle(
-        pageGradient: AppGradients.pageLight,
-        sectionHeaderColor: AppColors.slate900,
-        subtitleColor: AppColors.slate500,
-        iconAccentColor: AppColors.lavender400,
-        iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
-      );
+    pageGradient: AppGradients.pageLight,
+    sectionHeaderColor: AppColors.slate900,
+    subtitleColor: AppColors.slate500,
+    iconAccentColor: AppColors.lavender400,
+    iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
+  );
 
   static AppPageStyle get dark => AppPageStyle(
-        pageGradient: AppGradients.pageDark,
-        sectionHeaderColor: AppColors.slate100,
-        subtitleColor: AppColors.slate400,
-        iconAccentColor: AppColors.lavender400,
-        iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
-      );
+    pageGradient: AppGradients.pageDark,
+    sectionHeaderColor: AppColors.slate100,
+    subtitleColor: AppColors.slate400,
+    iconAccentColor: AppColors.lavender400,
+    iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
+  );
 
   static AppPageStyle get black => const AppPageStyle(
-        pageGradient: AppGradients.pageBlack,
-        pageColor: Colors.black,
-        sectionHeaderColor: Colors.white70,
-        subtitleColor: Colors.white38,
-        iconAccentColor: Colors.white,
-        iconBackgroundColor: Colors.white12,
-      );
+    pageGradient: AppGradients.pageBlack,
+    pageColor: Colors.black,
+    sectionHeaderColor: Colors.white70,
+    subtitleColor: Colors.white38,
+    iconAccentColor: Colors.white,
+    iconBackgroundColor: Colors.white12,
+  );
 
   /// Convenience: returns a BoxDecoration for page backgrounds
-  BoxDecoration get backgroundDecoration => BoxDecoration(
-        gradient: pageGradient,
-        color: pageColor,
-      );
+  BoxDecoration get backgroundDecoration =>
+      BoxDecoration(gradient: pageGradient, color: pageColor);
 
   @override
   AppPageStyle copyWith({
@@ -160,13 +158,18 @@ class AppPageStyle extends ThemeExtension<AppPageStyle> {
     return AppPageStyle(
       pageGradient: pageGradient,
       pageColor: Color.lerp(pageColor, other.pageColor, t),
-      sectionHeaderColor:
-          Color.lerp(sectionHeaderColor, other.sectionHeaderColor, t)!,
+      sectionHeaderColor: Color.lerp(
+        sectionHeaderColor,
+        other.sectionHeaderColor,
+        t,
+      )!,
       subtitleColor: Color.lerp(subtitleColor, other.subtitleColor, t)!,
-      iconAccentColor:
-          Color.lerp(iconAccentColor, other.iconAccentColor, t)!,
-      iconBackgroundColor:
-          Color.lerp(iconBackgroundColor, other.iconBackgroundColor, t)!,
+      iconAccentColor: Color.lerp(iconAccentColor, other.iconAccentColor, t)!,
+      iconBackgroundColor: Color.lerp(
+        iconBackgroundColor,
+        other.iconBackgroundColor,
+        t,
+      )!,
     );
   }
 }
@@ -189,37 +192,37 @@ class AppNavStyle extends ThemeExtension<AppNavStyle> {
   });
 
   static AppNavStyle get light => AppNavStyle(
-        barBackground: Colors.white.withOpacity(0.92),
-        barBorderColor: AppColors.slate200.withOpacity(0.3),
-        selectedLabelColor: AppColors.lavender500,
-        unselectedLabelColor: AppColors.slate400,
-        selectedIndicatorGradient: const LinearGradient(
-          colors: [AppColors.lavender100, AppColors.blue100],
-        ),
-      );
+    barBackground: Colors.white.withOpacity(0.92),
+    barBorderColor: AppColors.slate200.withOpacity(0.3),
+    selectedLabelColor: AppColors.lavender500,
+    unselectedLabelColor: AppColors.slate400,
+    selectedIndicatorGradient: const LinearGradient(
+      colors: [AppColors.lavender100, AppColors.blue100],
+    ),
+  );
 
   static AppNavStyle get dark => AppNavStyle(
-        barBackground: AppColors.slate900.withOpacity(0.92),
-        barBorderColor: AppColors.slate700.withOpacity(0.3),
-        selectedLabelColor: AppColors.lavender400,
-        unselectedLabelColor: AppColors.slate500,
-        selectedIndicatorGradient: LinearGradient(
-          colors: [
-            AppColors.lavender400.withOpacity(0.2),
-            AppColors.blue400.withOpacity(0.1),
-          ],
-        ),
-      );
+    barBackground: AppColors.slate900.withOpacity(0.92),
+    barBorderColor: AppColors.slate700.withOpacity(0.3),
+    selectedLabelColor: AppColors.lavender400,
+    unselectedLabelColor: AppColors.slate500,
+    selectedIndicatorGradient: LinearGradient(
+      colors: [
+        AppColors.lavender400.withOpacity(0.2),
+        AppColors.blue400.withOpacity(0.1),
+      ],
+    ),
+  );
 
   static AppNavStyle get black => AppNavStyle(
-        barBackground: Colors.black.withOpacity(0.95),
-        barBorderColor: Colors.white10,
-        selectedLabelColor: Colors.white,
-        unselectedLabelColor: Colors.white38,
-        selectedIndicatorGradient: const LinearGradient(
-          colors: [Colors.white12, Colors.white10],
-        ),
-      );
+    barBackground: Colors.black.withOpacity(0.95),
+    barBorderColor: Colors.white10,
+    selectedLabelColor: Colors.white,
+    unselectedLabelColor: Colors.white38,
+    selectedIndicatorGradient: const LinearGradient(
+      colors: [Colors.white12, Colors.white10],
+    ),
+  );
 
   @override
   AppNavStyle copyWith({
@@ -233,8 +236,7 @@ class AppNavStyle extends ThemeExtension<AppNavStyle> {
       barBackground: barBackground ?? this.barBackground,
       barBorderColor: barBorderColor ?? this.barBorderColor,
       selectedLabelColor: selectedLabelColor ?? this.selectedLabelColor,
-      unselectedLabelColor:
-          unselectedLabelColor ?? this.unselectedLabelColor,
+      unselectedLabelColor: unselectedLabelColor ?? this.unselectedLabelColor,
       selectedIndicatorGradient:
           selectedIndicatorGradient ?? this.selectedIndicatorGradient,
     );
@@ -246,10 +248,16 @@ class AppNavStyle extends ThemeExtension<AppNavStyle> {
     return AppNavStyle(
       barBackground: Color.lerp(barBackground, other.barBackground, t)!,
       barBorderColor: Color.lerp(barBorderColor, other.barBorderColor, t)!,
-      selectedLabelColor:
-          Color.lerp(selectedLabelColor, other.selectedLabelColor, t)!,
-      unselectedLabelColor:
-          Color.lerp(unselectedLabelColor, other.unselectedLabelColor, t)!,
+      selectedLabelColor: Color.lerp(
+        selectedLabelColor,
+        other.selectedLabelColor,
+        t,
+      )!,
+      unselectedLabelColor: Color.lerp(
+        unselectedLabelColor,
+        other.unselectedLabelColor,
+        t,
+      )!,
       selectedIndicatorGradient: selectedIndicatorGradient,
     );
   }

@@ -114,7 +114,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
   Widget build(BuildContext context) {
     final themeService = Provider.of<ThemeService>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
@@ -126,8 +127,16 @@ class _ConnectScreenState extends State<ConnectScreen> {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF121212)]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [Color(0xFFE0F2F1), Color(0xFFE0F7FA), Color(0xFFE0F2F1)]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [
+                          Color(0xFFE0F2F1),
+                          Color(0xFFE0F7FA),
+                          Color(0xFFE0F2F1),
+                        ]),
           ),
         ),
         child: SafeArea(
@@ -146,10 +155,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Connect & Resources',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isBlackMinimalism ? Colors.white : null,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isBlackMinimalism ? Colors.white : null,
+                          ),
                     ),
                   ],
                 ),
@@ -157,7 +167,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -176,7 +189,13 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       const SizedBox(height: 16),
 
                       // Resource Categories
-                      ..._resourceCategories.map((category) => _buildCategoryCard(category, isDark, isBlackMinimalism)),
+                      ..._resourceCategories.map(
+                        (category) => _buildCategoryCard(
+                          category,
+                          isDark,
+                          isBlackMinimalism,
+                        ),
+                      ),
 
                       const SizedBox(height: 20),
                     ],
@@ -197,7 +216,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
         color: isBlackMinimalism ? const Color(0xFF1A1A1A) : Colors.red.shade50,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isBlackMinimalism ? Colors.red.withOpacity(0.5) : Colors.red.shade200,
+          color: isBlackMinimalism
+              ? Colors.red.withOpacity(0.5)
+              : Colors.red.shade200,
           width: 2,
         ),
       ),
@@ -208,10 +229,16 @@ class _ConnectScreenState extends State<ConnectScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: isBlackMinimalism ? Colors.red.withOpacity(0.2) : Colors.red.shade100,
+                  color: isBlackMinimalism
+                      ? Colors.red.withOpacity(0.2)
+                      : Colors.red.shade100,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.emergency_share, color: Colors.red, size: 28),
+                child: const Icon(
+                  Icons.emergency_share,
+                  color: Colors.red,
+                  size: 28,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -223,13 +250,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isBlackMinimalism ? Colors.white : Colors.red.shade900,
+                        color: isBlackMinimalism
+                            ? Colors.white
+                            : Colors.red.shade900,
                       ),
                     ),
                     Text(
                       'Tap for immediate help',
                       style: TextStyle(
-                        color: isBlackMinimalism ? Colors.white70 : Colors.red.shade700,
+                        color: isBlackMinimalism
+                            ? Colors.white70
+                            : Colors.red.shade700,
                       ),
                     ),
                   ],
@@ -249,7 +280,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     elevation: 0,
                   ),
                 ),
@@ -261,11 +294,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
-  Widget _buildCategoryCard(Map<String, dynamic> category, bool isDark, bool isBlackMinimalism) {
+  Widget _buildCategoryCard(
+    Map<String, dynamic> category,
+    bool isDark,
+    bool isBlackMinimalism,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(24),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
         boxShadow: isBlackMinimalism
@@ -282,18 +321,27 @@ class _ConnectScreenState extends State<ConnectScreen> {
         data: Theme.of(context).copyWith(
           dividerColor: Colors.transparent,
           hoverColor: isBlackMinimalism ? Colors.white.withOpacity(0.05) : null,
-          splashColor: isBlackMinimalism ? Colors.white.withOpacity(0.05) : null,
+          splashColor: isBlackMinimalism
+              ? Colors.white.withOpacity(0.05)
+              : null,
         ),
         child: ExpansionTile(
           iconColor: isBlackMinimalism ? Colors.white : category['color'],
-          collapsedIconColor: isBlackMinimalism ? Colors.white38 : AppColors.slate400,
+          collapsedIconColor: isBlackMinimalism
+              ? Colors.white38
+              : AppColors.slate400,
           leading: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isBlackMinimalism ? Colors.white.withOpacity(0.05) : (category['color'] as Color).withOpacity(0.1),
+              color: isBlackMinimalism
+                  ? Colors.white.withOpacity(0.05)
+                  : (category['color'] as Color).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(category['icon'], color: isBlackMinimalism ? Colors.white : category['color']),
+            child: Icon(
+              category['icon'],
+              color: isBlackMinimalism ? Colors.white : category['color'],
+            ),
           ),
           title: Text(
             category['title'],
@@ -306,7 +354,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               child: Column(
-                children: (category['items'] as List).map((item) => _buildResourceTile(item, isBlackMinimalism)).toList(),
+                children: (category['items'] as List)
+                    .map((item) => _buildResourceTile(item, isBlackMinimalism))
+                    .toList(),
               ),
             ),
           ],
@@ -341,7 +391,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? Colors.white.withOpacity(0.03) : AppColors.slate100.withOpacity(0.3),
+        color: isBlackMinimalism
+            ? Colors.white.withOpacity(0.03)
+            : AppColors.slate100.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -363,7 +415,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 Text(
                   item['description'],
                   style: TextStyle(
-                    color: isBlackMinimalism ? Colors.white60 : AppColors.slate500,
+                    color: isBlackMinimalism
+                        ? Colors.white60
+                        : AppColors.slate500,
                     fontSize: 12,
                   ),
                 ),
@@ -371,20 +425,32 @@ class _ConnectScreenState extends State<ConnectScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          _buildActionButton(actionIcon, actionLabel, () => _handleAction(type, contact), isBlackMinimalism),
+          _buildActionButton(
+            actionIcon,
+            actionLabel,
+            () => _handleAction(type, contact),
+            isBlackMinimalism,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, VoidCallback onTap, bool isBlackMinimalism) {
+  Widget _buildActionButton(
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+    bool isBlackMinimalism,
+  ) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isBlackMinimalism ? Colors.white.withOpacity(0.05) : Colors.white,
+          color: isBlackMinimalism
+              ? Colors.white.withOpacity(0.05)
+              : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isBlackMinimalism ? Colors.white10 : AppColors.slate200,
@@ -393,7 +459,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16, color: isBlackMinimalism ? Colors.white70 : AppColors.lavender500),
+            Icon(
+              icon,
+              size: 16,
+              color: isBlackMinimalism ? Colors.white70 : AppColors.lavender500,
+            ),
             const SizedBox(width: 4),
             Text(
               label,
@@ -412,25 +482,36 @@ class _ConnectScreenState extends State<ConnectScreen> {
   void _handleAction(ResourceType type, String contact) {
     switch (type) {
       case ResourceType.phone:
-        _launchAction(Uri(scheme: 'tel', path: contact), 'Cannot make phone call');
+        _launchAction(
+          Uri(scheme: 'tel', path: contact),
+          'Cannot make phone call',
+        );
         break;
       case ResourceType.sms:
         _launchAction(Uri(scheme: 'sms', path: contact), 'Cannot send SMS');
         break;
       case ResourceType.website:
-        _launchAction(Uri.parse(contact), 'Cannot open website', mode: LaunchMode.externalApplication);
+        _launchAction(
+          Uri.parse(contact),
+          'Cannot open website',
+          mode: LaunchMode.externalApplication,
+        );
         break;
     }
   }
 
-  Future<void> _launchAction(Uri uri, String errorMessage, {LaunchMode mode = LaunchMode.platformDefault}) async {
+  Future<void> _launchAction(
+    Uri uri,
+    String errorMessage, {
+    LaunchMode mode = LaunchMode.platformDefault,
+  }) async {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: mode);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
       }
     }
   }

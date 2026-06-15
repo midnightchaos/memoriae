@@ -8,9 +8,16 @@ import 'database_helper.dart';
 class MusicLibraryService {
   final DatabaseHelper _db = DatabaseHelper.instance;
   final AudioRecorder _recorder = AudioRecorder();
-  
+
   static const List<String> _supportedAudioFormats = [
-    'mp3', 'mp4', 'm4a', 'wav', 'aac', 'ogg', 'flac', 'wma'
+    'mp3',
+    'mp4',
+    'm4a',
+    'wav',
+    'aac',
+    'ogg',
+    'flac',
+    'wma',
   ];
 
   // Get all tracks (assets + custom)
@@ -45,19 +52,22 @@ class MusicLibraryService {
       if (result != null && result.files.single.path != null) {
         final file = File(result.files.single.path!);
         final fileName = result.files.single.name;
-        
+
         // Copy to app directory
         final appDir = await getApplicationDocumentsDirectory();
         final musicDir = Directory('${appDir.path}/music');
         if (!await musicDir.exists()) {
           await musicDir.create(recursive: true);
         }
-        
+
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final sanitizedFileName = fileName.replaceAll(RegExp(r'[^\w\s.-]'), '_');
+        final sanitizedFileName = fileName.replaceAll(
+          RegExp(r'[^\w\s.-]'),
+          '_',
+        );
         final newPath = '${musicDir.path}/${timestamp}_$sanitizedFileName';
         final copiedFile = await file.copy(newPath);
-        
+
         final track = MusicTrack(
           id: timestamp.toString(),
           name: fileName.split('.').first,
@@ -68,7 +78,7 @@ class MusicLibraryService {
           icon: '🎵',
           colorValue: 0xFF9333EA, // purple
         );
-        
+
         await _db.createMusicTrack(track);
         return track;
       }
@@ -87,10 +97,10 @@ class MusicLibraryService {
         if (!await recordingsDir.exists()) {
           await recordingsDir.create(recursive: true);
         }
-        
+
         final timestamp = DateTime.now().millisecondsSinceEpoch;
         final path = '${recordingsDir.path}/recording_$timestamp.m4a';
-        
+
         await _recorder.start(const RecordConfig(), path: path);
         return true;
       } else {
@@ -107,11 +117,12 @@ class MusicLibraryService {
   Future<MusicTrack?> stopRecording({String? customName}) async {
     try {
       final path = await _recorder.stop();
-      
+
       if (path != null) {
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final defaultName = 'Recording ${DateTime.now().toString().substring(0, 16)}';
-        
+        final defaultName =
+            'Recording ${DateTime.now().toString().substring(0, 16)}';
+
         final track = MusicTrack(
           id: timestamp.toString(),
           name: customName ?? defaultName,
@@ -122,7 +133,7 @@ class MusicLibraryService {
           icon: '🎙️',
           colorValue: 0xFFEC4899, // pink
         );
-        
+
         await _db.createMusicTrack(track);
         return track;
       }

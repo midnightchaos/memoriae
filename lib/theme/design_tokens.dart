@@ -29,36 +29,36 @@ class AppShadows {
   AppShadows._();
 
   static List<BoxShadow> get subtle => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.04),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withOpacity(0.04),
+      blurRadius: 8,
+      offset: const Offset(0, 2),
+    ),
+  ];
 
   static List<BoxShadow> get medium => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.08),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withOpacity(0.08),
+      blurRadius: 16,
+      offset: const Offset(0, 4),
+    ),
+  ];
 
   static List<BoxShadow> get elevated => [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.12),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withOpacity(0.12),
+      blurRadius: 24,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static List<BoxShadow> glowWith(Color color) => [
-        BoxShadow(
-          color: color.withOpacity(0.25),
-          blurRadius: 20,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: color.withOpacity(0.25),
+      blurRadius: 20,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }
 
 /// Gradient presets
@@ -86,19 +86,13 @@ class AppGradients {
   static const glass = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0x33FFFFFF),
-      Color(0x0DFFFFFF),
-    ],
+    colors: [Color(0x33FFFFFF), Color(0x0DFFFFFF)],
   );
 
   static const glassDark = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0x1AFFFFFF),
-      Color(0x05FFFFFF),
-    ],
+    colors: [Color(0x1AFFFFFF), Color(0x05FFFFFF)],
   );
 
   /// Page backgrounds

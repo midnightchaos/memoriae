@@ -28,7 +28,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     _nameController = TextEditingController(text: widget.profile.name);
     _emailController = TextEditingController(text: widget.profile.email);
-    _ageController = TextEditingController(text: widget.profile.age?.toString() ?? '');
+    _ageController = TextEditingController(
+      text: widget.profile.age?.toString() ?? '',
+    );
   }
 
   @override
@@ -41,9 +43,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Name cannot be empty')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Name cannot be empty')));
       return;
     }
 
@@ -67,9 +69,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving profile: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving profile: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -138,12 +140,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(
                         'Save Changes',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
             ],
@@ -179,18 +186,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: InputDecoration(
             prefixIcon: Icon(icon, color: AppColors.lavender400),
             filled: true,
-            fillColor: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.5),
+            fillColor: isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.white.withOpacity(0.5),
             border: OutlineInputBorder(
               borderRadius: AppRadius.md,
-              borderSide: BorderSide(color: isDark ? Colors.white10 : AppColors.lavender100),
+              borderSide: BorderSide(
+                color: isDark ? Colors.white10 : AppColors.lavender100,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.md,
-              borderSide: BorderSide(color: isDark ? Colors.white10 : AppColors.lavender100),
+              borderSide: BorderSide(
+                color: isDark ? Colors.white10 : AppColors.lavender100,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: AppRadius.md,
-              borderSide: const BorderSide(color: AppColors.lavender400, width: 2),
+              borderSide: const BorderSide(
+                color: AppColors.lavender400,
+                width: 2,
+              ),
             ),
           ),
         ),

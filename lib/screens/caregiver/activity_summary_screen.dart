@@ -36,14 +36,18 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
       _logs = await DatabaseHelper.instance.getActivityLogs(widget.patientId);
       // Sort logs by timestamp descending
       _logs.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      
-      _todayScore = await ActivityMonitoringService.instance.getTodayEngagementScore(widget.patientId);
-      _history = await DatabaseHelper.instance.getEngagementHistory(widget.patientId);
-      
+
+      _todayScore = await ActivityMonitoringService.instance
+          .getTodayEngagementScore(widget.patientId);
+      _history = await DatabaseHelper.instance.getEngagementHistory(
+        widget.patientId,
+      );
+
       // Log audit action
       await AuditLoggingService.instance.logAction(
         action: 'Viewed Activity Summary',
-        details: 'Caregiver viewed engagement trends and logs for patient ${widget.patientId}',
+        details:
+            'Caregiver viewed engagement trends and logs for patient ${widget.patientId}',
       );
     } catch (e) {
       debugPrint('Error loading summary data: $e');
@@ -74,7 +78,10 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                     children: [
                       const Text(
                         'Detailed Activity Log',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       TextButton.icon(
                         onPressed: () {
@@ -100,7 +107,9 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
   Widget _buildEngagementSection() {
     double score = _todayScore?['score'] ?? 0.0;
     String status = score > 15 ? 'High' : (score > 5 ? 'Moderate' : 'Low');
-    Color color = score > 15 ? AppColors.emerald500 : (score > 5 ? AppColors.peach400 : AppColors.coral400);
+    Color color = score > 15
+        ? AppColors.emerald500
+        : (score > 5 ? AppColors.peach400 : AppColors.coral400);
 
     return Card(
       elevation: 2,
@@ -121,7 +130,10 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                   width: 120,
                   height: 120,
                   child: CircularProgressIndicator(
-                    value: (score / 30).clamp(0.0, 1.0), // Capacity of 30 for visualization
+                    value: (score / 30).clamp(
+                      0.0,
+                      1.0,
+                    ), // Capacity of 30 for visualization
                     strokeWidth: 10,
                     backgroundColor: AppColors.slate100,
                     valueColor: AlwaysStoppedAnimation<Color>(color),
@@ -131,11 +143,19 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                   children: [
                     Text(
                       score.toStringAsFixed(1),
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: color),
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
                     ),
                     Text(
                       status,
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: color),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: color,
+                      ),
                     ),
                   ],
                 ),
@@ -146,16 +166,25 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildMiniStat('Chats', '${_todayScore?['chatCount'] ?? 0}'),
-                _buildMiniStat('Journals', '${_todayScore?['journalCount'] ?? 0}'),
+                _buildMiniStat(
+                  'Journals',
+                  '${_todayScore?['journalCount'] ?? 0}',
+                ),
                 _buildMiniStat('Games', '${_todayScore?['gameCount'] ?? 0}'),
-                _buildMiniStat('Therapy', '${_todayScore?['therapyCount'] ?? 0}'),
+                _buildMiniStat(
+                  'Therapy',
+                  '${_todayScore?['therapyCount'] ?? 0}',
+                ),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildMiniStat('Feedback', '${_todayScore?['feedbackCount'] ?? 0}'),
+                _buildMiniStat(
+                  'Feedback',
+                  '${_todayScore?['feedbackCount'] ?? 0}',
+                ),
               ],
             ),
           ],
@@ -167,19 +196,35 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
   Widget _buildMiniStat(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.slate600)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: AppColors.slate600),
+        ),
       ],
     );
   }
 
   Widget _buildActivityTypeBreakdown() {
     // Simple count per type
-    int chats = _logs.where((l) => l.activityType == ActivityMonitoringService.TYPE_CHAT).length;
-    int journals = _logs.where((l) => l.activityType == ActivityMonitoringService.TYPE_JOURNAL).length;
-    int games = _logs.where((l) => l.activityType == ActivityMonitoringService.TYPE_GAME).length;
-    int therapy = _logs.where((l) => l.activityType == ActivityMonitoringService.TYPE_THERAPY).length;
-    int feedback = _logs.where((l) => l.activityType == ActivityMonitoringService.TYPE_FEEDBACK).length;
+    int chats = _logs
+        .where((l) => l.activityType == ActivityMonitoringService.TYPE_CHAT)
+        .length;
+    int journals = _logs
+        .where((l) => l.activityType == ActivityMonitoringService.TYPE_JOURNAL)
+        .length;
+    int games = _logs
+        .where((l) => l.activityType == ActivityMonitoringService.TYPE_GAME)
+        .length;
+    int therapy = _logs
+        .where((l) => l.activityType == ActivityMonitoringService.TYPE_THERAPY)
+        .length;
+    int feedback = _logs
+        .where((l) => l.activityType == ActivityMonitoringService.TYPE_FEEDBACK)
+        .length;
 
     return Row(
       children: [
@@ -207,8 +252,14 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
           children: [
             Text(label.split(' ')[0], style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 4),
-            Text(count.toString(), style: TextStyle(fontWeight: FontWeight.bold, color: color)),
-            Text(label.split(' ')[1], style: TextStyle(fontSize: 10, color: color)),
+            Text(
+              count.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(
+              label.split(' ')[1],
+              style: TextStyle(fontSize: 10, color: color),
+            ),
           ],
         ),
       ),
@@ -219,12 +270,29 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
     IconData icon;
     Color color;
     switch (log.activityType) {
-      case ActivityMonitoringService.TYPE_CHAT: icon = Icons.chat_bubble_outline; color = AppColors.blue400; break;
-      case ActivityMonitoringService.TYPE_JOURNAL: icon = Icons.edit_note; color = AppColors.emerald400; break;
-      case ActivityMonitoringService.TYPE_GAME: icon = Icons.sports_esports_outlined; color = AppColors.purple400; break;
-      case ActivityMonitoringService.TYPE_THERAPY: icon = Icons.self_improvement; color = AppColors.peach400; break;
-      case ActivityMonitoringService.TYPE_FEEDBACK: icon = Icons.thumbs_up_down_outlined; color = AppColors.slate600; break;
-      default: icon = Icons.history; color = AppColors.slate400;
+      case ActivityMonitoringService.TYPE_CHAT:
+        icon = Icons.chat_bubble_outline;
+        color = AppColors.blue400;
+        break;
+      case ActivityMonitoringService.TYPE_JOURNAL:
+        icon = Icons.edit_note;
+        color = AppColors.emerald400;
+        break;
+      case ActivityMonitoringService.TYPE_GAME:
+        icon = Icons.sports_esports_outlined;
+        color = AppColors.purple400;
+        break;
+      case ActivityMonitoringService.TYPE_THERAPY:
+        icon = Icons.self_improvement;
+        color = AppColors.peach400;
+        break;
+      case ActivityMonitoringService.TYPE_FEEDBACK:
+        icon = Icons.thumbs_up_down_outlined;
+        color = AppColors.slate600;
+        break;
+      default:
+        icon = Icons.history;
+        color = AppColors.slate400;
     }
 
     return Card(
@@ -240,7 +308,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
           DateFormat('MMM d, h:mm a').format(log.timestamp),
           style: const TextStyle(fontSize: 12),
         ),
-        trailing: log.durationSeconds > 0 
+        trailing: log.durationSeconds > 0
             ? Text('${(log.durationSeconds / 60).ceil()}m')
             : null,
       ),
@@ -249,11 +317,12 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
 
   Future<void> _sendIntervention() async {
     final TextEditingController messageController = TextEditingController(
-      text: 'Hi! Just checking in to see how you are doing today. ❤️'
+      text: 'Hi! Just checking in to see how you are doing today. ❤️',
     );
 
     final themeService = context.read<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     showDialog(
       context: context,
@@ -280,14 +349,18 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
               style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
               decoration: InputDecoration(
                 hintText: 'Enter your message...',
-                hintStyle: TextStyle(color: isBlackMinimalism ? Colors.white24 : null),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                enabledBorder: isBlackMinimalism 
-                  ? OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white10),
-                    )
-                  : null,
+                hintStyle: TextStyle(
+                  color: isBlackMinimalism ? Colors.white24 : null,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: isBlackMinimalism
+                    ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.white10),
+                      )
+                    : null,
               ),
             ),
           ],
@@ -297,7 +370,9 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: isBlackMinimalism ? Colors.white38 : null),
+              style: TextStyle(
+                color: isBlackMinimalism ? Colors.white38 : null,
+              ),
             ),
           ),
           ElevatedButton(
@@ -306,30 +381,34 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
               if (message.isEmpty) return;
 
               Navigator.pop(context);
-              
+
               // 1. Log Activity
-              await DatabaseHelper.instance.insertActivityLog(ActivityLog(
-                activityType: 'I', // Intervention
-                description: 'Caregiver sent check-in: $message',
-                patientId: widget.patientId,
-              ));
-              
+              await DatabaseHelper.instance.insertActivityLog(
+                ActivityLog(
+                  activityType: 'I', // Intervention
+                  description: 'Caregiver sent check-in: $message',
+                  patientId: widget.patientId,
+                ),
+              );
+
               // 2. Insert into Chat so patient sees it
-              await DatabaseHelper.instance.insertChatMessage(ChatMessage(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                content: message,
-                isUser: false, // From "system/caregiver"
-                timestamp: DateTime.now().millisecondsSinceEpoch,
-                type: 'intervention',
-                metadata: '{"from": "caregiver"}',
-              ));
-              
+              await DatabaseHelper.instance.insertChatMessage(
+                ChatMessage(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  content: message,
+                  isUser: false, // From "system/caregiver"
+                  timestamp: DateTime.now().millisecondsSinceEpoch,
+                  type: 'intervention',
+                  metadata: '{"from": "caregiver"}',
+                ),
+              );
+
               // 3. Log Audit
               await AuditLoggingService.instance.logAction(
                 action: 'Manual Intervention Sent',
                 details: 'Caregiver sent message: $message',
               );
-              
+
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -340,7 +419,9 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender500,
+              backgroundColor: isBlackMinimalism
+                  ? Colors.white
+                  : AppColors.lavender500,
               foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
             ),
             child: const Text('Send Prompt'),
@@ -355,7 +436,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
 
     // Get last 7 days of data
     final displayData = _history.take(7).toList().reversed.toList();
-    
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -366,7 +447,11 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
           children: [
             const Text(
               'Engagement Trend (7 Days)',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.slate700),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.slate700,
+              ),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -375,14 +460,22 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                 LineChartData(
                   gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          if (value.toInt() < 0 || value.toInt() >= displayData.length) return const SizedBox.shrink();
+                          if (value.toInt() < 0 ||
+                              value.toInt() >= displayData.length)
+                            return const SizedBox.shrink();
                           final dateString = displayData[value.toInt()]['date'];
                           try {
                             final date = DateTime.parse(dateString);
@@ -390,7 +483,10 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                               padding: const EdgeInsets.only(top: 8),
                               child: Text(
                                 DateFormat('M/d').format(date),
-                                style: const TextStyle(fontSize: 10, color: AppColors.slate400),
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.slate400,
+                                ),
                               ),
                             );
                           } catch (_) {
@@ -405,7 +501,10 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                   lineBarsData: [
                     LineChartBarData(
                       spots: List.generate(displayData.length, (i) {
-                        return FlSpot(i.toDouble(), displayData[i]['score'] as double);
+                        return FlSpot(
+                          i.toDouble(),
+                          displayData[i]['score'] as double,
+                        );
                       }),
                       isCurved: true,
                       color: AppColors.lavender400,

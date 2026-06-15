@@ -14,15 +14,20 @@ class AlertService extends ChangeNotifier {
   }) async {
     try {
       // Check if a similar active alert already exists to avoid spamming
-      final existingAlerts = await DatabaseHelper.instance.getCaregiverAlerts(patientId);
-      final hasActiveSimilarAlert = existingAlerts.any((a) => 
-        a.type == type && 
-        !a.isResolved && 
-        DateTime.now().difference(a.timestamp).inHours < 12
+      final existingAlerts = await DatabaseHelper.instance.getCaregiverAlerts(
+        patientId,
+      );
+      final hasActiveSimilarAlert = existingAlerts.any(
+        (a) =>
+            a.type == type &&
+            !a.isResolved &&
+            DateTime.now().difference(a.timestamp).inHours < 12,
       );
 
       if (hasActiveSimilarAlert) {
-        debugPrint('Similar alert "$type" already exists and is unresolved. Skipping duplicate.');
+        debugPrint(
+          'Similar alert "$type" already exists and is unresolved. Skipping duplicate.',
+        );
         return;
       }
 
@@ -38,8 +43,8 @@ class AlertService extends ChangeNotifier {
       await DatabaseHelper.instance.insertCaregiverAlert(alert);
       debugPrint('Alert created: $type - $message');
       notifyListeners();
-      
-      // Note: In a production app, this is where you'd trigger 
+
+      // Note: In a production app, this is where you'd trigger
       // Firebase Cloud Messaging (FCM) to send a push notification to the caregiver.
     } catch (e) {
       debugPrint('Error creating alert: $e');

@@ -39,7 +39,10 @@ class DailyRoutine {
       title: map['title'] as String,
       description: map['description'] as String,
       time: map['time'] as String,
-      days: (map['days'] as String).split(',').map((e) => int.parse(e)).toList(),
+      days: (map['days'] as String)
+          .split(',')
+          .map((e) => int.parse(e))
+          .toList(),
       isActive: (map['isActive'] as int) == 1,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
     );

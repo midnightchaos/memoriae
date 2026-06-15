@@ -20,18 +20,18 @@ void main() {
   test('getMemoryContext includes moodSummary when journals exist', () async {
     final List<JournalEntry> journals = [
       JournalEntry(
-        id: '1', 
-        title: 'Happy Day', 
-        content: 'I had a great time today.', 
-        date: DateTime.now(), 
-        mood: 'Happy'
+        id: '1',
+        title: 'Happy Day',
+        content: 'I had a great time today.',
+        date: DateTime.now(),
+        mood: 'Happy',
       ),
       JournalEntry(
-        id: '2', 
-        title: 'Tired Day', 
-        content: 'I feel a bit tired.', 
-        date: DateTime.now().subtract(const Duration(days: 1)), 
-        mood: 'Tired'
+        id: '2',
+        title: 'Tired Day',
+        content: 'I feel a bit tired.',
+        date: DateTime.now().subtract(const Duration(days: 1)),
+        mood: 'Tired',
       ),
     ];
 
@@ -44,7 +44,11 @@ void main() {
     final context = await service.getMemoryContext();
 
     // This should fail (RED) as moodSummary is not yet implemented
-    expect(context.containsKey('moodSummary'), isTrue, reason: 'Context should contain a mood summary');
+    expect(
+      context.containsKey('moodSummary'),
+      isTrue,
+      reason: 'Context should contain a mood summary',
+    );
     expect(context['moodSummary'], contains('Happy'));
     expect(context['moodSummary'], contains('Tired'));
   });

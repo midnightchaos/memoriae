@@ -6,34 +6,43 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/medication.dart';
 
 class MedicationNotificationService {
-  static MedicationNotificationService _instance = MedicationNotificationService._internal();
+  static MedicationNotificationService _instance =
+      MedicationNotificationService._internal();
   static MedicationNotificationService get instance => _instance;
 
   @visibleForTesting
-  static set instance(MedicationNotificationService service) => _instance = service;
+  static set instance(MedicationNotificationService service) =>
+      _instance = service;
 
   final FlutterLocalNotificationsPlugin _notifications;
   bool _initialized = false;
 
-  MedicationNotificationService._internal() : _notifications = FlutterLocalNotificationsPlugin();
+  MedicationNotificationService._internal()
+    : _notifications = FlutterLocalNotificationsPlugin();
 
   @visibleForTesting
-  MedicationNotificationService.test(this._notifications, {bool initialized = true}) : _initialized = initialized;
+  MedicationNotificationService.test(
+    this._notifications, {
+    bool initialized = true,
+  }) : _initialized = initialized;
 
   Future<void> initialize() async {
     if (_initialized) return;
 
     tz.initializeTimeZones();
-    
+
     // Use device timezone or fallback to Asia/Kolkata
     try {
-      final String timeZoneName = (await FlutterTimezone.getLocalTimezone()).identifier;
+      final String timeZoneName =
+          (await FlutterTimezone.getLocalTimezone()).identifier;
       tz.setLocalLocation(tz.getLocation(timeZoneName));
     } catch (e) {
       tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
     }
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -135,7 +144,9 @@ class MedicationNotificationService {
       payload: 'medication_${medication.id}',
     );
 
-    print('✅ Medication reminder scheduled for ${medication.name} at ${medication.timeOfDay}');
+    print(
+      '✅ Medication reminder scheduled for ${medication.name} at ${medication.timeOfDay}',
+    );
   }
 
   Future<void> cancelMedicationReminder(String medicationId) async {
@@ -155,34 +166,44 @@ class MedicationNotificationService {
         await scheduleMedicationReminder(medication);
       }
     }
-    print('🔄 Rescheduled ${medications.where((m) => m.isActive).length} medications');
+    print(
+      '🔄 Rescheduled ${medications.where((m) => m.isActive).length} medications',
+    );
   }
 
   Future<bool> requestPermissions() async {
-    if (_notifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final androidImplementation = _notifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!;
-      
-      final granted = await androidImplementation.requestNotificationsPermission();
-      
+            AndroidFlutterLocalNotificationsPlugin
+          >()!;
+
+      final granted = await androidImplementation
+          .requestNotificationsPermission();
+
       // Also request exact alarm permission for Android 12+
-      final exactAlarmGranted = await androidImplementation.requestExactAlarmsPermission();
-      
+      final exactAlarmGranted = await androidImplementation
+          .requestExactAlarmsPermission();
+
       print('Notification permission: $granted');
       print('Exact alarm permission: $exactAlarmGranted');
-      
+
       return (granted ?? false) && (exactAlarmGranted ?? true);
     }
 
-    if (_notifications.resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final granted = await _notifications
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()!
+            IOSFlutterLocalNotificationsPlugin
+          >()!
           .requestPermissions(alert: true, badge: true, sound: true);
       return granted ?? false;
     }
@@ -238,12 +259,15 @@ class MedicationNotificationService {
 
   // Check if notifications are enabled
   Future<bool> areNotificationsEnabled() async {
-    if (_notifications.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>() !=
+    if (_notifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >() !=
         null) {
       final bool? enabled = await _notifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!
+            AndroidFlutterLocalNotificationsPlugin
+          >()!
           .areNotificationsEnabled();
       return enabled ?? false;
     }

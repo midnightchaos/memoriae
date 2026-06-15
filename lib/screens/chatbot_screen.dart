@@ -30,11 +30,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
   late MentaService _mentaService;
-  
+
   // Image Input
   final ImagePicker _picker = ImagePicker();
   String? _selectedImagePath;
-  
+
   // Voice Input
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
@@ -45,7 +45,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     _mentaService = Provider.of<MentaService>(context, listen: false);
     _addWelcomeMessage();
     _initializeAndCheckApi();
-    
+
     // Record interaction on screen open
     ActivityMonitoringService.instance.recordInteraction();
     _initSpeech();
@@ -55,7 +55,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     try {
       await _speech.initialize(
         onStatus: (status) => debugPrint('STT status: $status'),
-        onError: (errorNotification) => debugPrint('STT error: $errorNotification'),
+        onError: (errorNotification) =>
+            debugPrint('STT error: $errorNotification'),
       );
     } catch (e) {
       debugPrint('STT initialization failed: $e');
@@ -87,7 +88,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       source: ImageSource.gallery,
       imageQuality: 70,
     );
-    
+
     if (image != null) {
       setState(() {
         _selectedImagePath = image.path;
@@ -103,12 +104,14 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
   Future<void> _initializeAndCheckApi() async {
     await _mentaService.initialize(); // Ensure API key is loaded
-    
+
     if (!_mentaService.hasApiKey) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('⚠️ Gemini API key not configured. Please set it in Settings.'),
+            content: const Text(
+              '⚠️ Gemini API key not configured. Please set it in Settings.',
+            ),
             duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
@@ -128,36 +131,43 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
   void _addWelcomeMessage() {
     setState(() {
-      _messages.add(ChatMessage(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: "Hello! I'm Menta, your memory care companion. How can I help you today?",
-        isUser: false,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-      ));
+      _messages.add(
+        ChatMessage(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          content:
+              "Hello! I'm Menta, your memory care companion. How can I help you today?",
+          isUser: false,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
     });
   }
 
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
     final imagePath = _selectedImagePath;
-    
+
     if (text.isEmpty && imagePath == null) return;
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
       type: ActivityMonitoringService.TYPE_CHAT,
-      description: imagePath != null ? 'Patient sent an image to Menta' : 'Patient sent a message to Menta',
+      description: imagePath != null
+          ? 'Patient sent an image to Menta'
+          : 'Patient sent a message to Menta',
     );
 
     // Add user message
     setState(() {
-      _messages.add(ChatMessage(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        content: text,
-        isUser: true,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        imagePath: imagePath,
-      ));
+      _messages.add(
+        ChatMessage(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          content: text,
+          isUser: true,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+          imagePath: imagePath,
+        ),
+      );
       _isLoading = true;
       _selectedImagePath = null;
     });
@@ -170,12 +180,14 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       final response = await _mentaService.chat(text, imagePath: imagePath);
 
       setState(() {
-        _messages.add(ChatMessage(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          content: response,
-          isUser: false,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
-        ));
+        _messages.add(
+          ChatMessage(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            content: response,
+            isUser: false,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+          ),
+        );
         _isLoading = false;
       });
 
@@ -183,30 +195,38 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     } catch (e) {
       final errorMessage = e.toString();
       String userFriendlyMessage = "I'm sorry, I encountered an error. ";
-      
+
       if (errorMessage.contains('API key')) {
-        userFriendlyMessage = '⚠️ API key issue detected. Please check your settings or try again later.';
-      } else if (errorMessage.contains('network') || errorMessage.contains('connection')) {
-        userFriendlyMessage = '🚫 Connection error. Please check your internet and try again.';
+        userFriendlyMessage =
+            '⚠️ API key issue detected. Please check your settings or try again later.';
+      } else if (errorMessage.contains('network') ||
+          errorMessage.contains('connection')) {
+        userFriendlyMessage =
+            '🚫 Connection error. Please check your internet and try again.';
       } else {
-        userFriendlyMessage += 'Please try again or contact support if the issue persists.';
+        userFriendlyMessage +=
+            'Please try again or contact support if the issue persists.';
       }
-      
+
       setState(() {
-        _messages.add(ChatMessage(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          content: userFriendlyMessage,
-          isUser: false,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
-        ));
+        _messages.add(
+          ChatMessage(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            content: userFriendlyMessage,
+            isUser: false,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+          ),
+        );
         _isLoading = false;
       });
-      
+
       // Show retry option
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${errorMessage.length > 50 ? '${errorMessage.substring(0, 50)}...' : errorMessage}'),
+            content: Text(
+              'Error: ${errorMessage.length > 50 ? '${errorMessage.substring(0, 50)}...' : errorMessage}',
+            ),
             duration: const Duration(seconds: 5),
             action: SnackBarAction(
               label: 'Retry',
@@ -219,7 +239,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           ),
         );
       }
-      
+
       _scrollToBottom();
     }
   }
@@ -227,16 +247,21 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   void _handleFeedback(String messageId, bool isPositive) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(isPositive ? 'Glad I could help! 😊' : 'Thanks for the feedback. I\'ll try to do better. 😔'),
+        content: Text(
+          isPositive
+              ? 'Glad I could help! 😊'
+              : 'Thanks for the feedback. I\'ll try to do better. 😔',
+        ),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ),
     );
-    
+
     // Log feedback for adaptive learning
     ActivityMonitoringService.instance.logActivity(
       type: ActivityMonitoringService.TYPE_FEEDBACK,
-      description: 'User provided ${isPositive ? 'positive' : 'negative'} feedback on Menta response',
+      description:
+          'User provided ${isPositive ? 'positive' : 'negative'} feedback on Menta response',
     );
   }
 
@@ -257,20 +282,23 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       future: _checkApiKeyValid(),
       builder: (context, snapshot) {
         final themeService = context.watch<ThemeService>();
-        final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+        final isBlackMinimalism =
+            themeService.themeMode == AppThemeMode.blackMinimalism;
         final hasValidKey = snapshot.data ?? false;
         final isConnected = snapshot.connectionState == ConnectionState.done;
-        
+
         if (!isConnected) {
           return Text(
             'Checking...',
             style: TextStyle(
               fontSize: 12,
-              color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+              color: isBlackMinimalism
+                  ? Colors.white38
+                  : (isDark ? AppColors.slate400 : AppColors.slate600),
             ),
           );
         }
-        
+
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -284,7 +312,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               hasValidKey ? 'AI Connected' : 'Limited Mode',
               style: TextStyle(
                 fontSize: 12,
-                color: hasValidKey ? Colors.green : (isBlackMinimalism ? Colors.orange.withOpacity(0.8) : Colors.orange),
+                color: hasValidKey
+                    ? Colors.green
+                    : (isBlackMinimalism
+                          ? Colors.orange.withOpacity(0.8)
+                          : Colors.orange),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -312,7 +344,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     // Format the conversation
     final buffer = StringBuffer();
     buffer.writeln('Menta Conversation');
-    buffer.writeln('Generated: ${DateFormat('MMM dd, yyyy - hh:mm a').format(DateTime.now())}');
+    buffer.writeln(
+      'Generated: ${DateFormat('MMM dd, yyyy - hh:mm a').format(DateTime.now())}',
+    );
     buffer.writeln('=' * 50);
     buffer.writeln();
 
@@ -331,7 +365,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       // Share as plain text (works with any app)
       await Share.share(
         buffer.toString(),
-        subject: 'Menta Conversation - ${DateFormat('MMM dd, yyyy').format(DateTime.now())}',
+        subject:
+            'Menta Conversation - ${DateFormat('MMM dd, yyyy').format(DateTime.now())}',
       );
     } catch (e) {
       if (mounted) {
@@ -350,7 +385,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear Conversation?'),
-        content: const Text('This will delete all messages in this chat. This action cannot be undone.'),
+        content: const Text(
+          'This will delete all messages in this chat. This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -397,7 +434,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = theme.brightness == Brightness.dark;
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
 
     return Scaffold(
       appBar: AppBar(
@@ -407,9 +445,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                gradient: isBlackMinimalism ? null : LinearGradient(
-                  colors: [AppColors.lavender400, AppColors.teal400],
-                ),
+                gradient: isBlackMinimalism
+                    ? null
+                    : LinearGradient(
+                        colors: [AppColors.lavender400, AppColors.teal400],
+                      ),
                 color: isBlackMinimalism ? Colors.white : null,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -463,7 +503,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   children: [
                     Icon(Icons.delete_outline, color: Colors.red),
                     SizedBox(width: 8),
-                    Text('Clear conversation', style: TextStyle(color: Colors.red)),
+                    Text(
+                      'Clear conversation',
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ],
                 ),
               ),
@@ -481,7 +524,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       child: Text(
                         'Start a conversation with Menta',
                         style: TextStyle(
-                          color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                          color: isBlackMinimalism
+                              ? Colors.white38
+                              : (isDark
+                                    ? AppColors.slate400
+                                    : AppColors.slate600),
                         ),
                       ),
                     )
@@ -516,9 +563,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+                        color: isBlackMinimalism
+                            ? const Color(0xFF0A0A0A)
+                            : (isDark ? AppColors.slate800 : Colors.white),
                         borderRadius: BorderRadius.circular(20),
-                        border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                        border: isBlackMinimalism
+                            ? Border.all(color: Colors.white10)
+                            : null,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -537,7 +588,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                           Text(
                             'Menta is thinking...',
                             style: TextStyle(
-                              color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+                              color: isBlackMinimalism
+                                  ? Colors.white38
+                                  : (isDark
+                                        ? AppColors.slate400
+                                        : AppColors.slate600),
                               fontSize: 14,
                             ),
                           ),
@@ -552,15 +607,21 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isBlackMinimalism ? Colors.black : (isDark ? AppColors.slate800 : Colors.white),
-                border: isBlackMinimalism ? const Border(top: BorderSide(color: Colors.white10)) : null,
-                boxShadow: isBlackMinimalism ? null : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
+                color: isBlackMinimalism
+                    ? Colors.black
+                    : (isDark ? AppColors.slate800 : Colors.white),
+                border: isBlackMinimalism
+                    ? const Border(top: BorderSide(color: Colors.white10))
+                    : null,
+                boxShadow: isBlackMinimalism
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, -5),
+                        ),
+                      ],
               ),
               child: SafeArea(
                 child: Column(
@@ -591,9 +652,18 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                                   decoration: const BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle,
-                                    boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 4,
+                                      ),
+                                    ],
                                   ),
-                                  child: const Icon(Icons.cancel, color: Colors.red, size: 20),
+                                  child: const Icon(
+                                    Icons.cancel,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ),
@@ -603,7 +673,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.image_outlined, color: AppColors.lavender400),
+                          icon: Icon(
+                            Icons.image_outlined,
+                            color: AppColors.lavender400,
+                          ),
                           onPressed: _pickImage,
                         ),
                         Expanded(
@@ -616,7 +689,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                                 borderSide: BorderSide.none,
                               ),
                               filled: true,
-                              fillColor: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate700 : AppColors.slate100),
+                              fillColor: isBlackMinimalism
+                                  ? const Color(0xFF0A0A0A)
+                                  : (isDark
+                                        ? AppColors.slate700
+                                        : AppColors.slate100),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 12,
@@ -630,16 +707,24 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         const SizedBox(width: 8),
                         Container(
                           decoration: BoxDecoration(
-                            color: _isListening 
-                                ? Colors.red 
-                                : (isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate700 : AppColors.slate100)),
+                            color: _isListening
+                                ? Colors.red
+                                : (isBlackMinimalism
+                                      ? const Color(0xFF0A0A0A)
+                                      : (isDark
+                                            ? AppColors.slate700
+                                            : AppColors.slate100)),
                             shape: BoxShape.circle,
-                            border: isBlackMinimalism && !_isListening ? Border.all(color: Colors.white10) : null,
+                            border: isBlackMinimalism && !_isListening
+                                ? Border.all(color: Colors.white10)
+                                : null,
                           ),
                           child: IconButton(
                             icon: Icon(
                               _isListening ? Icons.mic : Icons.mic_none,
-                              color: _isListening ? Colors.white : AppColors.lavender400,
+                              color: _isListening
+                                  ? Colors.white
+                                  : AppColors.lavender400,
                             ),
                             onPressed: _listen,
                           ),
@@ -647,14 +732,24 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         const SizedBox(width: 8),
                         Container(
                           decoration: BoxDecoration(
-                            gradient: isBlackMinimalism ? null : LinearGradient(
-                              colors: [AppColors.lavender400, AppColors.teal400],
-                            ),
+                            gradient: isBlackMinimalism
+                                ? null
+                                : LinearGradient(
+                                    colors: [
+                                      AppColors.lavender400,
+                                      AppColors.teal400,
+                                    ],
+                                  ),
                             color: isBlackMinimalism ? Colors.white : null,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.send, color: isBlackMinimalism ? Colors.black : Colors.white),
+                            icon: Icon(
+                              Icons.send,
+                              color: isBlackMinimalism
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
                             onPressed: _isLoading ? null : _sendMessage,
                           ),
                         ),
@@ -698,7 +793,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     _scrollToBottom();
 
     final feedback = await MentaGamesService.instance.handleResponse(option);
-    
+
     setState(() {
       _isLoading = false;
       _messages.add(feedback);
@@ -727,8 +822,9 @@ class _MessageBubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
-        mainAxisAlignment:
-            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: message.isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!message.isUser)
@@ -737,9 +833,11 @@ class _MessageBubble extends StatelessWidget {
               height: 32,
               margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
-                gradient: isBlackMinimalism ? null : LinearGradient(
-                  colors: [AppColors.lavender400, AppColors.teal400],
-                ),
+                gradient: isBlackMinimalism
+                    ? null
+                    : LinearGradient(
+                        colors: [AppColors.lavender400, AppColors.teal400],
+                      ),
                 color: isBlackMinimalism ? Colors.white24 : null,
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -758,9 +856,13 @@ class _MessageBubble extends StatelessWidget {
                     : null,
                 color: message.isUser
                     ? (isBlackMinimalism ? Colors.white12 : null)
-                    : (isBlackMinimalism ? const Color(0xFF1A1A1A) : (isDark ? AppColors.slate800 : Colors.white)),
+                    : (isBlackMinimalism
+                          ? const Color(0xFF1A1A1A)
+                          : (isDark ? AppColors.slate800 : Colors.white)),
                 borderRadius: BorderRadius.circular(20),
-                border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                border: isBlackMinimalism
+                    ? Border.all(color: Colors.white10)
+                    : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -777,12 +879,20 @@ class _MessageBubble extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: message.imagePath!.startsWith('assets/') 
-                          ? Image.asset(message.imagePath!, fit: BoxFit.cover, width: 200)
-                          : Image.file(File(message.imagePath!), fit: BoxFit.cover, width: 200),
+                        child: message.imagePath!.startsWith('assets/')
+                            ? Image.asset(
+                                message.imagePath!,
+                                fit: BoxFit.cover,
+                                width: 200,
+                              )
+                            : Image.file(
+                                File(message.imagePath!),
+                                fit: BoxFit.cover,
+                                width: 200,
+                              ),
                       ),
                     ),
-                  Text( 
+                  Text(
                     message.content,
                     style: TextStyle(
                       color: message.isUser
@@ -791,9 +901,12 @@ class _MessageBubble extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  if (message.type == 'game_question' && message.metadata != null)
+                  if (message.type == 'game_question' &&
+                      message.metadata != null)
                     _buildGameOptions(context),
-                  if (!message.isUser && message.content.length > 20 && message.type == 'text')
+                  if (!message.isUser &&
+                      message.content.length > 20 &&
+                      message.type == 'text')
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Row(
@@ -827,7 +940,9 @@ class _MessageBubble extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isBlackMinimalism ? Colors.white12 : AppColors.blue400,
                 borderRadius: BorderRadius.circular(16),
-                border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
+                border: isBlackMinimalism
+                    ? Border.all(color: Colors.white10)
+                    : null,
               ),
               child: const Center(
                 child: Text('👤', style: TextStyle(fontSize: 16)),
@@ -856,14 +971,20 @@ class _MessageBubble extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   side: BorderSide(
-                    color: isBlackMinimalism ? Colors.white24 : AppColors.lavender400.withOpacity(0.5),
+                    color: isBlackMinimalism
+                        ? Colors.white24
+                        : AppColors.lavender400.withOpacity(0.5),
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: Text(
                   option.toString(),
                   style: TextStyle(
-                    color: isBlackMinimalism ? Colors.white : AppColors.lavender400,
+                    color: isBlackMinimalism
+                        ? Colors.white
+                        : AppColors.lavender400,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -901,7 +1022,9 @@ class _FeedbackButton extends StatelessWidget {
         child: Icon(
           icon,
           size: 14,
-          color: isBlackMinimalism ? Colors.white38 : (isDark ? AppColors.slate400 : AppColors.slate600),
+          color: isBlackMinimalism
+              ? Colors.white38
+              : (isDark ? AppColors.slate400 : AppColors.slate600),
         ),
       ),
     );

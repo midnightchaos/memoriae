@@ -8,7 +8,8 @@ class ExportProvider with ChangeNotifier {
   String? _lastExportDate;
   String? _exportError;
 
-  ExportProvider(SharedPreferences prefs) : _exportService = DataExportService(prefs) {
+  ExportProvider(SharedPreferences prefs)
+    : _exportService = DataExportService(prefs) {
     _loadLastExportDate();
     _checkScheduledExport();
   }

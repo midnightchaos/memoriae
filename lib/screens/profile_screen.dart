@@ -124,13 +124,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_analytics == null) return 'No data available';
     final buffer = StringBuffer();
     buffer.writeln('📊 MEMORIAE ACTIVITY REPORT');
-    buffer.writeln('Generated: ${DateFormat('MMM dd, yyyy HH:mm').format(DateTime.now())}');
+    buffer.writeln(
+      'Generated: ${DateFormat('MMM dd, yyyy HH:mm').format(DateTime.now())}',
+    );
     buffer.writeln('');
     buffer.writeln('👤 USER: ${_analytics!.name}');
     if (location != null) {
-      buffer.writeln('📍 LOCATION: https://maps.google.com/?q=${location.latitude},${location.longitude}');
+      buffer.writeln(
+        '📍 LOCATION: https://maps.google.com/?q=${location.latitude},${location.longitude}',
+      );
     }
-    buffer.writeln('📈 STATS: ${_analytics!.totalChats} chats, ${_analytics!.currentStreak} day streak');
+    buffer.writeln(
+      '📈 STATS: ${_analytics!.totalChats} chats, ${_analytics!.currentStreak} day streak',
+    );
     return buffer.toString();
   }
 
@@ -143,12 +149,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Navigator.canPop(context) 
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-              onPressed: () => Navigator.pop(context),
-            )
-          : null,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         title: Text(
           'Personal Profile',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -164,7 +170,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (profile != null) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => EditProfileScreen(profile: profile)),
+                  MaterialPageRoute(
+                    builder: (_) => EditProfileScreen(profile: profile),
+                  ),
                 );
               }
             },
@@ -181,8 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
-                ? _buildErrorState()
-                : _buildContent(pageStyle),
+            ? _buildErrorState()
+            : _buildContent(pageStyle),
       ),
     );
   }
@@ -210,21 +218,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildContent(AppPageStyle pageStyle) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 100, AppSpacing.lg, AppSpacing.xxl),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        100,
+        AppSpacing.lg,
+        AppSpacing.xxl,
+      ),
       child: Column(
         children: [
           // User Card
-          const StaggeredEntrance(
-            index: 0,
-            child: _UserIdentityCard(),
-          ),
+          const StaggeredEntrance(index: 0, child: _UserIdentityCard()),
           const SizedBox(height: AppSpacing.lg),
 
           // Quick Stats
-          const StaggeredEntrance(
-            index: 1,
-            child: _QuickStatsGrid(),
-          ),
+          const StaggeredEntrance(index: 1, child: _QuickStatsGrid()),
           const SizedBox(height: AppSpacing.xl),
 
           // Activity Section
@@ -289,7 +296,11 @@ class _UserIdentityCard extends StatelessWidget {
                   boxShadow: AppShadows.subtle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.person_rounded, color: Colors.white, size: 40),
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: Colors.white,
+                    size: 40,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.lg),
@@ -299,11 +310,12 @@ class _UserIdentityCard extends StatelessWidget {
                   children: [
                     Text(
                       profile?.name ?? 'Memoriae User',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontFamily: 'PlayfairDisplay',
-                        fontWeight: FontWeight.bold,
-                        color: pageStyle.sectionHeaderColor,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontFamily: 'PlayfairDisplay',
+                            fontWeight: FontWeight.bold,
+                            color: pageStyle.sectionHeaderColor,
+                          ),
                     ),
                     Text(
                       'Dementia Care Account',
@@ -315,15 +327,37 @@ class _UserIdentityCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          _buildInfoItem(context, 'Date of Birth', profile?.age?.toString() != null ? '${profile!.age} Years Old' : 'Not set', Icons.cake_rounded),
-          _buildInfoItem(context, 'Email', profile?.email ?? 'Not set', Icons.email_rounded),
-          _buildInfoItem(context, 'Account Type', profile?.caregiverAccess == true ? 'Caregiver' : 'Patient', Icons.person_rounded),
+          _buildInfoItem(
+            context,
+            'Date of Birth',
+            profile?.age?.toString() != null
+                ? '${profile!.age} Years Old'
+                : 'Not set',
+            Icons.cake_rounded,
+          ),
+          _buildInfoItem(
+            context,
+            'Email',
+            profile?.email ?? 'Not set',
+            Icons.email_rounded,
+          ),
+          _buildInfoItem(
+            context,
+            'Account Type',
+            profile?.caregiverAccess == true ? 'Caregiver' : 'Patient',
+            Icons.person_rounded,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoItem(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildInfoItem(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     final pageStyle = Theme.of(context).extension<AppPageStyle>()!;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -341,7 +375,10 @@ class _UserIdentityCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: TextStyle(fontSize: 12, color: pageStyle.subtitleColor)),
+              Text(
+                label,
+                style: TextStyle(fontSize: 12, color: pageStyle.subtitleColor),
+              ),
               Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
             ],
           ),
@@ -370,10 +407,26 @@ class _QuickStatsGrid extends StatelessWidget {
           mainAxisSpacing: AppSpacing.md,
           childAspectRatio: 1.5,
           children: [
-            _StatCard(label: 'Total Chats', value: analytics.totalChats.toString(), icon: Icons.chat_bubble_rounded),
-            _StatCard(label: 'Day Streak', value: '${analytics.currentStreak} Days', icon: Icons.local_fire_department_rounded),
-            _StatCard(label: 'Journals', value: analytics.journalEntries.toString(), icon: Icons.book_rounded),
-            _StatCard(label: 'Games', value: analytics.gamesPlayed.toString(), icon: Icons.videogame_asset_rounded),
+            _StatCard(
+              label: 'Total Chats',
+              value: analytics.totalChats.toString(),
+              icon: Icons.chat_bubble_rounded,
+            ),
+            _StatCard(
+              label: 'Day Streak',
+              value: '${analytics.currentStreak} Days',
+              icon: Icons.local_fire_department_rounded,
+            ),
+            _StatCard(
+              label: 'Journals',
+              value: analytics.journalEntries.toString(),
+              icon: Icons.book_rounded,
+            ),
+            _StatCard(
+              label: 'Games',
+              value: analytics.gamesPlayed.toString(),
+              icon: Icons.videogame_asset_rounded,
+            ),
           ],
         );
       },
@@ -386,7 +439,11 @@ class _StatCard extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _StatCard({required this.label, required this.value, required this.icon});
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -398,8 +455,14 @@ class _StatCard extends StatelessWidget {
         children: [
           Icon(icon, color: pageStyle.iconAccentColor, size: 24),
           const SizedBox(height: AppSpacing.sm),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          Text(label, style: TextStyle(fontSize: 12, color: pageStyle.subtitleColor)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            label,
+            style: TextStyle(fontSize: 12, color: pageStyle.subtitleColor),
+          ),
         ],
       ),
     );
@@ -422,9 +485,15 @@ class _EngagementChart extends StatelessWidget {
         LineChartData(
           gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -432,7 +501,10 @@ class _EngagementChart extends StatelessWidget {
                   if (value.toInt() % 2 != 0) return const SizedBox();
                   return Text(
                     'Day ${value.toInt() + 1}',
-                    style: TextStyle(fontSize: 10, color: pageStyle.subtitleColor),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: pageStyle.subtitleColor,
+                    ),
                   );
                 },
               ),
@@ -443,7 +515,10 @@ class _EngagementChart extends StatelessWidget {
             LineChartBarData(
               spots: List.generate(
                 analytics.engagementHistory.length,
-                (i) => FlSpot(i.toDouble(), (analytics.engagementHistory[i]['chats'] as int).toDouble()),
+                (i) => FlSpot(
+                  i.toDouble(),
+                  (analytics.engagementHistory[i]['chats'] as int).toDouble(),
+                ),
               ),
               isCurved: true,
               gradient: AppGradients.primary,

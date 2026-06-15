@@ -33,14 +33,10 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
   void _exportData() {
     _handleManualExport();
   }
+
   late TextEditingController _emailController;
   String? _selectedFrequency;
-  final List<String> _frequencies = [
-    'manual',
-    'daily',
-    'weekly',
-    'monthly',
-  ];
+  final List<String> _frequencies = ['manual', 'daily', 'weekly', 'monthly'];
 
   bool _isLoading = false;
   bool _isExporting = false;
@@ -63,12 +59,14 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
   }
 
   Future<void> _initConnectivity() async {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       setState(() {
         _hasInternet = !results.contains(ConnectivityResult.none);
       });
     });
-    
+
     // Check initial connectivity
     final connectivityResults = await Connectivity().checkConnectivity();
     setState(() {
@@ -78,12 +76,12 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
 
   Future<void> _loadSettings() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final exportService = DataExportService(prefs);
       final settings = exportService.getExportSettings();
-      
+
       if (mounted) {
         setState(() {
           _emailController.text = settings['email'] ?? '';
@@ -107,18 +105,18 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
 
   Future<void> _saveSettings() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final exportService = DataExportService(prefs);
-      
+
       await exportService.saveExportSettings(
         email: _emailController.text.trim(),
         frequency: _selectedFrequency ?? 'manual',
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -144,13 +142,16 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
 
   Future<void> _exportToFile() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() => _isExporting = true);
-    
+
     try {
-      final exportProvider = Provider.of<ExportProvider>(context, listen: false);
+      final exportProvider = Provider.of<ExportProvider>(
+        context,
+        listen: false,
+      );
       await exportProvider.exportData('current_user_id', sendEmail: false);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -176,7 +177,7 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
 
   Future<void> _exportViaEmail() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_emailController.text.isEmpty) {
       if (mounted) {
         context.showError(
@@ -186,7 +187,7 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
       }
       return;
     }
-    
+
     if (!_hasInternet) {
       if (mounted) {
         context.showError(
@@ -196,13 +197,16 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
       }
       return;
     }
-    
+
     setState(() => _isExporting = true);
-    
+
     try {
-      final exportProvider = Provider.of<ExportProvider>(context, listen: false);
+      final exportProvider = Provider.of<ExportProvider>(
+        context,
+        listen: false,
+      );
       await exportProvider.exportData('current_user_id', sendEmail: true);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -230,16 +234,13 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeService = context.watch<ThemeService>();
-    final isBlackMinimalism = themeService.themeMode == AppThemeMode.blackMinimalism;
-    
+    final isBlackMinimalism =
+        themeService.themeMode == AppThemeMode.blackMinimalism;
+
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    
+
     return Scaffold(
       backgroundColor: isBlackMinimalism ? Colors.black : null,
       body: Container(
@@ -250,8 +251,12 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
             colors: isBlackMinimalism
                 ? [Colors.black, const Color(0xFF121212)]
                 : (isDark
-                    ? [AppColors.slate900, AppColors.slate800, AppColors.slate900]
-                    : [AppColors.blue50, const Color(0xFFE8EAF6)]),
+                      ? [
+                          AppColors.slate900,
+                          AppColors.slate800,
+                          AppColors.slate900,
+                        ]
+                      : [AppColors.blue50, const Color(0xFFE8EAF6)]),
           ),
         ),
         child: SafeArea(
@@ -270,10 +275,11 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Export Settings',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isBlackMinimalism ? Colors.white : null,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isBlackMinimalism ? Colors.white : null,
+                          ),
                     ),
                   ],
                 ),
@@ -298,14 +304,38 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: isBlackMinimalism ? Colors.white : null,
+                                  color: isBlackMinimalism
+                                      ? Colors.white
+                                      : null,
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              _buildCheckboxRow('Journal Entries', _exportJournals, (val) => setState(() => _exportJournals = val!), isBlackMinimalism),
-                              _buildCheckboxRow('Health Analytics', _exportHealth, (val) => setState(() => _exportHealth = val!), isBlackMinimalism),
-                              _buildCheckboxRow('Medication Logs', _exportMedications, (val) => setState(() => _exportMedications = val!), isBlackMinimalism),
-                              _buildCheckboxRow('Safety Locations', _exportLocations, (val) => setState(() => _exportLocations = val!), isBlackMinimalism),
+                              _buildCheckboxRow(
+                                'Journal Entries',
+                                _exportJournals,
+                                (val) => setState(() => _exportJournals = val!),
+                                isBlackMinimalism,
+                              ),
+                              _buildCheckboxRow(
+                                'Health Analytics',
+                                _exportHealth,
+                                (val) => setState(() => _exportHealth = val!),
+                                isBlackMinimalism,
+                              ),
+                              _buildCheckboxRow(
+                                'Medication Logs',
+                                _exportMedications,
+                                (val) =>
+                                    setState(() => _exportMedications = val!),
+                                isBlackMinimalism,
+                              ),
+                              _buildCheckboxRow(
+                                'Safety Locations',
+                                _exportLocations,
+                                (val) =>
+                                    setState(() => _exportLocations = val!),
+                                isBlackMinimalism,
+                              ),
                             ],
                           ),
                         ),
@@ -321,26 +351,39 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: isBlackMinimalism ? Colors.white : null,
+                                  color: isBlackMinimalism
+                                      ? Colors.white
+                                      : null,
                                 ),
                               ),
                               const SizedBox(height: 16),
                               _buildDropdownField(
                                 value: _exportFormat,
-                                items: ['PDF Report', 'CSV Data', 'Excel Spreadsheet'],
+                                items: [
+                                  'PDF Report',
+                                  'CSV Data',
+                                  'Excel Spreadsheet',
+                                ],
                                 label: 'Select Format',
                                 icon: Icons.description_outlined,
                                 isBlackMinimalism: isBlackMinimalism,
-                                onChanged: (val) => setState(() => _exportFormat = val!),
+                                onChanged: (val) =>
+                                    setState(() => _exportFormat = val!),
                               ),
                               const SizedBox(height: 16),
                               _buildDropdownField(
                                 value: _exportPeriod,
-                                items: ['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'Custom Range'],
+                                items: [
+                                  'Last 7 Days',
+                                  'Last 30 Days',
+                                  'Last 90 Days',
+                                  'Custom Range',
+                                ],
                                 label: 'Time Period',
                                 icon: Icons.calendar_today_outlined,
                                 isBlackMinimalism: isBlackMinimalism,
-                                onChanged: (val) => setState(() => _exportPeriod = val!),
+                                onChanged: (val) =>
+                                    setState(() => _exportPeriod = val!),
                               ),
                             ],
                           ),
@@ -357,7 +400,9 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: isBlackMinimalism ? Colors.white : null,
+                                  color: isBlackMinimalism
+                                      ? Colors.white
+                                      : null,
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -366,7 +411,9 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                                 label: 'Email Address',
                                 icon: Icons.email_outlined,
                                 isBlackMinimalism: isBlackMinimalism,
-                                validator: (val) => val == null || val.isEmpty ? 'Email is required' : null,
+                                validator: (val) => val == null || val.isEmpty
+                                    ? 'Email is required'
+                                    : null,
                               ),
                               const SizedBox(height: 16),
                               _buildTextField(
@@ -381,12 +428,20 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                         ),
                         const SizedBox(height: 40),
                         ElevatedButton(
-                          onPressed: _isExporting || _isLoading ? null : _exportData,
+                          onPressed: _isExporting || _isLoading
+                              ? null
+                              : _exportData,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: isBlackMinimalism ? Colors.white : AppColors.lavender500,
-                            foregroundColor: isBlackMinimalism ? Colors.black : Colors.white,
+                            backgroundColor: isBlackMinimalism
+                                ? Colors.white
+                                : AppColors.lavender500,
+                            foregroundColor: isBlackMinimalism
+                                ? Colors.black
+                                : Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             elevation: 0,
                           ),
                           child: _isExporting
@@ -394,20 +449,36 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
-                                    color: isBlackMinimalism ? Colors.black : Colors.white,
+                                    color: isBlackMinimalism
+                                        ? Colors.black
+                                        : Colors.white,
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text('GENERATE EXPORT', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              : const Text(
+                                  'GENERATE EXPORT',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                         const SizedBox(height: 16),
                         OutlinedButton(
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: isBlackMinimalism ? Colors.white38 : AppColors.slate600,
-                            side: BorderSide(color: isBlackMinimalism ? Colors.white12 : AppColors.slate300),
+                            foregroundColor: isBlackMinimalism
+                                ? Colors.white38
+                                : AppColors.slate600,
+                            side: BorderSide(
+                              color: isBlackMinimalism
+                                  ? Colors.white12
+                                  : AppColors.slate300,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                           child: const Text('CANCEL'),
                         ),
@@ -423,11 +494,17 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
     );
   }
 
-  Widget _buildSettingsCard(bool isDark, bool isBlackMinimalism, {required Widget child}) {
+  Widget _buildSettingsCard(
+    bool isDark,
+    bool isBlackMinimalism, {
+    required Widget child,
+  }) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isBlackMinimalism ? const Color(0xFF0A0A0A) : (isDark ? AppColors.slate800 : Colors.white),
+        color: isBlackMinimalism
+            ? const Color(0xFF0A0A0A)
+            : (isDark ? AppColors.slate800 : Colors.white),
         borderRadius: BorderRadius.circular(24),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
         boxShadow: isBlackMinimalism
@@ -444,7 +521,12 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
     );
   }
 
-  Widget _buildCheckboxRow(String label, bool value, Function(bool?) onChanged, bool isBlackMinimalism) {
+  Widget _buildCheckboxRow(
+    String label,
+    bool value,
+    Function(bool?) onChanged,
+    bool isBlackMinimalism,
+  ) {
     return CheckboxListTile(
       title: Text(
         label,
@@ -475,9 +557,20 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-        prefixIcon: Icon(icon, color: isBlackMinimalism ? Colors.white70 : null),
-        enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-        focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+        prefixIcon: Icon(
+          icon,
+          color: isBlackMinimalism ? Colors.white70 : null,
+        ),
+        enabledBorder: isBlackMinimalism
+            ? const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              )
+            : null,
+        focusedBorder: isBlackMinimalism
+            ? const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              )
+            : null,
       ),
     );
   }
@@ -492,22 +585,43 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
   }) {
     return DropdownButtonFormField<String>(
       initialValue: value,
-      items: items.map((item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          item,
-          style: TextStyle(color: isBlackMinimalism ? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black) : null),
-        ),
-      )).toList(),
+      items: items
+          .map(
+            (item) => DropdownMenuItem(
+              value: item,
+              child: Text(
+                item,
+                style: TextStyle(
+                  color: isBlackMinimalism
+                      ? (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black)
+                      : null,
+                ),
+              ),
+            ),
+          )
+          .toList(),
       onChanged: onChanged,
       dropdownColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
       style: TextStyle(color: isBlackMinimalism ? Colors.white : null),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(color: isBlackMinimalism ? Colors.white70 : null),
-        prefixIcon: Icon(icon, color: isBlackMinimalism ? Colors.white70 : null),
-        enabledBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)) : null,
-        focusedBorder: isBlackMinimalism ? const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : null,
+        prefixIcon: Icon(
+          icon,
+          color: isBlackMinimalism ? Colors.white70 : null,
+        ),
+        enabledBorder: isBlackMinimalism
+            ? const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white24),
+              )
+            : null,
+        focusedBorder: isBlackMinimalism
+            ? const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              )
+            : null,
       ),
     );
   }

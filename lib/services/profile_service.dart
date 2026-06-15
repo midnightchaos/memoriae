@@ -14,7 +14,7 @@ class ProfileService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final profileData = prefs.getString(_key);
-      
+
       if (profileData != null) {
         _profile = UserProfile.fromMap(
           Map<String, dynamic>.from(json.decode(profileData)),

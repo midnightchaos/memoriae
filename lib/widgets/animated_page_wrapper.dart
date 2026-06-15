@@ -33,10 +33,7 @@ class AnimatedPageWrapper extends StatelessWidget {
       body = SafeArea(child: body);
     }
 
-    return Container(
-      decoration: pageStyle.backgroundDecoration,
-      child: body,
-    );
+    return Container(decoration: pageStyle.backgroundDecoration, child: body);
   }
 }
 
