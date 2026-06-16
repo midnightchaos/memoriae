@@ -78,7 +78,6 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-    - assets/poi/
 
 # App Launcher Icons Configuration
 flutter_launcher_icons:

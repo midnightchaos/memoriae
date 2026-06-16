@@ -115,7 +115,6 @@ class _MentaAssistantState extends State<MentaAssistant>
       case MentaState.error:
         return const Icon(Icons.error_outline, color: Colors.white);
       case MentaState.idle:
-      default:
         return const Icon(Icons.mic_none, color: Colors.white);
     }
   }

@@ -109,7 +109,7 @@ class AppPageStyle extends ThemeExtension<AppPageStyle> {
     sectionHeaderColor: AppColors.slate900,
     subtitleColor: AppColors.slate500,
     iconAccentColor: AppColors.lavender400,
-    iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
+    iconBackgroundColor: AppColors.lavender400.withValues(alpha: 0.15),
   );
 
   static AppPageStyle get dark => AppPageStyle(
@@ -117,7 +117,7 @@ class AppPageStyle extends ThemeExtension<AppPageStyle> {
     sectionHeaderColor: AppColors.slate100,
     subtitleColor: AppColors.slate400,
     iconAccentColor: AppColors.lavender400,
-    iconBackgroundColor: AppColors.lavender400.withOpacity(0.15),
+    iconBackgroundColor: AppColors.lavender400.withValues(alpha: 0.15),
   );
 
   static AppPageStyle get black => const AppPageStyle(
@@ -192,8 +192,8 @@ class AppNavStyle extends ThemeExtension<AppNavStyle> {
   });
 
   static AppNavStyle get light => AppNavStyle(
-    barBackground: Colors.white.withOpacity(0.92),
-    barBorderColor: AppColors.slate200.withOpacity(0.3),
+    barBackground: Colors.white.withValues(alpha: 0.92),
+    barBorderColor: AppColors.slate200.withValues(alpha: 0.3),
     selectedLabelColor: AppColors.lavender500,
     unselectedLabelColor: AppColors.slate400,
     selectedIndicatorGradient: const LinearGradient(
@@ -202,20 +202,20 @@ class AppNavStyle extends ThemeExtension<AppNavStyle> {
   );
 
   static AppNavStyle get dark => AppNavStyle(
-    barBackground: AppColors.slate900.withOpacity(0.92),
-    barBorderColor: AppColors.slate700.withOpacity(0.3),
+    barBackground: AppColors.slate900.withValues(alpha: 0.92),
+    barBorderColor: AppColors.slate700.withValues(alpha: 0.3),
     selectedLabelColor: AppColors.lavender400,
     unselectedLabelColor: AppColors.slate500,
     selectedIndicatorGradient: LinearGradient(
       colors: [
-        AppColors.lavender400.withOpacity(0.2),
-        AppColors.blue400.withOpacity(0.1),
+        AppColors.lavender400.withValues(alpha: 0.2),
+        AppColors.blue400.withValues(alpha: 0.1),
       ],
     ),
   );
 
   static AppNavStyle get black => AppNavStyle(
-    barBackground: Colors.black.withOpacity(0.95),
+    barBackground: Colors.black.withValues(alpha: 0.95),
     barBorderColor: Colors.white10,
     selectedLabelColor: Colors.white,
     unselectedLabelColor: Colors.white38,

@@ -73,8 +73,8 @@ class FeatureTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.lavender400.withOpacity(0.3),
-                            AppColors.purple400.withOpacity(0.3),
+                            AppColors.lavender400.withValues(alpha: 0.3),
+                            AppColors.purple400.withValues(alpha: 0.3),
                           ],
                         ),
                         borderRadius: AppRadius.xl,
@@ -91,8 +91,8 @@ class FeatureTile extends StatelessWidget {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                        Colors.black.withOpacity(0.55),
-                        Colors.black.withOpacity(0.2),
+                        Colors.black.withValues(alpha: 0.55),
+                        Colors.black.withValues(alpha: 0.2),
                         Colors.transparent,
                       ],
                     ),
@@ -115,7 +115,7 @@ class FeatureTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isBlack
                             ? Colors.white12
-                            : Colors.white.withOpacity(0.25),
+                            : Colors.white.withValues(alpha: 0.25),
                         borderRadius: AppRadius.md,
                       ),
                       child: Icon(icon, size: 26, color: Colors.white),
@@ -169,7 +169,7 @@ class FeatureTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isBlack
                             ? Colors.white10
-                            : Colors.white.withOpacity(0.25),
+                            : Colors.white.withValues(alpha: 0.25),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

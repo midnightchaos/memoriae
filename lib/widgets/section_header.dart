@@ -31,7 +31,7 @@ class SectionHeader extends StatelessWidget {
       children: [
         if (showDivider)
           Divider(
-            color: pageStyle.subtitleColor.withOpacity(0.15),
+            color: pageStyle.subtitleColor.withValues(alpha: 0.15),
             height: AppSpacing.xl,
           ),
         Row(
