@@ -24,7 +24,6 @@ class RoundedImagePicker extends StatelessWidget {
     final themeService = Provider.of<ThemeService>(context);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
-    final defaultBorderColor = isBlackMinimalism ? Colors.white24 : Colors.grey;
 
     return GestureDetector(
       onTap: onImagePicked,
