@@ -1,4 +1,4 @@
-name: Menta CI
+﻿name: Menta CI
 
 on:
   push:
@@ -31,6 +31,16 @@ jobs:
 
       - name: Generate Mocks
         run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Generate env_config stub for CI
+        run: |
+          mkdir -p lib/config
+          cat > lib/config/env_config.dart << 'EOF'
+          class EnvConfig {
+            static const String geminiApiKey = '';
+            static const bool hasDefaultApiKey = false;
+          }
+          EOF
 
       - name: Verify Code Formatting
         run: dart format --output=none --set-exit-if-changed .
