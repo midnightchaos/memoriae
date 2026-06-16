@@ -34,10 +34,7 @@ class RoundedImagePicker extends StatelessWidget {
             height: radius * 2,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: borderColor,
-                width: borderWidth,
-              ),
+              border: Border.all(color: borderColor, width: borderWidth),
               boxShadow: isBlackMinimalism
                   ? null
                   : [
