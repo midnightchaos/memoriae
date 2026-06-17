@@ -14,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
         if (!didPop) {
           SystemNavigator.pop();
         }
@@ -26,8 +26,8 @@ class WelcomeScreen extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Theme.of(context).primaryColor.withOpacity(0.8),
-                Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
               ],
             ),
           ),
@@ -47,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -73,7 +73,7 @@ class WelcomeScreen extends StatelessWidget {
                     'Your Memory Companion',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                   const Spacer(),
@@ -135,7 +135,7 @@ class WelcomeScreen extends StatelessWidget {
                     child: Text(
                       'Continue as Guest',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 16,
                       ),
                     ),

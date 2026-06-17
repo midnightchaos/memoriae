@@ -124,15 +124,15 @@ class AboutScreen extends StatelessWidget {
                             ? null
                             : LinearGradient(
                                 colors: [
-                                  AppColors.lavender400.withOpacity(0.2),
-                                  AppColors.teal400.withOpacity(0.2),
+                                  AppColors.lavender400.withValues(alpha: 0.2),
+                                  AppColors.teal400.withValues(alpha: 0.2),
                                 ],
                               ),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: isBlackMinimalism
                               ? Colors.white10
-                              : AppColors.lavender400.withOpacity(0.3),
+                              : AppColors.lavender400.withValues(alpha: 0.3),
                           width: isBlackMinimalism ? 1 : 2,
                         ),
                       ),
@@ -152,7 +152,7 @@ class AboutScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.lavender400.withOpacity(0.3),
+                                  color: AppColors.lavender400.withValues(alpha: 0.3),
                                   blurRadius: 20,
                                   offset: const Offset(0, 8),
                                 ),
@@ -263,7 +263,7 @@ class AboutScreen extends StatelessWidget {
                             ? null
                             : [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -318,7 +318,7 @@ class AboutScreen extends StatelessWidget {
                             ? null
                             : [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -386,15 +386,15 @@ class AboutScreen extends StatelessWidget {
                             ? null
                             : LinearGradient(
                                 colors: [
-                                  AppColors.blue400.withOpacity(0.2),
-                                  AppColors.lavender400.withOpacity(0.2),
+                                  AppColors.blue400.withValues(alpha: 0.2),
+                                  AppColors.lavender400.withValues(alpha: 0.2),
                                 ],
                               ),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: isBlackMinimalism
                               ? Colors.white10
-                              : AppColors.blue400.withOpacity(0.3),
+                              : AppColors.blue400.withValues(alpha: 0.3),
                           width: isBlackMinimalism ? 1 : 2,
                         ),
                       ),
@@ -508,7 +508,7 @@ class AboutScreen extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 15,
                   offset: const Offset(0, 4),
                 ),
@@ -521,7 +521,7 @@ class AboutScreen extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: gradient.map((c) => c.withOpacity(0.3)).toList(),
+                colors: gradient.map((c) => c.withValues(alpha: 0.3)).toList(),
               ),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
@@ -540,7 +540,7 @@ class AboutScreen extends StatelessWidget {
                       border: Border.all(color: Colors.white, width: 4),
                       boxShadow: [
                         BoxShadow(
-                          color: gradient[0].withOpacity(0.4),
+                          color: gradient[0].withValues(alpha: 0.4),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),
@@ -597,7 +597,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: gradient.map((c) => c.withOpacity(0.2)).toList(),
+                      colors: gradient.map((c) => c.withValues(alpha: 0.2)).toList(),
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -628,8 +628,8 @@ class AboutScreen extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? AppColors.slate700.withOpacity(0.5)
-                        : AppColors.slate100.withOpacity(0.5),
+                        ? AppColors.slate700.withValues(alpha: 0.5)
+                        : AppColors.slate100.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -711,9 +711,9 @@ class AboutScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.2),
+          color: color.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.4), width: 1.5),
+          border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

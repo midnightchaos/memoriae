@@ -77,7 +77,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
         final themeService = Provider.of<ThemeService>(context, listen: false);
         final isBlackMinimalism =
             themeService.themeMode == AppThemeMode.blackMinimalism;
-        final isDark = themeService.isDarkMode;
 
         return AlertDialog(
           backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
@@ -144,7 +143,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = themeService.isDarkMode;
     final isBlackMinimalism =
@@ -484,7 +482,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     final themeService = Provider.of<ThemeService>(context, listen: false);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
-    final isDark = themeService.isDarkMode;
 
     showModalBottomSheet(
       context: context,
@@ -510,59 +507,50 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            RadioListTile<String>(
-              title: Text(
-                'All Medications',
-                style: TextStyle(
-                  color: isBlackMinimalism ? Colors.white : null,
-                ),
-              ),
-              value: 'all',
+            RadioGroup<String>(
               groupValue: _filterStatus,
-              activeColor: isBlackMinimalism ? Colors.white : null,
               onChanged: (value) {
+                if (value == null) return;
                 setState(() {
-                  _filterStatus = value!;
+                  _filterStatus = value;
                   _applyFilters();
                 });
                 Navigator.pop(context);
               },
-            ),
-            RadioListTile<String>(
-              title: Text(
-                'Active Only',
-                style: TextStyle(
-                  color: isBlackMinimalism ? Colors.white : null,
-                ),
+              child: Column(
+                children: [
+                  RadioListTile<String>(
+                    title: Text(
+                      'All Medications',
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
+                    ),
+                    value: 'all',
+                    activeColor: isBlackMinimalism ? Colors.white : null,
+                  ),
+                  RadioListTile<String>(
+                    title: Text(
+                      'Active Only',
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
+                    ),
+                    value: 'active',
+                    activeColor: isBlackMinimalism ? Colors.white : null,
+                  ),
+                  RadioListTile<String>(
+                    title: Text(
+                      'Inactive Only',
+                      style: TextStyle(
+                        color: isBlackMinimalism ? Colors.white : null,
+                      ),
+                    ),
+                    value: 'inactive',
+                    activeColor: isBlackMinimalism ? Colors.white : null,
+                  ),
+                ],
               ),
-              value: 'active',
-              groupValue: _filterStatus,
-              activeColor: isBlackMinimalism ? Colors.white : null,
-              onChanged: (value) {
-                setState(() {
-                  _filterStatus = value!;
-                  _applyFilters();
-                });
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<String>(
-              title: Text(
-                'Inactive Only',
-                style: TextStyle(
-                  color: isBlackMinimalism ? Colors.white : null,
-                ),
-              ),
-              value: 'inactive',
-              groupValue: _filterStatus,
-              activeColor: isBlackMinimalism ? Colors.white : null,
-              onChanged: (value) {
-                setState(() {
-                  _filterStatus = value!;
-                  _applyFilters();
-                });
-                Navigator.pop(context);
-              },
             ),
           ],
         ),

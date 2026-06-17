@@ -209,7 +209,7 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                         child: Icon(
                           Icons.person_rounded,
                           size: 48,
-                          color: pageStyle.iconAccentColor.withOpacity(0.5),
+                          color: pageStyle.iconAccentColor.withValues(alpha: 0.5),
                         ),
                       ),
                     ),
@@ -240,7 +240,7 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                   decoration: BoxDecoration(
                     color: isBlack
                         ? Colors.white10
-                        : AppColors.lavender500.withOpacity(0.1),
+                        : AppColors.lavender500.withValues(alpha: 0.1),
                     borderRadius: AppRadius.sm,
                   ),
                   child: Text(
@@ -347,8 +347,9 @@ class _FacesSearchDelegate extends SearchDelegate {
           return const Center(child: CircularProgressIndicator());
         }
         final results = snapshot.data ?? [];
-        if (results.isEmpty)
+        if (results.isEmpty) {
           return const Center(child: Text('No matches found'));
+        }
 
         return GridView.builder(
           padding: const EdgeInsets.all(AppSpacing.lg),

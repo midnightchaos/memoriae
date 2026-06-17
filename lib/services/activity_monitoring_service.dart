@@ -12,12 +12,12 @@ class ActivityMonitoringService extends ChangeNotifier {
   ActivityMonitoringService._init();
 
   // Activity Types
-  static const String TYPE_CHAT = 'C';
-  static const String TYPE_JOURNAL = 'J';
-  static const String TYPE_GAME = 'G';
-  static const String TYPE_THERAPY = 'T';
-  static const String TYPE_FEEDBACK = 'F';
-  static const String TYPE_INTERVENTION = 'I';
+  static const String typeChat = 'C';
+  static const String typeJournal = 'J';
+  static const String typeGame = 'G';
+  static const String typeTherapy = 'T';
+  static const String typeFeedback = 'F';
+  static const String typeIntervention = 'I';
 
   DateTime? _lastInteractionTime;
   DateTime? get lastInteractionTime => _lastInteractionTime;
@@ -75,19 +75,19 @@ class ActivityMonitoringService extends ChangeNotifier {
           .toList();
 
       int chatCount = todayLogs
-          .where((l) => l.activityType == TYPE_CHAT)
+          .where((l) => l.activityType == typeChat)
           .length;
       int journalCount = todayLogs
-          .where((l) => l.activityType == TYPE_JOURNAL)
+          .where((l) => l.activityType == typeJournal)
           .length;
       int gameCount = todayLogs
-          .where((l) => l.activityType == TYPE_GAME)
+          .where((l) => l.activityType == typeGame)
           .length;
       int therapyCount = todayLogs
-          .where((l) => l.activityType == TYPE_THERAPY)
+          .where((l) => l.activityType == typeTherapy)
           .length;
       int feedbackCount = todayLogs
-          .where((l) => l.activityType == TYPE_FEEDBACK)
+          .where((l) => l.activityType == typeFeedback)
           .length;
 
       // E = 2C + 10J + 5G

@@ -90,10 +90,12 @@ class DataExportService {
       await file.writeAsString(jsonString);
 
       // Share the file
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        subject: 'Memoriae Data Export',
-        text: 'Here is your Memoriae data export from ${DateTime.now()}',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          subject: 'Memoriae Data Export',
+          text: 'Here is your Memoriae data export from ${DateTime.now()}',
+        ),
       );
 
       // Update last export date

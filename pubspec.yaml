@@ -62,6 +62,9 @@ dependencies:
   crypto: ^3.0.3
   local_auth: ^2.2.0
 
+  # Annotations
+  meta: ^1.16.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

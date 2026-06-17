@@ -161,12 +161,12 @@ class _SplashScreenState extends State<SplashScreen>
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.lavender400.withOpacity(0.35),
+                                color: AppColors.lavender400.withValues(alpha: 0.35),
                                 blurRadius: 32,
                                 offset: const Offset(0, 10),
                               ),
                               BoxShadow(
-                                color: AppColors.teal400.withOpacity(0.15),
+                                color: AppColors.teal400.withValues(alpha: 0.15),
                                 blurRadius: 48,
                                 offset: const Offset(0, 16),
                               ),
@@ -205,7 +205,7 @@ class _SplashScreenState extends State<SplashScreen>
                         style: GoogleFonts.dmSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: theme.textTheme.bodyLarge?.color?.withOpacity(
+                          color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 
                             0.7,
                           ),
                           letterSpacing: 1.0,
@@ -290,7 +290,7 @@ class _LoadingDotsState extends State<_LoadingDots>
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: widget.color.withOpacity(_animations[i].value),
+                color: widget.color.withValues(alpha: _animations[i].value),
                 shape: BoxShape.circle,
               ),
             );

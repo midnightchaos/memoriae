@@ -4,7 +4,6 @@ import '../services/profile_service.dart';
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
-import '../theme/theme_extensions.dart';
 import '../widgets/animated_page_wrapper.dart';
 import '../widgets/glass_card.dart';
 
@@ -80,7 +79,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pageStyle = Theme.of(context).extension<AppPageStyle>()!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -187,8 +185,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             prefixIcon: Icon(icon, color: AppColors.lavender400),
             filled: true,
             fillColor: isDark
-                ? Colors.white.withOpacity(0.05)
-                : Colors.white.withOpacity(0.5),
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.white.withValues(alpha: 0.5),
             border: OutlineInputBorder(
               borderRadius: AppRadius.md,
               borderSide: BorderSide(

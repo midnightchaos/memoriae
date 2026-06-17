@@ -91,7 +91,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await AuthService.instance.logout();
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const WelcomeScreen()),
@@ -352,9 +352,9 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.2), width: 1),
+          border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -363,7 +363,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 24),
@@ -397,7 +397,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.lavender500.withOpacity(0.3),
+            color: AppColors.lavender500.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -413,7 +413,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
               child: Icon(
                 Icons.favorite_rounded,
                 size: 150,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             Padding(
@@ -426,10 +426,10 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             width: 2,
                           ),
                         ),
@@ -451,7 +451,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                             Text(
                               'MONITORING',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 1.5,
@@ -483,7 +483,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -497,7 +497,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
                         Text(
                           'Safety status is optimal',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -527,7 +527,7 @@ class _CaregiverDashboardScreenState extends State<CaregiverDashboardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: color.withOpacity(0.3), width: 1),
+        side: BorderSide(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: ListTile(
         leading: Icon(
@@ -575,9 +575,9 @@ class StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,

@@ -220,7 +220,7 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
           boxShadow: (isSelected && !isBlackMinimalism)
               ? [
                   BoxShadow(
-                    color: AppColors.mint500.withOpacity(0.3),
+                    color: AppColors.mint500.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -267,7 +267,7 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.mint500.withOpacity(0.1),
+                  color: AppColors.mint500.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),

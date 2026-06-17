@@ -14,12 +14,12 @@ class ChatMessage {
     required this.id,
     required this.content,
     required this.isUser,
-    required int timestamp,
+    required this.timestamp,
     this.type = 'text',
     this.isLoading = false,
     this.metadata,
     this.imagePath,
-  }) : timestamp = timestamp;
+  });
 
   Map<String, dynamic> toMap() {
     return {

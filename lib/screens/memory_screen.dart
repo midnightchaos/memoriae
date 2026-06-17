@@ -180,6 +180,9 @@ class _MemoryScreenState extends State<MemoryScreen>
 
   Future<void> _showStatistics() async {
     final stats = await _journalService.getStatistics();
+
+    if (!mounted) return;
+
     final themeService = Provider.of<ThemeService>(context, listen: false);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
@@ -291,7 +294,6 @@ class _MemoryScreenState extends State<MemoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final themeService = context.watch<ThemeService>();
     final isDark = themeService.isDarkMode;
     final isBlackMinimalism =
@@ -341,7 +343,7 @@ class _MemoryScreenState extends State<MemoryScreen>
                       onPressed: _showStatistics,
                       tooltip: 'Statistics',
                       style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withValues(alpha: 0.2),
                       ),
                     ),
                   ],
@@ -364,7 +366,7 @@ class _MemoryScreenState extends State<MemoryScreen>
                         ? null
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 2),
                             ),
@@ -534,7 +536,7 @@ class _MemoryScreenState extends State<MemoryScreen>
             decoration: BoxDecoration(
               color: isBlackMinimalism
                   ? Colors.white12
-                  : Colors.white.withOpacity(0.5),
+                  : Colors.white.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: const Text('📝', style: TextStyle(fontSize: 72)),
@@ -588,7 +590,7 @@ class _MemoryScreenState extends State<MemoryScreen>
               ? null
               : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -768,7 +770,7 @@ class _MemoryScreenState extends State<MemoryScreen>
                           decoration: BoxDecoration(
                             color: isBlackMinimalism
                                 ? Colors.white12
-                                : Colors.white.withOpacity(0.5),
+                                : Colors.white.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(

@@ -77,7 +77,7 @@ class AuditLogsScreen extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -88,7 +88,7 @@ class AuditLogsScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: _getActionColor(log.action).withOpacity(0.1),
+            color: _getActionColor(log.action).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(

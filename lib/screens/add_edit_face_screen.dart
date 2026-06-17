@@ -140,7 +140,7 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                   ),
                   onTap: () async {
                     final path = await faceService.pickImage(fromCamera: false);
-                    Navigator.of(ctx).pop(path);
+                    if (ctx.mounted) Navigator.of(ctx).pop(path);
                   },
                 ),
                 ListTile(
@@ -156,7 +156,7 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
                   ),
                   onTap: () async {
                     final path = await faceService.pickImage(fromCamera: true);
-                    Navigator.of(ctx).pop(path);
+                    if (ctx.mounted) Navigator.of(ctx).pop(path);
                   },
                 ),
               ],
@@ -179,7 +179,6 @@ class _AddEditFaceScreenState extends State<AddEditFaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeService = Provider.of<ThemeService>(context);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;

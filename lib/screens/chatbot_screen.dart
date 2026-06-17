@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'dart:io';
 import '../services/menta_games_service.dart';
 import '../widgets/animated_page_wrapper.dart';
-import '../theme/theme_extensions.dart';
 
 class ChatbotScreen extends StatefulWidget {
   const ChatbotScreen({super.key});
@@ -151,7 +150,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_CHAT,
+      type: ActivityMonitoringService.typeChat,
       description: imagePath != null
           ? 'Patient sent an image to Menta'
           : 'Patient sent a message to Menta',
@@ -259,7 +258,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
     // Log feedback for adaptive learning
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_FEEDBACK,
+      type: ActivityMonitoringService.typeFeedback,
       description:
           'User provided ${isPositive ? 'positive' : 'negative'} feedback on Menta response',
     );
@@ -315,7 +314,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 color: hasValidKey
                     ? Colors.green
                     : (isBlackMinimalism
-                          ? Colors.orange.withOpacity(0.8)
+                          ? Colors.orange.withValues(alpha: 0.8)
                           : Colors.orange),
                 fontWeight: FontWeight.w500,
               ),
@@ -363,10 +362,12 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
     try {
       // Share as plain text (works with any app)
-      await Share.share(
-        buffer.toString(),
-        subject:
-            'Menta Conversation - ${DateFormat('MMM dd, yyyy').format(DateTime.now())}',
+      await SharePlus.instance.share(
+        ShareParams(
+          text: buffer.toString(),
+          subject:
+              'Menta Conversation - ${DateFormat('MMM dd, yyyy').format(DateTime.now())}',
+        ),
       );
     } catch (e) {
       if (mounted) {
@@ -617,7 +618,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                     ? null
                     : [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, -5),
                         ),
@@ -865,7 +866,7 @@ class _MessageBubble extends StatelessWidget {
                     : null,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -973,7 +974,7 @@ class _MessageBubble extends StatelessWidget {
                   side: BorderSide(
                     color: isBlackMinimalism
                         ? Colors.white24
-                        : AppColors.lavender400.withOpacity(0.5),
+                        : AppColors.lavender400.withValues(alpha: 0.5),
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -67,7 +67,7 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
 
       // Log activity
       ActivityMonitoringService.instance.logActivity(
-        type: ActivityMonitoringService.TYPE_THERAPY,
+        type: ActivityMonitoringService.typeTherapy,
         description: 'Patient saved a drawing therapy session',
       );
 
@@ -123,14 +123,17 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
 
       // Log activity
       ActivityMonitoringService.instance.logActivity(
-        type: ActivityMonitoringService.TYPE_THERAPY,
+        type: ActivityMonitoringService.typeTherapy,
         description: 'Patient shared a drawing therapy session',
       );
 
       // Share the file
-      await Share.shareXFiles([
-        XFile(path),
-      ], text: 'Check out my drawing from Drawing Therapy!');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(path)],
+          text: 'Check out my drawing from Drawing Therapy!',
+        ),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -210,7 +213,7 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
   void _showImagePreview(File file) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
+      builder: (dialogContext) => Dialog(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -222,7 +225,9 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                 children: [
                   TextButton.icon(
                     onPressed: () async {
-                      await Share.shareXFiles([XFile(file.path)]);
+                      await SharePlus.instance.share(
+                        ShareParams(files: [XFile(file.path)]),
+                      );
                     },
                     icon: const Icon(Icons.share),
                     label: const Text('Share'),
@@ -230,10 +235,14 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                   TextButton.icon(
                     onPressed: () async {
                       await file.delete();
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Drawing deleted')),
-                      );
+                      if (dialogContext.mounted) {
+                        Navigator.pop(dialogContext);
+                      }
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Drawing deleted')),
+                        );
+                      }
                     },
                     icon: const Icon(Icons.delete, color: Colors.red),
                     label: const Text(
@@ -315,8 +324,8 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isBlackMinimalism
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.white.withOpacity(0.9),
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : Colors.white.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isBlackMinimalism
@@ -376,8 +385,8 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                         boxShadow: [
                           BoxShadow(
                             color: isBlackMinimalism
-                                ? Colors.black.withOpacity(0.5)
-                                : AppColors.lavender400.withOpacity(0.2),
+                                ? Colors.black.withValues(alpha: 0.5)
+                                : AppColors.lavender400.withValues(alpha: 0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -442,7 +451,7 @@ class _DrawingTherapyScreenState extends State<DrawingTherapyScreen> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: color.withOpacity(0.4),
+                              color: color.withValues(alpha: 0.4),
                               blurRadius: isSelected ? 12 : 8,
                               offset: const Offset(0, 4),
                             ),

@@ -215,7 +215,7 @@ class RelaxScreen extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.blue400.withOpacity(0.3),
+                  color: AppColors.blue400.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -295,20 +295,20 @@ class RelaxScreen extends StatelessWidget {
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: gradient.map((c) => c.withOpacity(0.15)).toList(),
+                  colors: gradient.map((c) => c.withValues(alpha: 0.15)).toList(),
                 ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isBlackMinimalism
                 ? Colors.white10
-                : gradient[0].withOpacity(0.3),
+                : gradient[0].withValues(alpha: 0.3),
             width: 2,
           ),
           boxShadow: isBlackMinimalism
               ? null
               : [
                   BoxShadow(
-                    color: gradient[0].withOpacity(0.2),
+                    color: gradient[0].withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -335,7 +335,7 @@ class RelaxScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: gradient[0].withOpacity(0.4),
+                          color: gradient[0].withValues(alpha: 0.4),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -378,7 +378,7 @@ class RelaxScreen extends StatelessWidget {
                                             : (isDark
                                                   ? Colors.white
                                                   : AppColors.slate900))
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                               ),
                         ),
                       ],
@@ -389,7 +389,7 @@ class RelaxScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: gradient[0].withOpacity(0.2),
+                      color: gradient[0].withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -416,7 +416,7 @@ class _WavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.05)
+      ..color = color.withValues(alpha: 0.05)
       ..style = PaintingStyle.fill;
 
     final path = Path();

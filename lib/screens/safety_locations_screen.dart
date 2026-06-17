@@ -116,7 +116,7 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                         ? null
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 20,
                               spreadRadius: 0,
                             ),
@@ -130,8 +130,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                         CustomPaint(
                           painter: MapGridPainter(
                             color: isBlackMinimalism
-                                ? Colors.white.withOpacity(0.03)
-                                : AppColors.slate200.withOpacity(0.5),
+                                ? Colors.white.withValues(alpha: 0.03)
+                                : AppColors.slate200.withValues(alpha: 0.5),
                           ),
                           child: Container(),
                         ),
@@ -139,8 +139,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                         Center(
                           child: _MapPulseIndicator(
                             color: isBlackMinimalism
-                                ? Colors.white.withOpacity(0.1)
-                                : AppColors.lavender200.withOpacity(0.3),
+                                ? Colors.white.withValues(alpha: 0.1)
+                                : AppColors.lavender200.withValues(alpha: 0.3),
                           ),
                         ),
                         // Location Pins
@@ -200,8 +200,8 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: isDark
-                        ? AppColors.slate800.withOpacity(0.5)
-                        : Colors.white.withOpacity(0.7),
+                        ? AppColors.slate800.withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.7),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
@@ -289,7 +289,7 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.coral500.withOpacity(0.3),
+                  color: AppColors.coral500.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -475,7 +475,6 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
     final themeService = Provider.of<ThemeService>(context, listen: false);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
-    final isDark = themeService.isDarkMode;
 
     await showDialog(
       context: context,
@@ -633,7 +632,6 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
     final themeService = Provider.of<ThemeService>(context, listen: false);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
-    final isDark = themeService.isDarkMode;
 
     showDialog(
       context: context,
@@ -662,7 +660,9 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
               final dbHelper = DatabaseHelper.instance;
               await dbHelper.deleteSafetyLocation(location.id);
               _loadLocations(); // Refresh list
-              Navigator.pop(context);
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Delete'),
@@ -697,7 +697,6 @@ class _SafetyLocationsScreenState extends State<SafetyLocationsScreen> {
     final themeService = Provider.of<ThemeService>(context, listen: false);
     final isBlackMinimalism =
         themeService.themeMode == AppThemeMode.blackMinimalism;
-    final isDark = themeService.isDarkMode;
 
     showDialog(
       context: context,
@@ -783,7 +782,7 @@ class MapGridPainter extends CustomPainter {
     }
 
     final roadPaint = Paint()
-      ..color = color.withOpacity(color.opacity * 2)
+      ..color = color.withValues(alpha: color.a * 2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -846,7 +845,7 @@ class _MapPulseIndicatorState extends State<_MapPulseIndicator>
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: widget.color.withOpacity(1.0 - _controller.value),
+              color: widget.color.withValues(alpha: 1.0 - _controller.value),
               width: 2,
             ),
           ),

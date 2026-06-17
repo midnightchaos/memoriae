@@ -267,7 +267,9 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
           _audioPosition = Duration.zero;
         });
         await _audioPlayer.stop();
-      } catch (e) {}
+      } catch (e) {
+        // Ignore errors deleting/stopping audio playback during entry deletion.
+      }
     }
   }
 
@@ -292,7 +294,7 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_JOURNAL,
+      type: ActivityMonitoringService.typeJournal,
       description: 'Patient created/updated a journal entry: $title',
     );
 
@@ -312,17 +314,19 @@ class _AddEditJournalScreenV2State extends State<AddEditJournalScreenV2> {
   }
 
   void _showError(String msg) {
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(msg), backgroundColor: AppColors.coral400),
       );
+    }
   }
 
   void _showSuccess(String msg) {
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(msg), backgroundColor: AppColors.emerald500),
       );
+    }
   }
 
   void _showPermissionError(String msg) {

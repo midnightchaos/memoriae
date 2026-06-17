@@ -98,7 +98,7 @@ class _MeditationScreenState extends State<MeditationScreen>
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_THERAPY,
+      type: ActivityMonitoringService.typeTherapy,
       description:
           'Patient started meditation session: $durationMinutes minutes',
     );
@@ -130,7 +130,7 @@ class _MeditationScreenState extends State<MeditationScreen>
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_THERAPY,
+      type: ActivityMonitoringService.typeTherapy,
       description:
           'Patient completed meditation session: $_selectedDuration minutes',
     );
@@ -141,17 +141,6 @@ class _MeditationScreenState extends State<MeditationScreen>
         _showCompletionDialog();
       }
     });
-  }
-
-  void _pauseSession() {
-    _timer?.cancel();
-    setState(() {
-      _currentPhase = 'Session paused';
-    });
-  }
-
-  void _resumeSession() {
-    _startSession(_remainingSeconds ~/ 60);
   }
 
   void _stopSession() {
@@ -306,8 +295,8 @@ class _MeditationScreenState extends State<MeditationScreen>
                     ? null
                     : RadialGradient(
                         colors: [
-                          AppColors.lavender400.withOpacity(0.3),
-                          AppColors.purple400.withOpacity(0.1),
+                          AppColors.lavender400.withValues(alpha: 0.3),
+                          AppColors.purple400.withValues(alpha: 0.1),
                           Colors.transparent,
                         ],
                         stops: [
@@ -317,7 +306,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                         ],
                       ),
                 color: isBlackMinimalism
-                    ? Colors.white.withOpacity(
+                    ? Colors.white.withValues(alpha: 
                         0.05 * _animationController.value,
                       )
                     : null,
@@ -325,7 +314,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                     ? null
                     : [
                         BoxShadow(
-                          color: AppColors.lavender400.withOpacity(
+                          color: AppColors.lavender400.withValues(alpha: 
                             0.3 * _animationController.value,
                           ),
                           blurRadius: 60,
@@ -334,7 +323,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                       ],
                 border: isBlackMinimalism
                     ? Border.all(
-                        color: Colors.white10.withOpacity(
+                        color: Colors.white10.withValues(alpha: 
                           0.5 * _animationController.value,
                         ),
                         width: 2,
@@ -357,7 +346,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                         ? null
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -484,7 +473,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                 ? null
                 : [
                     BoxShadow(
-                      color: AppColors.lavender400.withOpacity(0.3),
+                      color: AppColors.lavender400.withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -551,14 +540,14 @@ class _MeditationScreenState extends State<MeditationScreen>
               : (isDark ? AppColors.slate800 : Colors.white),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3),
+            color: isBlackMinimalism ? Colors.white10 : color.withValues(alpha: 0.3),
             width: isBlackMinimalism ? 1 : 2,
           ),
           boxShadow: isBlackMinimalism
               ? null
               : [
                   BoxShadow(
-                    color: color.withOpacity(0.2),
+                    color: color.withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -573,7 +562,7 @@ class _MeditationScreenState extends State<MeditationScreen>
               decoration: BoxDecoration(
                 color: isBlackMinimalism
                     ? Colors.white12
-                    : color.withOpacity(0.2),
+                    : color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
@@ -618,7 +607,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                     decoration: BoxDecoration(
                       color: isBlackMinimalism
                           ? Colors.white12
-                          : color.withOpacity(0.2),
+                          : color.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

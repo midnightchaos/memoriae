@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/theme_service.dart';
-import '../services/database_helper.dart';
-import '../models/safety_location.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -205,7 +203,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
 
       // Log activity
       ActivityMonitoringService.instance.logActivity(
-        type: ActivityMonitoringService.TYPE_THERAPY,
+        type: ActivityMonitoringService.typeTherapy,
         description: 'Patient started playing music track: ${track['name']}',
       );
 
@@ -299,8 +297,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
   }
 
   String _getCurrentTrackSubtitle() {
-    if (_currentCustomTrack != null)
+    if (_currentCustomTrack != null) {
       return _currentCustomTrack!.subtitle ?? 'Custom audio';
+    }
     if (_currentPlayingIndex == null) return 'Select a track to play';
     return _tracks[_currentPlayingIndex!]['subtitle'];
   }
@@ -568,8 +567,8 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               gradient: isPlaying
                   ? LinearGradient(
                       colors: [
-                        Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.3),
-                        Color(track.colorValue ?? 0xFF9333EA).withOpacity(0.1),
+                        Color(track.colorValue ?? 0xFF9333EA).withValues(alpha: 0.3),
+                        Color(track.colorValue ?? 0xFF9333EA).withValues(alpha: 0.1),
                       ],
                     )
                   : null,
@@ -598,7 +597,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                   decoration: BoxDecoration(
                     color: Color(
                       track.colorValue ?? 0xFF9333EA,
-                    ).withOpacity(0.2),
+                    ).withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -643,7 +642,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                   decoration: BoxDecoration(
                     color: Color(
                       track.colorValue ?? 0xFF9333EA,
-                    ).withOpacity(0.2),
+                    ).withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -681,7 +680,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
           colors: currentTrack != null
               ? [
                   currentTrack['color'],
-                  (currentTrack['color'] as Color).withOpacity(0.7),
+                  (currentTrack['color'] as Color).withValues(alpha: 0.7),
                 ]
               : [AppColors.lavender400, AppColors.purple400],
         ),
@@ -692,7 +691,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             : [
                 BoxShadow(
                   color: (currentTrack?['color'] ?? AppColors.lavender400)
-                      .withOpacity(0.4),
+                      .withValues(alpha: 0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -706,7 +705,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
@@ -752,7 +751,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             data: SliderThemeData(
               thumbColor: Colors.white,
               activeTrackColor: Colors.white,
-              inactiveTrackColor: Colors.white.withOpacity(0.3),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.3),
               trackHeight: 4,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
             ),
@@ -817,7 +816,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -877,7 +876,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
         decoration: BoxDecoration(
           gradient: isPlaying
               ? LinearGradient(
-                  colors: [color.withOpacity(0.3), color.withOpacity(0.1)],
+                  colors: [color.withValues(alpha: 0.3), color.withValues(alpha: 0.1)],
                 )
               : null,
           color: isPlaying
@@ -898,7 +897,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               ? null
               : [
                   BoxShadow(
-                    color: (isPlaying ? color : Colors.black).withOpacity(0.1),
+                    color: (isPlaying ? color : Colors.black).withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -911,7 +910,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               height: 50,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [color, color.withOpacity(0.7)],
+                  colors: [color, color.withValues(alpha: 0.7)],
                 ),
                 shape: BoxShape.circle,
               ),
@@ -955,7 +954,7 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -975,11 +974,11 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: isBlackMinimalism
-            ? Colors.white.withOpacity(0.05)
-            : color.withOpacity(0.1),
+            ? Colors.white.withValues(alpha: 0.05)
+            : color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isBlackMinimalism ? Colors.white10 : color.withOpacity(0.3),
+          color: isBlackMinimalism ? Colors.white10 : color.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),

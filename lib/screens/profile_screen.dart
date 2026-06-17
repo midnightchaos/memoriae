@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart' as loc;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'edit_profile_screen.dart';
 
 import '../services/analytics_service.dart';
-import '../services/theme_service.dart';
 import '../services/profile_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
@@ -117,7 +114,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     final report = _compileAnalyticsReport(locationData);
-    await Share.share(report, subject: 'Memoriae Activity Report');
+    await SharePlus.instance.share(
+      ShareParams(text: report, subject: 'Memoriae Activity Report'),
+    );
   }
 
   String _compileAnalyticsReport(loc.LocationData? location) {
@@ -475,7 +474,6 @@ class _EngagementChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final pageStyle = Theme.of(context).extension<AppPageStyle>()!;
 
     return GlassCard(
@@ -529,8 +527,8 @@ class _EngagementChart extends StatelessWidget {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.lavender400.withOpacity(0.3),
-                    AppColors.teal400.withOpacity(0.0),
+                    AppColors.lavender400.withValues(alpha: 0.3),
+                    AppColors.teal400.withValues(alpha: 0.0),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

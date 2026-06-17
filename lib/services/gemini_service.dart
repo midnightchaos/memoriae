@@ -126,7 +126,7 @@ class GeminiService {
             (r) => {
               'title': r.title,
               'time': r.time,
-              'description': r.description ?? '',
+              'description': r.description,
             },
           )
           .toList();

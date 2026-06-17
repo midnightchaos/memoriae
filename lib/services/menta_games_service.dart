@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'database_helper.dart';
 import '../models/chat_message.dart';
-import '../models/familiar_face.dart';
-import '../models/journal_entry.dart';
-import '../models/daily_routine.dart';
 import '../models/game_progress.dart';
 import 'auth_service.dart';
 import 'analytics_service.dart';
@@ -21,7 +18,6 @@ class MentaGamesService extends ChangeNotifier {
 
   // Current active game state
   MentaGameType? _activeGameType;
-  dynamic _activeGameData;
   String? _correctAnswer;
   DateTime? _gameStartTime;
 
@@ -54,7 +50,6 @@ class MentaGamesService extends ChangeNotifier {
     switch (_activeGameType!) {
       case MentaGameType.faceRecall:
         final face = faces[_random.nextInt(faces.length)];
-        _activeGameData = face;
         _correctAnswer = face.name;
         content =
             "I found a photo of someone special. Do you remember who this is?";
@@ -68,7 +63,6 @@ class MentaGamesService extends ChangeNotifier {
 
       case MentaGameType.journalQuiz:
         final journal = journals[_random.nextInt(journals.length)];
-        _activeGameData = journal;
         _correctAnswer = journal.title;
         content =
             "You wrote something wonderful recently. Do you remember what you titled this entry: '${journal.content.substring(0, min(50, journal.content.length))}...'?";
@@ -81,7 +75,6 @@ class MentaGamesService extends ChangeNotifier {
 
       case MentaGameType.routineCheck:
         final routine = routines[_random.nextInt(routines.length)];
-        _activeGameData = routine;
         _correctAnswer = routine.title;
         content =
             "It's almost ${routine.time}. Do you remember what we usually do at this time?";
@@ -102,7 +95,6 @@ class MentaGamesService extends ChangeNotifier {
           "Piano",
         ];
         final word = words[_random.nextInt(words.length)];
-        _activeGameData = word;
         _correctAnswer = null; // Open ended
         content =
             "Let's play Word Association! I'll say a word, and you tell me the first thing that comes to mind. The word is: **$word**";
@@ -169,7 +161,6 @@ class MentaGamesService extends ChangeNotifier {
     }
 
     _activeGameType = null;
-    _activeGameData = null;
     _correctAnswer = null;
     _gameStartTime = null;
 

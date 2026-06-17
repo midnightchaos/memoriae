@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:intl/intl.dart';
-
 /// System prompt for Menta - Memory Care AI Assistant
 /// This defines how Menta should interact with users who may have dementia or memory issues
 class MentaSystemPrompt {
@@ -160,10 +157,14 @@ Stay in Care Mode unless explicitly asked technical questions.
         final agenda = recentData['todayAgenda'] as Map<String, dynamic>;
         contextBuffer.writeln('\n📅 TODAY\'S AGENDA:');
         if (agenda['routines'] != null) {
-          for (var r in agenda['routines']) contextBuffer.writeln('- $r');
+          for (var r in agenda['routines']) {
+            contextBuffer.writeln('- $r');
+          }
         }
         if (agenda['reminders'] != null) {
-          for (var r in agenda['reminders']) contextBuffer.writeln('- $r');
+          for (var r in agenda['reminders']) {
+            contextBuffer.writeln('- $r');
+          }
         }
       }
     }

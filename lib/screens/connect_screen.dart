@@ -217,7 +217,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isBlackMinimalism
-              ? Colors.red.withOpacity(0.5)
+              ? Colors.red.withValues(alpha: 0.5)
               : Colors.red.shade200,
           width: 2,
         ),
@@ -230,7 +230,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: isBlackMinimalism
-                      ? Colors.red.withOpacity(0.2)
+                      ? Colors.red.withValues(alpha: 0.2)
                       : Colors.red.shade100,
                   shape: BoxShape.circle,
                 ),
@@ -311,7 +311,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             ? null
             : [
                 BoxShadow(
-                  color: (category['color'] as Color).withOpacity(0.1),
+                  color: (category['color'] as Color).withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -320,9 +320,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
       child: Theme(
         data: Theme.of(context).copyWith(
           dividerColor: Colors.transparent,
-          hoverColor: isBlackMinimalism ? Colors.white.withOpacity(0.05) : null,
+          hoverColor: isBlackMinimalism ? Colors.white.withValues(alpha: 0.05) : null,
           splashColor: isBlackMinimalism
-              ? Colors.white.withOpacity(0.05)
+              ? Colors.white.withValues(alpha: 0.05)
               : null,
         ),
         child: ExpansionTile(
@@ -334,8 +334,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isBlackMinimalism
-                  ? Colors.white.withOpacity(0.05)
-                  : (category['color'] as Color).withOpacity(0.1),
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : (category['color'] as Color).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -392,8 +392,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isBlackMinimalism
-            ? Colors.white.withOpacity(0.03)
-            : AppColors.slate100.withOpacity(0.3),
+            ? Colors.white.withValues(alpha: 0.03)
+            : AppColors.slate100.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: isBlackMinimalism ? Border.all(color: Colors.white10) : null,
       ),
@@ -449,7 +449,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isBlackMinimalism
-              ? Colors.white.withOpacity(0.05)
+              ? Colors.white.withValues(alpha: 0.05)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(

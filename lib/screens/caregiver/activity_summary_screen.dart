@@ -211,19 +211,16 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
   Widget _buildActivityTypeBreakdown() {
     // Simple count per type
     int chats = _logs
-        .where((l) => l.activityType == ActivityMonitoringService.TYPE_CHAT)
+        .where((l) => l.activityType == ActivityMonitoringService.typeChat)
         .length;
     int journals = _logs
-        .where((l) => l.activityType == ActivityMonitoringService.TYPE_JOURNAL)
+        .where((l) => l.activityType == ActivityMonitoringService.typeJournal)
         .length;
     int games = _logs
-        .where((l) => l.activityType == ActivityMonitoringService.TYPE_GAME)
+        .where((l) => l.activityType == ActivityMonitoringService.typeGame)
         .length;
     int therapy = _logs
-        .where((l) => l.activityType == ActivityMonitoringService.TYPE_THERAPY)
-        .length;
-    int feedback = _logs
-        .where((l) => l.activityType == ActivityMonitoringService.TYPE_FEEDBACK)
+        .where((l) => l.activityType == ActivityMonitoringService.typeTherapy)
         .length;
 
     return Row(
@@ -244,9 +241,9 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -270,23 +267,23 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
     IconData icon;
     Color color;
     switch (log.activityType) {
-      case ActivityMonitoringService.TYPE_CHAT:
+      case ActivityMonitoringService.typeChat:
         icon = Icons.chat_bubble_outline;
         color = AppColors.blue400;
         break;
-      case ActivityMonitoringService.TYPE_JOURNAL:
+      case ActivityMonitoringService.typeJournal:
         icon = Icons.edit_note;
         color = AppColors.emerald400;
         break;
-      case ActivityMonitoringService.TYPE_GAME:
+      case ActivityMonitoringService.typeGame:
         icon = Icons.sports_esports_outlined;
         color = AppColors.purple400;
         break;
-      case ActivityMonitoringService.TYPE_THERAPY:
+      case ActivityMonitoringService.typeTherapy:
         icon = Icons.self_improvement;
         color = AppColors.peach400;
         break;
-      case ActivityMonitoringService.TYPE_FEEDBACK:
+      case ActivityMonitoringService.typeFeedback:
         icon = Icons.thumbs_up_down_outlined;
         color = AppColors.slate600;
         break;
@@ -300,7 +297,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.1),
+          backgroundColor: color.withValues(alpha: 0.1),
           child: Icon(icon, color: color),
         ),
         title: Text(log.description),
@@ -326,7 +323,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: isBlackMinimalism ? const Color(0xFF1A1A1A) : null,
         title: Text(
           'Send Check-in Prompt',
@@ -367,7 +364,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               'Cancel',
               style: TextStyle(
@@ -380,7 +377,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
               final message = messageController.text.trim();
               if (message.isEmpty) return;
 
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
 
               // 1. Log Activity
               await DatabaseHelper.instance.insertActivityLog(
@@ -474,8 +471,9 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           if (value.toInt() < 0 ||
-                              value.toInt() >= displayData.length)
+                              value.toInt() >= displayData.length) {
                             return const SizedBox.shrink();
+                          }
                           final dateString = displayData[value.toInt()]['date'];
                           try {
                             final date = DateTime.parse(dateString);
@@ -513,7 +511,7 @@ class _ActivitySummaryScreenState extends State<ActivitySummaryScreen> {
                       dotData: const FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: AppColors.lavender400.withOpacity(0.1),
+                        color: AppColors.lavender400.withValues(alpha: 0.1),
                       ),
                     ),
                   ],

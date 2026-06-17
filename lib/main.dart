@@ -83,7 +83,6 @@ class MemoriaeApp extends StatelessWidget {
         case AppThemeMode.blackMinimalism:
           return AppTheme.blackMinimalismTheme;
         case AppThemeMode.dark:
-        default:
           return AppTheme.darkTheme;
       }
     }

@@ -64,7 +64,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
 
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_THERAPY,
+      type: ActivityMonitoringService.typeTherapy,
       description: 'Patient started breathing exercise: $_selectedPattern',
     );
 
@@ -74,7 +74,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   void _stopBreathing() {
     // Log activity
     ActivityMonitoringService.instance.logActivity(
-      type: ActivityMonitoringService.TYPE_THERAPY,
+      type: ActivityMonitoringService.typeTherapy,
       description:
           'Patient stopped breathing exercise after $_cycleCount cycles',
     );
@@ -286,13 +286,13 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          _getPhaseColor().withOpacity(0.8),
-                          _getPhaseColor().withOpacity(0.4),
+                          _getPhaseColor().withValues(alpha: 0.8),
+                          _getPhaseColor().withValues(alpha: 0.4),
                         ],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _getPhaseColor().withOpacity(0.5),
+                          color: _getPhaseColor().withValues(alpha: 0.5),
                           blurRadius: 40,
                           spreadRadius: 10,
                         ),
@@ -345,7 +345,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                         ? null
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),

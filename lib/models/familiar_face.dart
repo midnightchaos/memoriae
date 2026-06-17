@@ -80,10 +80,9 @@ class FamiliarFace {
     return name.toLowerCase().contains(searchLower) ||
         relation.toLowerCase().contains(searchLower) ||
         (email?.toLowerCase().contains(searchLower) ?? false) ||
-        (phoneNumber?.contains(RegExp(r'\d')) ??
-            false &&
-                phoneNumber!
-                    .replaceAll(RegExp(r'[^\d]', multiLine: true), '')
-                    .contains(searchLower));
+        ((phoneNumber?.contains(RegExp(r'\d')) ?? false) &&
+            phoneNumber!
+                .replaceAll(RegExp(r'[^\d]', multiLine: true), '')
+                .contains(searchLower));
   }
 }

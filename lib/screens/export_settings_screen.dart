@@ -36,7 +36,6 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
 
   late TextEditingController _emailController;
   String? _selectedFrequency;
-  final List<String> _frequencies = ['manual', 'daily', 'weekly', 'monthly'];
 
   bool _isLoading = false;
   bool _isExporting = false;
@@ -103,43 +102,6 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
     }
   }
 
-  Future<void> _saveSettings() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isLoading = true);
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final exportService = DataExportService(prefs);
-
-      await exportService.saveExportSettings(
-        email: _emailController.text.trim(),
-        frequency: _selectedFrequency ?? 'manual',
-      );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Export settings saved'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        context.showError(
-          title: 'Save Failed',
-          message: 'Failed to save export settings: ${e.toString()}',
-          onRetry: _saveSettings,
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
   Future<void> _exportToFile() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -166,61 +128,6 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
           title: 'Export Failed',
           message: 'Failed to export data: ${e.toString()}',
           onRetry: _exportToFile,
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isExporting = false);
-      }
-    }
-  }
-
-  Future<void> _exportViaEmail() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_emailController.text.isEmpty) {
-      if (mounted) {
-        context.showError(
-          title: 'Email Required',
-          message: 'Please enter a caregiver email address to send the export',
-        );
-      }
-      return;
-    }
-
-    if (!_hasInternet) {
-      if (mounted) {
-        context.showError(
-          title: 'No Internet Connection',
-          message: 'Please check your internet connection and try again',
-        );
-      }
-      return;
-    }
-
-    setState(() => _isExporting = true);
-
-    try {
-      final exportProvider = Provider.of<ExportProvider>(
-        context,
-        listen: false,
-      );
-      await exportProvider.exportData('current_user_id', sendEmail: true);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Data sent via email successfully'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        context.showError(
-          title: 'Email Failed',
-          message: 'Failed to send email: ${e.toString()}',
-          onRetry: _exportViaEmail,
         );
       }
     } finally {
@@ -511,7 +418,7 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

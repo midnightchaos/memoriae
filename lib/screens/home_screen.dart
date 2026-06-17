@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               );
             }),
-            Divider(color: pageStyle.subtitleColor.withOpacity(0.15)),
+            Divider(color: pageStyle.subtitleColor.withValues(alpha: 0.15)),
             _drawerItem(Icons.brush_rounded, 'Drawing Therapy', () {
               Navigator.pop(context);
               Navigator.push(
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen>
                 );
               },
             ),
-            Divider(color: pageStyle.subtitleColor.withOpacity(0.15)),
+            Divider(color: pageStyle.subtitleColor.withValues(alpha: 0.15)),
             _drawerItem(Icons.person_rounded, 'My Profile', () {
               Navigator.pop(context);
               Navigator.push(
@@ -399,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen>
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: AppRadius.lg,
                           ),
                           child: const Center(

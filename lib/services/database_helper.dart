@@ -298,6 +298,9 @@ class DatabaseHelper {
       try {
         await _createEngagementScoresTable(db);
       } catch (_) {}
+      try {
+        await _createAuditLogsTable(db);
+      } catch (_) {}
     }
     if (oldVersion < 10) {
       // Add therapyCount and feedbackCount to engagement_scores
@@ -403,6 +406,7 @@ class DatabaseHelper {
     await _createActivityLogsTable(db);
     await _createCaregiverAlertsTable(db);
     await _createEngagementScoresTable(db);
+    await _createAuditLogsTable(db);
   }
 
   // Create

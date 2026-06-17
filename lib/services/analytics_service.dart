@@ -89,8 +89,6 @@ class AnalyticsService extends ChangeNotifier {
       throw Exception('No authenticated user');
     }
 
-    final db = DatabaseHelper.instance;
-
     // Gather all analytics data
     final analytics = UserAnalytics(
       userId: user.id,

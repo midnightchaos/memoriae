@@ -25,7 +25,6 @@ class FaceMatchingGameScreen extends StatefulWidget {
 class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
 
   List<FamiliarFace> _gameFaces = [];
   List<String> _shuffledNames = [];
@@ -38,7 +37,6 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
   int _score = 0;
   int _attempts = 0;
   bool _isLoading = true;
-  bool _showCelebration = false;
 
   // Game colors for color matching mode
   final List<Color> _gameColors = [
@@ -59,9 +57,6 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
-    );
     _loadGame();
 
     // Record interaction on screen open
@@ -73,13 +68,16 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
     if (profileService.profile != null) {
       // Log game start
       ActivityMonitoringService.instance.logActivity(
-        type: ActivityMonitoringService.TYPE_GAME,
+        type: ActivityMonitoringService.typeGame,
         description: 'Patient started Face Matching Game',
       );
 
       await context.read<FamiliarFaceService>().loadFaces(
         profileService.profile!.id,
       );
+
+      if (!mounted) return;
+
       final faceService = context.read<FamiliarFaceService>();
 
       if (faceService.faces.length < 3) {
@@ -174,14 +172,11 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
 
         // Log game completion
         ActivityMonitoringService.instance.logActivity(
-          type: ActivityMonitoringService.TYPE_GAME,
+          type: ActivityMonitoringService.typeGame,
           description:
               'Patient completed Face Matching Game with score $_score',
         );
 
-        setState(() {
-          _showCelebration = true;
-        });
         _showCompletionDialog();
       }
     } else {
@@ -297,7 +292,6 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
       _matchedFaces = [];
       _score = 0;
       _attempts = 0;
-      _showCelebration = false;
       _shuffledNames = _gameFaces.map((f) => f.name).toList()..shuffle();
     });
   }
@@ -394,7 +388,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                           (isBlackMinimalism
                                   ? Colors.black
                                   : AppColors.lavender400)
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -407,7 +401,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                     Container(
                       width: 2,
                       height: 24,
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                     ),
                     _buildScoreItem(
                       'Matched',
@@ -416,7 +410,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                     Container(
                       width: 2,
                       height: 24,
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                     ),
                     _buildScoreItem('Attempts', '$_attempts'),
                   ],
@@ -453,7 +447,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         ),
         Text(
           label,
-          style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
+          style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
         ),
       ],
     );
@@ -508,13 +502,13 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               color: isBlackMinimalism
                   ? const Color(0xFF0A0A0A)
                   : (isDark
-                        ? AppColors.slate800.withOpacity(0.5)
-                        : Colors.white.withOpacity(0.7)),
+                        ? AppColors.slate800.withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.7)),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isBlackMinimalism
                     ? Colors.white10
-                    : AppColors.lavender400.withOpacity(0.3),
+                    : AppColors.lavender400.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -623,12 +617,12 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                     ? AppColors.emerald400
                     : (isBlackMinimalism
                           ? Colors.white10
-                          : color.withOpacity(0.3)),
+                          : color.withValues(alpha: 0.3)),
                 width: isSelected || isMatched ? 3 : 2,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: (isSelected ? color : Colors.black).withOpacity(0.2),
+                  color: (isSelected ? color : Colors.black).withValues(alpha: 0.2),
                   blurRadius: isSelected ? 16 : 8,
                   offset: const Offset(0, 4),
                 ),
@@ -652,7 +646,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                             : Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [color.withOpacity(0.6), color],
+                                    colors: [color.withValues(alpha: 0.6), color],
                                   ),
                                 ),
                                 child: const Icon(
@@ -663,7 +657,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                               ),
                         if (isMatched)
                           Container(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             child: const Center(
                               child: Icon(
                                 Icons.check_circle,
@@ -679,7 +673,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(14),
                     ),
@@ -728,7 +722,7 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               gradient: isSelected
-                  ? LinearGradient(colors: [color, color.withOpacity(0.7)])
+                  ? LinearGradient(colors: [color, color.withValues(alpha: 0.7)])
                   : null,
               color: isSelected
                   ? null
@@ -743,12 +737,12 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                     ? AppColors.emerald400
                     : (isBlackMinimalism
                           ? Colors.white10
-                          : color.withOpacity(0.3)),
+                          : color.withValues(alpha: 0.3)),
                 width: isSelected || isMatched ? 2 : 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: (isSelected ? color : Colors.black).withOpacity(0.2),
+                  color: (isSelected ? color : Colors.black).withValues(alpha: 0.2),
                   blurRadius: isSelected ? 12 : 6,
                   offset: const Offset(0, 2),
                 ),

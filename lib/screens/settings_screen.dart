@@ -14,7 +14,6 @@ import '../widgets/animated_page_wrapper.dart';
 import '../widgets/glass_card.dart';
 import '../widgets/section_header.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'about_screen.dart';
 import 'caregiver/caregiver_register_screen.dart';
 import 'caregiver/caregiver_dashboard_screen.dart';
@@ -114,7 +113,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: pageStyle.iconBackgroundColor.withOpacity(0.5),
+                        color: pageStyle.iconBackgroundColor.withValues(alpha: 0.5),
                         borderRadius: AppRadius.sm,
                       ),
                       child: Text(
@@ -344,7 +343,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     icon: Icons.logout_rounded,
                     onTap: () async {
                       await AuthService.instance.logout();
-                      if (mounted) {
+                      if (context.mounted) {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           '/',
@@ -385,7 +384,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isDestructive
-                  ? AppColors.coral500.withOpacity(0.1)
+                  ? AppColors.coral500.withValues(alpha: 0.1)
                   : pageStyle.iconBackgroundColor,
               borderRadius: AppRadius.md,
             ),
@@ -422,7 +421,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Icon(
             Icons.chevron_right_rounded,
-            color: pageStyle.subtitleColor.withOpacity(0.3),
+            color: pageStyle.subtitleColor.withValues(alpha: 0.3),
             size: 20,
           ),
         ],
@@ -481,7 +480,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Switch.adaptive(
               value: value,
               onChanged: enabled ? onChanged : null,
-              activeColor: AppColors.lavender500,
+              activeThumbColor: AppColors.lavender500,
             ),
           ],
         ),
@@ -554,20 +553,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: Icons.palette_rounded,
             ),
             const SizedBox(height: AppSpacing.md),
-            ...AppThemeMode.values.map(
-              (mode) => ListTile(
-                title: Text(_getThemeLabel(mode)),
-                leading: Radio<AppThemeMode>(
-                  value: mode,
-                  groupValue: themeService.themeMode,
-                  onChanged: (v) {
-                    if (v != null) {
-                      themeService.setTheme(v);
-                      Navigator.pop(context);
-                    }
-                  },
-                ),
-                onTap: () => themeService.setTheme(mode),
+            RadioGroup<AppThemeMode>(
+              groupValue: themeService.themeMode,
+              onChanged: (v) {
+                if (v != null) {
+                  themeService.setTheme(v);
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                children: AppThemeMode.values
+                    .map(
+                      (mode) => ListTile(
+                        title: Text(_getThemeLabel(mode)),
+                        leading: Radio<AppThemeMode>(value: mode),
+                        onTap: () => themeService.setTheme(mode),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ],
@@ -700,7 +703,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _exportData() async {
-    await Share.share('Memoriae Data Export\nGenerated on ${DateTime.now()}');
+    await SharePlus.instance.share(
+      ShareParams(
+        text: 'Memoriae Data Export\nGenerated on ${DateTime.now()}',
+      ),
+    );
   }
 
   Future<void> _fireTestNotification(String type) async {
