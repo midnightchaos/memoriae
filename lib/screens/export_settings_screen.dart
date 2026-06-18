@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../services/data_export_service.dart';
 import '../providers/export_provider.dart';
 import '../theme/app_theme.dart';
@@ -35,42 +33,21 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
   }
 
   late TextEditingController _emailController;
-  String? _selectedFrequency;
 
   bool _isLoading = false;
   bool _isExporting = false;
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  bool _hasInternet = true;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
-    _initConnectivity();
     _loadSettings();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
-    _connectivitySubscription?.cancel();
     super.dispose();
-  }
-
-  Future<void> _initConnectivity() async {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
-      results,
-    ) {
-      setState(() {
-        _hasInternet = !results.contains(ConnectivityResult.none);
-      });
-    });
-
-    // Check initial connectivity
-    final connectivityResults = await Connectivity().checkConnectivity();
-    setState(() {
-      _hasInternet = !connectivityResults.contains(ConnectivityResult.none);
-    });
   }
 
   Future<void> _loadSettings() async {
@@ -84,7 +61,6 @@ class _ExportSettingsScreenState extends State<ExportSettingsScreen> {
       if (mounted) {
         setState(() {
           _emailController.text = settings['email'] ?? '';
-          _selectedFrequency = settings['frequency'] ?? 'manual';
         });
       }
     } catch (e) {
