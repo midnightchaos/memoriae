@@ -306,16 +306,16 @@ class _MeditationScreenState extends State<MeditationScreen>
                         ],
                       ),
                 color: isBlackMinimalism
-                    ? Colors.white.withValues(alpha: 
-                        0.05 * _animationController.value,
+                    ? Colors.white.withValues(
+                        alpha: 0.05 * _animationController.value,
                       )
                     : null,
                 boxShadow: isBlackMinimalism
                     ? null
                     : [
                         BoxShadow(
-                          color: AppColors.lavender400.withValues(alpha: 
-                            0.3 * _animationController.value,
+                          color: AppColors.lavender400.withValues(
+                            alpha: 0.3 * _animationController.value,
                           ),
                           blurRadius: 60,
                           spreadRadius: 20,
@@ -323,8 +323,8 @@ class _MeditationScreenState extends State<MeditationScreen>
                       ],
                 border: isBlackMinimalism
                     ? Border.all(
-                        color: Colors.white10.withValues(alpha: 
-                          0.5 * _animationController.value,
+                        color: Colors.white10.withValues(
+                          alpha: 0.5 * _animationController.value,
                         ),
                         width: 2,
                       )

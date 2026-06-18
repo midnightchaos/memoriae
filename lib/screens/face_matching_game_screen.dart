@@ -731,8 +731,8 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             decoration: BoxDecoration(
               gradient: isSelected
                   ? LinearGradient(
-                    colors: [color, color.withValues(alpha: 0.7)],
-                  )
+                      colors: [color, color.withValues(alpha: 0.7)],
+                    )
                   : null,
               color: isSelected
                   ? null

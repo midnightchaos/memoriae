@@ -706,9 +706,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _exportData() async {
     await SharePlus.instance.share(
-      ShareParams(
-        text: 'Memoriae Data Export\nGenerated on ${DateTime.now()}',
-      ),
+      ShareParams(text: 'Memoriae Data Export\nGenerated on ${DateTime.now()}'),
     );
   }
 
