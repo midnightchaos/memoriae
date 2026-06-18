@@ -447,7 +447,10 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
         ),
         Text(
           label,
-          style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white.withValues(alpha: 0.9),
+          ),
         ),
       ],
     );
@@ -622,7 +625,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: (isSelected ? color : Colors.black).withValues(alpha: 0.2),
+                  color: (isSelected ? color : Colors.black).withValues(
+                    alpha: 0.2,
+                  ),
                   blurRadius: isSelected ? 16 : 8,
                   offset: const Offset(0, 4),
                 ),
@@ -646,7 +651,10 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
                             : Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [color.withValues(alpha: 0.6), color],
+                                    colors: [
+                                      color.withValues(alpha: 0.6),
+                                      color,
+                                    ],
                                   ),
                                 ),
                                 child: const Icon(
@@ -722,7 +730,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               gradient: isSelected
-                  ? LinearGradient(colors: [color, color.withValues(alpha: 0.7)])
+                  ? LinearGradient(
+                    colors: [color, color.withValues(alpha: 0.7)],
+                  )
                   : null,
               color: isSelected
                   ? null
@@ -742,7 +752,9 @@ class _FaceMatchingGameScreenState extends State<FaceMatchingGameScreen>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: (isSelected ? color : Colors.black).withValues(alpha: 0.2),
+                  color: (isSelected ? color : Colors.black).withValues(
+                    alpha: 0.2,
+                  ),
                   blurRadius: isSelected ? 12 : 6,
                   offset: const Offset(0, 2),
                 ),

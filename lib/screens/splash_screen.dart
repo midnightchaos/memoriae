@@ -161,12 +161,16 @@ class _SplashScreenState extends State<SplashScreen>
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.lavender400.withValues(alpha: 0.35),
+                                color: AppColors.lavender400.withValues(
+                                  alpha: 0.35,
+                                ),
                                 blurRadius: 32,
                                 offset: const Offset(0, 10),
                               ),
                               BoxShadow(
-                                color: AppColors.teal400.withValues(alpha: 0.15),
+                                color: AppColors.teal400.withValues(
+                                  alpha: 0.15,
+                                ),
                                 blurRadius: 48,
                                 offset: const Offset(0, 16),
                               ),
@@ -205,8 +209,8 @@ class _SplashScreenState extends State<SplashScreen>
                         style: GoogleFonts.dmSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 
-                            0.7,
+                          color: theme.textTheme.bodyLarge?.color?.withValues(
+                            alpha: 0.7,
                           ),
                           letterSpacing: 1.0,
                         ),

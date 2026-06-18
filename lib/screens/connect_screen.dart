@@ -320,7 +320,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
       child: Theme(
         data: Theme.of(context).copyWith(
           dividerColor: Colors.transparent,
-          hoverColor: isBlackMinimalism ? Colors.white.withValues(alpha: 0.05) : null,
+          hoverColor: isBlackMinimalism
+              ? Colors.white.withValues(alpha: 0.05)
+              : null,
           splashColor: isBlackMinimalism
               ? Colors.white.withValues(alpha: 0.05)
               : null,

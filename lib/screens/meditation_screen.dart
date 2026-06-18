@@ -540,7 +540,9 @@ class _MeditationScreenState extends State<MeditationScreen>
               : (isDark ? AppColors.slate800 : Colors.white),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isBlackMinimalism ? Colors.white10 : color.withValues(alpha: 0.3),
+            color: isBlackMinimalism
+                ? Colors.white10
+                : color.withValues(alpha: 0.3),
             width: isBlackMinimalism ? 1 : 2,
           ),
           boxShadow: isBlackMinimalism

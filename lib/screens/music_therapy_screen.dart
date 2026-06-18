@@ -567,8 +567,12 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               gradient: isPlaying
                   ? LinearGradient(
                       colors: [
-                        Color(track.colorValue ?? 0xFF9333EA).withValues(alpha: 0.3),
-                        Color(track.colorValue ?? 0xFF9333EA).withValues(alpha: 0.1),
+                        Color(
+                          track.colorValue ?? 0xFF9333EA,
+                        ).withValues(alpha: 0.3),
+                        Color(
+                          track.colorValue ?? 0xFF9333EA,
+                        ).withValues(alpha: 0.1),
                       ],
                     )
                   : null,
@@ -876,7 +880,10 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
         decoration: BoxDecoration(
           gradient: isPlaying
               ? LinearGradient(
-                  colors: [color.withValues(alpha: 0.3), color.withValues(alpha: 0.1)],
+                  colors: [
+                    color.withValues(alpha: 0.3),
+                    color.withValues(alpha: 0.1),
+                  ],
                 )
               : null,
           color: isPlaying
@@ -897,7 +904,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
               ? null
               : [
                   BoxShadow(
-                    color: (isPlaying ? color : Colors.black).withValues(alpha: 0.1),
+                    color: (isPlaying ? color : Colors.black).withValues(
+                      alpha: 0.1,
+                    ),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -978,7 +987,9 @@ class _MusicTherapyScreenState extends State<MusicTherapyScreen> {
             : color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isBlackMinimalism ? Colors.white10 : color.withValues(alpha: 0.3),
+          color: isBlackMinimalism
+              ? Colors.white10
+              : color.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),

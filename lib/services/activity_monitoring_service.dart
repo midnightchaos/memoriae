@@ -74,15 +74,11 @@ class ActivityMonitoringService extends ChangeNotifier {
           )
           .toList();
 
-      int chatCount = todayLogs
-          .where((l) => l.activityType == typeChat)
-          .length;
+      int chatCount = todayLogs.where((l) => l.activityType == typeChat).length;
       int journalCount = todayLogs
           .where((l) => l.activityType == typeJournal)
           .length;
-      int gameCount = todayLogs
-          .where((l) => l.activityType == typeGame)
-          .length;
+      int gameCount = todayLogs.where((l) => l.activityType == typeGame).length;
       int therapyCount = todayLogs
           .where((l) => l.activityType == typeTherapy)
           .length;

@@ -113,7 +113,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: pageStyle.iconBackgroundColor.withValues(alpha: 0.5),
+                        color: pageStyle.iconBackgroundColor.withValues(
+                          alpha: 0.5,
+                        ),
                         borderRadius: AppRadius.sm,
                       ),
                       child: Text(

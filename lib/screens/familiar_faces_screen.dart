@@ -209,7 +209,9 @@ class _FamiliarFacesScreenState extends State<FamiliarFacesScreen> {
                         child: Icon(
                           Icons.person_rounded,
                           size: 48,
-                          color: pageStyle.iconAccentColor.withValues(alpha: 0.5),
+                          color: pageStyle.iconAccentColor.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                     ),

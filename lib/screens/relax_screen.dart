@@ -295,7 +295,9 @@ class RelaxScreen extends StatelessWidget {
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: gradient.map((c) => c.withValues(alpha: 0.15)).toList(),
+                  colors: gradient
+                      .map((c) => c.withValues(alpha: 0.15))
+                      .toList(),
                 ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
